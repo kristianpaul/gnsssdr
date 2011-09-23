@@ -1,0 +1,12 @@
+#summary GPS1A_SAMPLER for gnss-sdr front-end.
+
+= Introduction =
+
+GPS1A_Sampler is a console program for writing GPS-signal in a file. It works in MS Windows environment. It was developed for GPS1A (http://www.gpscreations.com/Products_GPS1A.html) hardware. The current project is a reworked version for open-source GNSS-SDR front-end (http://gnss-sdr.ru/index.php?itemid=10).
+
+
+= Details =
+
+GNSS-SDR front-end is an open-source hardware that is used for capturing GPS/GLONASS signals. In order to use this hardware in windows envronment this project was started.
+
+Current version requires libusb (need more text here...)
