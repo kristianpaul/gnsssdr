@@ -1,0 +1,52 @@
+ command line:
+   ./test_data_packer_isim_beh.exe
+     -intstyle  ise
+     -ipchost  localhost
+     -ipcport  2038
+
+Wed Apr 28 11:24:56 2010
+
+Total Line Count : 134
+
+ Elaboration time : 0.015625 sec.
+
+ Estimate current memory usage : 117.215 Meg. 
+
+ Total Signals          : 44
+ Total Nets             : 95
+ Total Signal Drivers   : 16
+ Total Blocks           : 6
+ Total Primitive Blocks : 1
+ Total Processes        : 10
+ Total Traceable Variables  : 0
+ Total Scalar Nets and Variables : 95
+ntrace select -o on -n /test_data_packer/clk 
+ntrace select -o on -n /test_data_packer/rst 
+ntrace select -o on -n /test_data_packer/di 
+ntrace select -o on -n /test_data_packer/flaga 
+ntrace select -o on -n /test_data_packer/flagb 
+ntrace select -o on -n /test_data_packer/flagc 
+ntrace select -o on -n /test_data_packer/ifclk 
+ntrace select -o on -n /test_data_packer/clk0 
+ntrace select -o on -n /test_data_packer/antflag_in 
+ntrace select -o on -n /test_data_packer/ld_in 
+ntrace select -o on -n /test_data_packer/ref_clk_sel 
+ntrace select -o on -n /test_data_packer/do 
+ntrace select -o on -n /test_data_packer/slwr 
+ntrace select -o on -n /test_data_packer/slrd 
+ntrace select -o on -n /test_data_packer/antflag_out 
+ntrace select -o on -n /test_data_packer/ld_out 
+ntrace select -o on -n /test_data_packer/ext_freq_dsbl 
+ntrace select -o on -n /test_data_packer/tcxo_dsbl 
+ntrace select -o on -n /test_data_packer/err_out 
+ntrace start 
+isimrun 1000 ns 
+Simulator is doing circuit initialization process.
+Finished circuit initialization process.
+
+ Simulation time 0.125 sec.
+
+ Estimate current memory usage : 125.604 Meg. 
+
+Wed Apr 28 11:31:07 2010
+

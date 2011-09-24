@@ -1,0 +1,6 @@
+CommandLine
+C:\Xilinx\10.1\ISE\bin\nt\unwrapped\xst.exe -ise C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/CPLD_data_packer.ise -intstyle ise -ifn C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/data_packer.xst -ofn C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/data_packer.syr -finalclean 1
+s
+FormatString
+xst [-ifn <InputFile>] [-ofn <OutputFile>] [-ise <iseProjectFile>] [--quiet] [-intstyle <Style>] [--deb <DebugLevel>] [--finalclean <Clean>] [--PcubeFlow] [--globOptFlow] [--XstNtrc]
+s

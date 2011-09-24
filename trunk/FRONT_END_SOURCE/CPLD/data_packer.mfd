@@ -1,0 +1,452 @@
+MDF Database:  version 1.0
+MDF_INFO | data_packer | XC9572XL-10-VQ64
+MACROCELL | 1 | 3 | data_out_reg<0>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 2 | 17 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<0>.D = delay_line_reg<0>;
+   do<0>.CLK = clk;	// GCK
+   do<0>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 13 | data_out_reg<10>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<10>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 2 | 16 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<10>.D = delay_line_reg<10>;
+   do<10>.CLK = clk;	// GCK
+   do<10>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 5 | data_out_reg<11>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<11>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 2 | 12 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<11>.D = delay_line_reg<11>;
+   do<11>.CLK = clk;	// GCK
+   do<11>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 10 | data_out_reg<12>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<12>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 2 | 11 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<12>.D = delay_line_reg<12>;
+   do<12>.CLK = clk;	// GCK
+   do<12>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 0 | 9 | data_out_reg<13>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<13>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 1 | 17 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<13>.D = delay_line_reg<13>;
+   do<13>.CLK = clk;	// GCK
+   do<13>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 0 | 14 | data_out_reg<14>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 3 | 2 | 6 | 2 | 0 | 2 | 1
+INPUTP | 1 | 15
+EQ | 3 | 
+   do<14>.D = di<0>;
+   do<14>.CLK = clk;	// GCK
+   do<14>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 0 | 16 | data_out_reg<15>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 3 | 2 | 6 | 2 | 0 | 2 | 1
+INPUTP | 1 | 13
+EQ | 3 | 
+   do<15>.D = di<1>;
+   do<15>.CLK = clk;	// GCK
+   do<15>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 1 | data_out_reg<1>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 1 | 16 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<1>.D = delay_line_reg<1>;
+   do<1>.CLK = clk;	// GCK
+   do<1>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 4 | data_out_reg<2>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<2>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 1 | 15 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<2>.D = delay_line_reg<2>;
+   do<2>.CLK = clk;	// GCK
+   do<2>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 7 | data_out_reg<3>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<3>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 1 | 14 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<3>.D = delay_line_reg<3>;
+   do<3>.CLK = clk;	// GCK
+   do<3>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 11 | data_out_reg<4>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<4>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 1 | 13 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<4>.D = delay_line_reg<4>;
+   do<4>.CLK = clk;	// GCK
+   do<4>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 9 | data_out_reg<5>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<5>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 3 | 17 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<5>.D = delay_line_reg<5>;
+   do<5>.CLK = clk;	// GCK
+   do<5>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 13 | data_out_reg<6>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<6>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 3 | 16 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<6>.D = delay_line_reg<6>;
+   do<6>.CLK = clk;	// GCK
+   do<6>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 5 | data_out_reg<7>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<7>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 3 | 15 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<7>.D = delay_line_reg<7>;
+   do<7>.CLK = clk;	// GCK
+   do<7>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 15 | data_out_reg<8>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<8>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 2 | 9 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<8>.D = delay_line_reg<8>;
+   do<8>.CLK = clk;	// GCK
+   do<8>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 14 | data_out_reg<9>
+ATTRIBUTES | 8684352 | 0
+INPUTS | 4 | delay_line_reg<9>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 4 | 2 | 8 | 2 | 6 | 2 | 0 | 2 | 1
+EQ | 3 | 
+   do<9>.D = delay_line_reg<9>;
+   do<9>.CLK = clk;	// GCK
+   do<9>.CE = state_reg_FFd1 & state_reg_FFd3 & state_reg_FFd2;
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 3 | SLWR_OBUF
+ATTRIBUTES | 264960 | 0
+INPUTS | 3 | state_reg_FFd3  | state_reg_FFd2  | state_reg_FFd1
+INPUTMC | 3 | 2 | 0 | 2 | 1 | 2 | 6
+EQ | 2 | 
+   !SLWR = !state_reg_FFd3 & !state_reg_FFd2
+	$ state_reg_FFd1;
+
+MACROCELL | 2 | 6 | state_reg_FFd1
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 31 | 1 | 3 | 2 | 13 | 2 | 5 | 2 | 10 | 0 | 9 | 0 | 14 | 0 | 16 | 1 | 1 | 1 | 4 | 1 | 7 | 3 | 11 | 3 | 9 | 3 | 13 | 3 | 5 | 2 | 15 | 2 | 14 | 2 | 3 | 2 | 17 | 2 | 16 | 2 | 12 | 2 | 11 | 1 | 17 | 1 | 16 | 1 | 15 | 1 | 14 | 1 | 13 | 3 | 17 | 3 | 16 | 3 | 15 | 2 | 9 | 2 | 8
+INPUTS | 2 | state_reg_FFd3  | state_reg_FFd2
+INPUTMC | 2 | 2 | 0 | 2 | 1
+EQ | 2 | 
+   state_reg_FFd1.T = state_reg_FFd3 & state_reg_FFd2;
+   state_reg_FFd1.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 0 | state_reg_FFd3
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 33 | 1 | 3 | 2 | 13 | 2 | 5 | 2 | 10 | 0 | 9 | 0 | 14 | 0 | 16 | 1 | 1 | 1 | 4 | 1 | 7 | 3 | 11 | 3 | 9 | 3 | 13 | 3 | 5 | 2 | 15 | 2 | 14 | 2 | 3 | 2 | 6 | 2 | 1 | 2 | 17 | 2 | 16 | 2 | 12 | 2 | 11 | 1 | 17 | 1 | 16 | 1 | 15 | 1 | 14 | 1 | 13 | 3 | 17 | 3 | 16 | 3 | 15 | 2 | 9 | 2 | 8
+INPUTS | 0
+EQ | 2 | 
+   state_reg_FFd3.T = Vcc;
+   state_reg_FFd3.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 1 | state_reg_FFd2
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 32 | 1 | 3 | 2 | 13 | 2 | 5 | 2 | 10 | 0 | 9 | 0 | 14 | 0 | 16 | 1 | 1 | 1 | 4 | 1 | 7 | 3 | 11 | 3 | 9 | 3 | 13 | 3 | 5 | 2 | 15 | 2 | 14 | 2 | 3 | 2 | 6 | 2 | 17 | 2 | 16 | 2 | 12 | 2 | 11 | 1 | 17 | 1 | 16 | 1 | 15 | 1 | 14 | 1 | 13 | 3 | 17 | 3 | 16 | 3 | 15 | 2 | 9 | 2 | 8
+INPUTS | 1 | state_reg_FFd3
+INPUTMC | 1 | 2 | 0
+EQ | 2 | 
+   state_reg_FFd2.T = state_reg_FFd3;
+   state_reg_FFd2.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 17 | delay_line_reg<0>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 1 | 3 | 2 | 17
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<0>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 17
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<0>.T = di<0> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<0>
+	# !di<0> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<0>;
+   delay_line_reg<0>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 16 | delay_line_reg<10>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 2 | 13 | 2 | 16
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<10>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 16
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<10>.T = di<0> & state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<10>
+	# !di<0> & state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<10>;
+   delay_line_reg<10>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 12 | delay_line_reg<11>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 2 | 5 | 2 | 12
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<11>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 12
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<11>.T = di<1> & state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<11>
+	# !di<1> & state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<11>;
+   delay_line_reg<11>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 11 | delay_line_reg<12>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 2 | 10 | 2 | 11
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<12>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 11
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<12>.T = di<0> & state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & !delay_line_reg<12>
+	# !di<0> & state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & delay_line_reg<12>;
+   delay_line_reg<12>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 17 | delay_line_reg<13>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 0 | 9 | 1 | 17
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<13>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 1 | 17
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<13>.T = di<1> & state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & !delay_line_reg<13>
+	# !di<1> & state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & delay_line_reg<13>;
+   delay_line_reg<13>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 16 | delay_line_reg<1>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 1 | 1 | 1 | 16
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<1>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 1 | 16
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<1>.T = di<1> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<1>
+	# !di<1> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<1>;
+   delay_line_reg<1>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 15 | delay_line_reg<2>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 1 | 4 | 1 | 15
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<2>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 1 | 15
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<2>.T = di<0> & !state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<2>
+	# !di<0> & !state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<2>;
+   delay_line_reg<2>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 14 | delay_line_reg<3>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 1 | 7 | 1 | 14
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<3>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 1 | 14
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<3>.T = di<1> & !state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<3>
+	# !di<1> & !state_reg_FFd1 & state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<3>;
+   delay_line_reg<3>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 13 | delay_line_reg<4>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 3 | 11 | 1 | 13
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<4>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 1 | 13
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<4>.T = di<0> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & !delay_line_reg<4>
+	# !di<0> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & delay_line_reg<4>;
+   delay_line_reg<4>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 17 | delay_line_reg<5>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 3 | 9 | 3 | 17
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<5>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 3 | 17
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<5>.T = di<1> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & !delay_line_reg<5>
+	# !di<1> & !state_reg_FFd1 & !state_reg_FFd3 & 
+	state_reg_FFd2 & delay_line_reg<5>;
+   delay_line_reg<5>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 16 | delay_line_reg<6>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 3 | 13 | 3 | 16
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<6>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 3 | 16
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<6>.T = di<0> & !state_reg_FFd1 & state_reg_FFd3 & 
+	state_reg_FFd2 & !delay_line_reg<6>
+	# !di<0> & !state_reg_FFd1 & state_reg_FFd3 & 
+	state_reg_FFd2 & delay_line_reg<6>;
+   delay_line_reg<6>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 15 | delay_line_reg<7>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 3 | 5 | 3 | 15
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<7>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 3 | 15
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<7>.T = di<1> & !state_reg_FFd1 & state_reg_FFd3 & 
+	state_reg_FFd2 & !delay_line_reg<7>
+	# !di<1> & !state_reg_FFd1 & state_reg_FFd3 & 
+	state_reg_FFd2 & delay_line_reg<7>;
+   delay_line_reg<7>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 9 | delay_line_reg<8>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 2 | 15 | 2 | 9
+INPUTS | 5 | di<0>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<8>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 9
+INPUTP | 1 | 15
+EQ | 5 | 
+   delay_line_reg<8>.T = di<0> & state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<8>
+	# !di<0> & state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<8>;
+   delay_line_reg<8>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 2 | 8 | delay_line_reg<9>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 2 | 2 | 14 | 2 | 8
+INPUTS | 5 | di<1>  | state_reg_FFd1  | state_reg_FFd3  | state_reg_FFd2  | delay_line_reg<9>
+INPUTMC | 4 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 8
+INPUTP | 1 | 13
+EQ | 5 | 
+   delay_line_reg<9>.T = di<1> & state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & !delay_line_reg<9>
+	# !di<1> & state_reg_FFd1 & !state_reg_FFd3 & 
+	!state_reg_FFd2 & delay_line_reg<9>;
+   delay_line_reg<9>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 3 | 14 | SLRD_OBUF
+ATTRIBUTES | 264960 | 0
+INPUTS | 0
+EQ | 1 | 
+   ext_freq_dsbl = Gnd;
+
+MACROCELL | 1 | 5 | SLRD_OBUF$BUF0
+ATTRIBUTES | 264960 | 0
+INPUTS | 0
+EQ | 1 | 
+   TCXO_dsbl = Gnd;
+
+MACROCELL | 2 | 2 | SLRD_OBUF$BUF1
+ATTRIBUTES | 264960 | 0
+INPUTS | 0
+EQ | 1 | 
+   SLRD = Gnd;
+
+MACROCELL | 2 | 7 | SLRD_OBUF$BUF2
+ATTRIBUTES | 264960 | 0
+INPUTS | 0
+EQ | 1 | 
+   LD_out = Gnd;
+
+MACROCELL | 2 | 4 | SLRD_OBUF$BUF3
+ATTRIBUTES | 264960 | 0
+INPUTS | 0
+EQ | 1 | 
+   AntFlag_out = Gnd;
+
+PIN | clk | 4096 | 0 | N/A | 20 | 33 | 1 | 3 | 2 | 13 | 2 | 5 | 2 | 10 | 0 | 9 | 0 | 14 | 0 | 16 | 1 | 1 | 1 | 4 | 1 | 7 | 3 | 11 | 3 | 9 | 3 | 13 | 3 | 5 | 2 | 15 | 2 | 14 | 2 | 6 | 2 | 0 | 2 | 1 | 2 | 17 | 2 | 16 | 2 | 12 | 2 | 11 | 1 | 17 | 1 | 16 | 1 | 15 | 1 | 14 | 1 | 13 | 3 | 17 | 3 | 16 | 3 | 15 | 2 | 9 | 2 | 8
+PIN | di<0> | 64 | 0 | N/A | 15 | 8 | 0 | 14 | 2 | 17 | 2 | 16 | 2 | 11 | 1 | 15 | 1 | 13 | 3 | 16 | 2 | 9
+PIN | di<1> | 64 | 0 | N/A | 13 | 8 | 0 | 16 | 2 | 12 | 1 | 17 | 1 | 16 | 1 | 14 | 3 | 17 | 3 | 15 | 2 | 8
+PIN | do<0> | 128 | 0 | N/A | 86
+PIN | do<10> | 128 | 0 | N/A | 49
+PIN | do<11> | 128 | 0 | N/A | 47
+PIN | do<12> | 128 | 0 | N/A | 46
+PIN | do<13> | 128 | 0 | N/A | 25
+PIN | do<14> | 128 | 0 | N/A | 26
+PIN | do<15> | 128 | 0 | N/A | 27
+PIN | do<1> | 128 | 0 | N/A | 87
+PIN | do<2> | 128 | 0 | N/A | 88
+PIN | do<3> | 128 | 0 | N/A | 90
+PIN | do<4> | 128 | 0 | N/A | 75
+PIN | do<5> | 128 | 0 | N/A | 74
+PIN | do<6> | 128 | 0 | N/A | 72
+PIN | do<7> | 128 | 0 | N/A | 70
+PIN | do<8> | 128 | 0 | N/A | 59
+PIN | do<9> | 128 | 0 | N/A | 50
+PIN | SLWR | 128 | 0 | N/A | 44
+PIN | ext_freq_dsbl | 128 | 0 | N/A | 82
+PIN | TCXO_dsbl | 128 | 0 | N/A | 89
+PIN | SLRD | 128 | 0 | N/A | 43
+PIN | LD_out | 128 | 0 | N/A | 33
+PIN | AntFlag_out | 128 | 0 | N/A | 31

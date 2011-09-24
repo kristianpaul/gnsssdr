@@ -1,0 +1,594 @@
+<html><body>
+<pre>
+ 
+cpldfit:  version K.31                              Xilinx Inc.
+                                  Fitter Report
+Design Name: data_packer                         Date:  6-25-2010,  1:36PM
+Device Used: XC9572XL-10-VQ64
+Fitting Status: Successful
+
+*************************  Mapped Resource Summary  **************************
+
+Macrocells     Product Terms    Function Block   Registers      Pins           
+Used/Tot       Used/Tot         Inps Used/Tot    Used/Tot       Used/Tot       
+39 /72  ( 54%) 64  /360  ( 18%) 37 /216 ( 17%)   33 /72  ( 46%) 25 /52  ( 48%)
+
+** Function Block Resources **
+
+Function    Mcells      FB Inps     Pterms      IO          
+Block       Used/Tot    Used/Tot    Used/Tot    Used/Tot    
+FB1           3/18        6/54        6/90       3/13
+FB2          10/18       11/54       18/90       5/13
+FB3          18/18*      11/54       26/90       9/14
+FB4           8/18        9/54       14/90       5/12
+             -----       -----       -----      -----    
+             39/72       37/216      64/360     22/52 
+
+* - Resource is exhausted
+
+** Global Control Resources **
+
+Signal 'clk' mapped onto global clock net GCK1.
+Global output enable net(s) unused.
+Global set/reset net(s) unused.
+
+** Pin Resources **
+
+Signal Type    Required     Mapped  |  Pin Type            Used    Total 
+------------------------------------|------------------------------------
+Input         :    2           2    |  I/O              :    24      46
+Output        :   22          22    |  GCK/IO           :     1       3
+Bidirectional :    0           0    |  GTS/IO           :     0       2
+GCK           :    1           1    |  GSR/IO           :     0       1
+GTS           :    0           0    |
+GSR           :    0           0    |
+                 ----        ----
+        Total     25          25
+
+** Power Data **
+
+There are 39 macrocells in high performance mode (MCHP).
+There are 0 macrocells in low power mode (MCLP).
+End of Mapped Resource Summary
+**************************  Errors and Warnings  ***************************
+
+WARNING:Cpld:936 - The output buffer 'err_out_OBUF' is missing an input and will
+   be deleted.
+WARNING:Cpld:1007 - Removing unused input(s) 'AntFlag_in'.  The input(s) are
+   unused after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'CLK0'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'FLAGA'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'FLAGB'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'FLAGC'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'IFCLK'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'LD_in'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'di<2>'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'di<3>'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'ref_clk_sel'.  The input(s) are
+   unused after optimization. Please verify functionality via simulation.
+WARNING:Cpld:1007 - Removing unused input(s) 'rst'.  The input(s) are unused
+   after optimization. Please verify functionality via simulation.
+*************************  Summary of Mapped Logic  ************************
+
+** 22 Outputs **
+
+Signal              Total Total Loc     Pin  Pin     Pin     Pwr  Slew Reg Init
+Name                Pts   Inps          No.  Type    Use     Mode Rate State
+do<13>              2     4     FB1_10  18   I/O     O       STD  SLOW RESET
+do<14>              2     4     FB1_15  19   I/O     O       STD  SLOW RESET
+do<15>              2     4     FB1_17  20   I/O     O       STD  SLOW RESET
+do<1>               2     4     FB2_2   60   I/O     O       STD  SLOW RESET
+do<0>               2     4     FB2_4   59   I/O     O       STD  SLOW RESET
+do<2>               2     4     FB2_5   61   I/O     O       STD  SLOW RESET
+TCXO_dsbl           0     0     FB2_6   62   I/O     O       STD  SLOW 
+do<3>               2     4     FB2_8   63   I/O     O       STD  SLOW RESET
+SLRD                0     0     FB3_3   31   I/O     O       STD  SLOW 
+SLWR                2     3     FB3_4   32   I/O     O       STD  SLOW 
+AntFlag_out         0     0     FB3_5   24   I/O     O       STD  SLOW 
+do<11>              2     4     FB3_6   34   I/O     O       STD  SLOW RESET
+LD_out              0     0     FB3_8   25   I/O     O       STD  SLOW 
+do<12>              2     4     FB3_11  33   I/O     O       STD  SLOW RESET
+do<10>              2     4     FB3_14  35   I/O     O       STD  SLOW RESET
+do<9>               2     4     FB3_15  36   I/O     O       STD  SLOW RESET
+do<8>               2     4     FB3_16  42   I/O     O       STD  SLOW RESET
+do<7>               2     4     FB4_6   49   I/O     O       STD  SLOW RESET
+do<5>               2     4     FB4_10  51   I/O     O       STD  SLOW RESET
+do<4>               2     4     FB4_12  52   I/O     O       STD  SLOW RESET
+do<6>               2     4     FB4_14  50   I/O     O       STD  SLOW RESET
+ext_freq_dsbl       0     0     FB4_15  56   I/O     O       STD  SLOW 
+
+** 17 Buried Nodes **
+
+Signal              Total Total Loc     Pwr  Reg Init
+Name                Pts   Inps          Mode State
+delay_line_reg<4>   2     5     FB2_14  STD  RESET
+delay_line_reg<3>   2     5     FB2_15  STD  RESET
+delay_line_reg<2>   2     5     FB2_16  STD  RESET
+delay_line_reg<1>   2     5     FB2_17  STD  RESET
+delay_line_reg<13>  2     5     FB2_18  STD  RESET
+state_reg_FFd3      0     0     FB3_1   STD  RESET
+state_reg_FFd2      1     1     FB3_2   STD  RESET
+state_reg_FFd1      1     2     FB3_7   STD  RESET
+delay_line_reg<9>   2     5     FB3_9   STD  RESET
+delay_line_reg<8>   2     5     FB3_10  STD  RESET
+delay_line_reg<12>  2     5     FB3_12  STD  RESET
+delay_line_reg<11>  2     5     FB3_13  STD  RESET
+delay_line_reg<10>  2     5     FB3_17  STD  RESET
+delay_line_reg<0>   2     5     FB3_18  STD  RESET
+delay_line_reg<7>   2     5     FB4_16  STD  RESET
+delay_line_reg<6>   2     5     FB4_17  STD  RESET
+delay_line_reg<5>   2     5     FB4_18  STD  RESET
+
+** 3 Inputs **
+
+Signal              Loc     Pin  Pin     Pin     
+Name                        No.  Type    Use     
+di<1>               FB1_6   10   I/O     I
+di<0>               FB1_8   11   I/O     I
+clk                 FB1_9   15   GCK/I/O GCK
+
+Legend:
+Pin No. - ~ - User Assigned
+**************************  Function Block Details  ************************
+Legend:
+Total Pt     - Total product terms used by the macrocell signal
+Imp Pt       - Product terms imported from other macrocells
+Exp Pt       - Product terms exported to other macrocells
+               in direction shown
+Unused Pt    - Unused local product terms remaining in macrocell
+Loc          - Location where logic was mapped in device
+Pin Type/Use - I  - Input             GCK - Global Clock
+               O  - Output            GTS - Global Output Enable
+              (b) - Buried macrocell  GSR - Global Set/Reset
+X            - Signal used as input to the macrocell logic.
+Pin No.      - ~  - User Assigned
+*********************************** FB1  ***********************************
+Number of function block inputs used/remaining:               6/48
+Number of signals used by logic mapping into function block:  6
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB1_1         (b)     
+(unused)              0       0     0   5     FB1_2   8     I/O     
+(unused)              0       0     0   5     FB1_3   12    I/O     
+(unused)              0       0     0   5     FB1_4   13    I/O     
+(unused)              0       0     0   5     FB1_5   9     I/O     
+(unused)              0       0     0   5     FB1_6   10    I/O     I
+(unused)              0       0     0   5     FB1_7         (b)     
+(unused)              0       0     0   5     FB1_8   11    I/O     I
+(unused)              0       0     0   5     FB1_9   15    GCK/I/O GCK
+do<13>                2       0     0   3     FB1_10  18    I/O     O
+(unused)              0       0     0   5     FB1_11  16    GCK/I/O 
+(unused)              0       0     0   5     FB1_12  23    I/O     
+(unused)              0       0     0   5     FB1_13        (b)     
+(unused)              0       0     0   5     FB1_14  17    GCK/I/O 
+do<14>                2       0     0   3     FB1_15  19    I/O     O
+(unused)              0       0     0   5     FB1_16        (b)     
+do<15>                2       0     0   3     FB1_17  20    I/O     O
+(unused)              0       0     0   5     FB1_18        (b)     
+
+Signals Used by Logic in Function Block
+  1: delay_line_reg<13>   3: di<1>              5: state_reg_FFd2 
+  2: di<0>                4: state_reg_FFd1     6: state_reg_FFd3 
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+do<13>               X..XXX.................................. 4
+do<14>               .X.XXX.................................. 4
+do<15>               ..XXXX.................................. 4
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*********************************** FB2  ***********************************
+Number of function block inputs used/remaining:               11/43
+Number of signals used by logic mapping into function block:  11
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB2_1         (b)     
+do<1>                 2       0     0   3     FB2_2   60    I/O     O
+(unused)              0       0     0   5     FB2_3   58    I/O     
+do<0>                 2       0     0   3     FB2_4   59    I/O     O
+do<2>                 2       0     0   3     FB2_5   61    I/O     O
+TCXO_dsbl             0       0     0   5     FB2_6   62    I/O     O
+(unused)              0       0     0   5     FB2_7         (b)     
+do<3>                 2       0     0   3     FB2_8   63    I/O     O
+(unused)              0       0     0   5     FB2_9   64    GSR/I/O 
+(unused)              0       0     0   5     FB2_10  1     I/O     
+(unused)              0       0     0   5     FB2_11  2     GTS/I/O 
+(unused)              0       0     0   5     FB2_12  4     I/O     
+(unused)              0       0     0   5     FB2_13        (b)     
+delay_line_reg<4>     2       0     0   3     FB2_14  5     GTS/I/O (b)
+delay_line_reg<3>     2       0     0   3     FB2_15  6     I/O     (b)
+delay_line_reg<2>     2       0     0   3     FB2_16        (b)     (b)
+delay_line_reg<1>     2       0     0   3     FB2_17  7     I/O     (b)
+delay_line_reg<13>    2       0     0   3     FB2_18        (b)     (b)
+
+Signals Used by Logic in Function Block
+  1: delay_line_reg<0>    5: delay_line_reg<3>   9: state_reg_FFd1 
+  2: delay_line_reg<13>   6: delay_line_reg<4>  10: state_reg_FFd2 
+  3: delay_line_reg<1>    7: di<0>              11: state_reg_FFd3 
+  4: delay_line_reg<2>    8: di<1>             
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+do<1>                ..X.....XXX............................. 4
+do<0>                X.......XXX............................. 4
+do<2>                ...X....XXX............................. 4
+TCXO_dsbl            ........................................ 0
+do<3>                ....X...XXX............................. 4
+delay_line_reg<4>    .....XX.XXX............................. 5
+delay_line_reg<3>    ....X..XXXX............................. 5
+delay_line_reg<2>    ...X..X.XXX............................. 5
+delay_line_reg<1>    ..X....XXXX............................. 5
+delay_line_reg<13>   .X.....XXXX............................. 5
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*********************************** FB3  ***********************************
+Number of function block inputs used/remaining:               11/43
+Number of signals used by logic mapping into function block:  11
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+state_reg_FFd3        0       0     0   5     FB3_1         (b)     (b)
+state_reg_FFd2        1       0     0   4     FB3_2   22    I/O     (b)
+SLRD                  0       0     0   5     FB3_3   31    I/O     O
+SLWR                  2       0     0   3     FB3_4   32    I/O     O
+AntFlag_out           0       0     0   5     FB3_5   24    I/O     O
+do<11>                2       0     0   3     FB3_6   34    I/O     O
+state_reg_FFd1        1       0     0   4     FB3_7         (b)     (b)
+LD_out                0       0     0   5     FB3_8   25    I/O     O
+delay_line_reg<9>     2       0     0   3     FB3_9   27    I/O     (b)
+delay_line_reg<8>     2       0     0   3     FB3_10  39    I/O     (b)
+do<12>                2       0     0   3     FB3_11  33    I/O     O
+delay_line_reg<12>    2       0     0   3     FB3_12  40    I/O     (b)
+delay_line_reg<11>    2       0     0   3     FB3_13        (b)     (b)
+do<10>                2       0     0   3     FB3_14  35    I/O     O
+do<9>                 2       0     0   3     FB3_15  36    I/O     O
+do<8>                 2       0     0   3     FB3_16  42    I/O     O
+delay_line_reg<10>    2       0     0   3     FB3_17  38    I/O     (b)
+delay_line_reg<0>     2       0     0   3     FB3_18        (b)     (b)
+
+Signals Used by Logic in Function Block
+  1: delay_line_reg<0>    5: delay_line_reg<8>   9: state_reg_FFd1 
+  2: delay_line_reg<10>   6: delay_line_reg<9>  10: state_reg_FFd2 
+  3: delay_line_reg<11>   7: di<0>              11: state_reg_FFd3 
+  4: delay_line_reg<12>   8: di<1>             
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+state_reg_FFd3       ........................................ 0
+state_reg_FFd2       ..........X............................. 1
+SLRD                 ........................................ 0
+SLWR                 ........XXX............................. 3
+AntFlag_out          ........................................ 0
+do<11>               ..X.....XXX............................. 4
+state_reg_FFd1       .........XX............................. 2
+LD_out               ........................................ 0
+delay_line_reg<9>    .....X.XXXX............................. 5
+delay_line_reg<8>    ....X.X.XXX............................. 5
+do<12>               ...X....XXX............................. 4
+delay_line_reg<12>   ...X..X.XXX............................. 5
+delay_line_reg<11>   ..X....XXXX............................. 5
+do<10>               .X......XXX............................. 4
+do<9>                .....X..XXX............................. 4
+do<8>                ....X...XXX............................. 4
+delay_line_reg<10>   .X....X.XXX............................. 5
+delay_line_reg<0>    X.....X.XXX............................. 5
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*********************************** FB4  ***********************************
+Number of function block inputs used/remaining:               9/45
+Number of signals used by logic mapping into function block:  9
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB4_1         (b)     
+(unused)              0       0     0   5     FB4_2   43    I/O     
+(unused)              0       0     0   5     FB4_3   46    I/O     
+(unused)              0       0     0   5     FB4_4   47    I/O     
+(unused)              0       0     0   5     FB4_5   44    I/O     
+do<7>                 2       0     0   3     FB4_6   49    I/O     O
+(unused)              0       0     0   5     FB4_7         (b)     
+(unused)              0       0     0   5     FB4_8   45    I/O     
+(unused)              0       0     0   5     FB4_9         (b)     
+do<5>                 2       0     0   3     FB4_10  51    I/O     O
+(unused)              0       0     0   5     FB4_11  48    I/O     
+do<4>                 2       0     0   3     FB4_12  52    I/O     O
+(unused)              0       0     0   5     FB4_13        (b)     
+do<6>                 2       0     0   3     FB4_14  50    I/O     O
+ext_freq_dsbl         0       0     0   5     FB4_15  56    I/O     O
+delay_line_reg<7>     2       0     0   3     FB4_16        (b)     (b)
+delay_line_reg<6>     2       0     0   3     FB4_17  57    I/O     (b)
+delay_line_reg<5>     2       0     0   3     FB4_18        (b)     (b)
+
+Signals Used by Logic in Function Block
+  1: delay_line_reg<4>   4: delay_line_reg<7>   7: state_reg_FFd1 
+  2: delay_line_reg<5>   5: di<0>               8: state_reg_FFd2 
+  3: delay_line_reg<6>   6: di<1>               9: state_reg_FFd3 
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+do<7>                ...X..XXX............................... 4
+do<5>                .X....XXX............................... 4
+do<4>                X.....XXX............................... 4
+do<6>                ..X...XXX............................... 4
+ext_freq_dsbl        ........................................ 0
+delay_line_reg<7>    ...X.XXXX............................... 5
+delay_line_reg<6>    ..X.X.XXX............................... 5
+delay_line_reg<5>    .X...XXXX............................... 5
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*******************************  Equations  ********************************
+
+********** Mapped Logic **********
+
+
+AntFlag_out <= '0';
+
+
+LD_out <= '0';
+
+
+SLRD <= '0';
+
+
+SLWR <= NOT ((NOT state_reg_FFd3 AND NOT state_reg_FFd2)
+	 XOR 
+SLWR <= NOT (state_reg_FFd1);
+
+
+TCXO_dsbl <= '0';
+
+FTCPE_delay_line_reg0: FTCPE port map (delay_line_reg(0),delay_line_reg_T(0),clk,'0','0');
+delay_line_reg_T(0) <= ((di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(0))
+	OR (NOT di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(0)));
+
+FTCPE_delay_line_reg1: FTCPE port map (delay_line_reg(1),delay_line_reg_T(1),clk,'0','0');
+delay_line_reg_T(1) <= ((di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(1))
+	OR (NOT di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(1)));
+
+FTCPE_delay_line_reg2: FTCPE port map (delay_line_reg(2),delay_line_reg_T(2),clk,'0','0');
+delay_line_reg_T(2) <= ((di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(2))
+	OR (NOT di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(2)));
+
+FTCPE_delay_line_reg3: FTCPE port map (delay_line_reg(3),delay_line_reg_T(3),clk,'0','0');
+delay_line_reg_T(3) <= ((di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(3))
+	OR (NOT di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(3)));
+
+FTCPE_delay_line_reg4: FTCPE port map (delay_line_reg(4),delay_line_reg_T(4),clk,'0','0');
+delay_line_reg_T(4) <= ((di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND NOT delay_line_reg(4))
+	OR (NOT di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND delay_line_reg(4)));
+
+FTCPE_delay_line_reg5: FTCPE port map (delay_line_reg(5),delay_line_reg_T(5),clk,'0','0');
+delay_line_reg_T(5) <= ((di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND NOT delay_line_reg(5))
+	OR (NOT di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND delay_line_reg(5)));
+
+FTCPE_delay_line_reg6: FTCPE port map (delay_line_reg(6),delay_line_reg_T(6),clk,'0','0');
+delay_line_reg_T(6) <= ((di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	state_reg_FFd2 AND NOT delay_line_reg(6))
+	OR (NOT di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	state_reg_FFd2 AND delay_line_reg(6)));
+
+FTCPE_delay_line_reg7: FTCPE port map (delay_line_reg(7),delay_line_reg_T(7),clk,'0','0');
+delay_line_reg_T(7) <= ((di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	state_reg_FFd2 AND NOT delay_line_reg(7))
+	OR (NOT di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+	state_reg_FFd2 AND delay_line_reg(7)));
+
+FTCPE_delay_line_reg8: FTCPE port map (delay_line_reg(8),delay_line_reg_T(8),clk,'0','0');
+delay_line_reg_T(8) <= ((di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(8))
+	OR (NOT di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(8)));
+
+FTCPE_delay_line_reg9: FTCPE port map (delay_line_reg(9),delay_line_reg_T(9),clk,'0','0');
+delay_line_reg_T(9) <= ((di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(9))
+	OR (NOT di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(9)));
+
+FTCPE_delay_line_reg10: FTCPE port map (delay_line_reg(10),delay_line_reg_T(10),clk,'0','0');
+delay_line_reg_T(10) <= ((di(0) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(10))
+	OR (NOT di(0) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(10)));
+
+FTCPE_delay_line_reg11: FTCPE port map (delay_line_reg(11),delay_line_reg_T(11),clk,'0','0');
+delay_line_reg_T(11) <= ((di(1) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND NOT delay_line_reg(11))
+	OR (NOT di(1) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+	NOT state_reg_FFd2 AND delay_line_reg(11)));
+
+FTCPE_delay_line_reg12: FTCPE port map (delay_line_reg(12),delay_line_reg_T(12),clk,'0','0');
+delay_line_reg_T(12) <= ((di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND NOT delay_line_reg(12))
+	OR (NOT di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND delay_line_reg(12)));
+
+FTCPE_delay_line_reg13: FTCPE port map (delay_line_reg(13),delay_line_reg_T(13),clk,'0','0');
+delay_line_reg_T(13) <= ((di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND NOT delay_line_reg(13))
+	OR (NOT di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+	state_reg_FFd2 AND delay_line_reg(13)));
+
+FDCPE_do0: FDCPE port map (do(0),delay_line_reg(0),clk,'0','0',do_CE(0));
+do_CE(0) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do1: FDCPE port map (do(1),delay_line_reg(1),clk,'0','0',do_CE(1));
+do_CE(1) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do2: FDCPE port map (do(2),delay_line_reg(2),clk,'0','0',do_CE(2));
+do_CE(2) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do3: FDCPE port map (do(3),delay_line_reg(3),clk,'0','0',do_CE(3));
+do_CE(3) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do4: FDCPE port map (do(4),delay_line_reg(4),clk,'0','0',do_CE(4));
+do_CE(4) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do5: FDCPE port map (do(5),delay_line_reg(5),clk,'0','0',do_CE(5));
+do_CE(5) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do6: FDCPE port map (do(6),delay_line_reg(6),clk,'0','0',do_CE(6));
+do_CE(6) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do7: FDCPE port map (do(7),delay_line_reg(7),clk,'0','0',do_CE(7));
+do_CE(7) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do8: FDCPE port map (do(8),delay_line_reg(8),clk,'0','0',do_CE(8));
+do_CE(8) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do9: FDCPE port map (do(9),delay_line_reg(9),clk,'0','0',do_CE(9));
+do_CE(9) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do10: FDCPE port map (do(10),delay_line_reg(10),clk,'0','0',do_CE(10));
+do_CE(10) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do11: FDCPE port map (do(11),delay_line_reg(11),clk,'0','0',do_CE(11));
+do_CE(11) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do12: FDCPE port map (do(12),delay_line_reg(12),clk,'0','0',do_CE(12));
+do_CE(12) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do13: FDCPE port map (do(13),delay_line_reg(13),clk,'0','0',do_CE(13));
+do_CE(13) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do14: FDCPE port map (do(14),di(0),clk,'0','0',do_CE(14));
+do_CE(14) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+FDCPE_do15: FDCPE port map (do(15),di(1),clk,'0','0',do_CE(15));
+do_CE(15) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+
+
+ext_freq_dsbl <= '0';
+
+FTCPE_state_reg_FFd1: FTCPE port map (state_reg_FFd1,state_reg_FFd1_T,clk,'0','0');
+state_reg_FFd1_T <= (state_reg_FFd3 AND state_reg_FFd2);
+
+FTCPE_state_reg_FFd2: FTCPE port map (state_reg_FFd2,state_reg_FFd3,clk,'0','0');
+
+FTCPE_state_reg_FFd3: FTCPE port map (state_reg_FFd3,'1',clk,'0','0');
+
+Register Legend:
+ FDCPE (Q,D,C,CLR,PRE,CE); 
+ FTCPE (Q,D,C,CLR,PRE,CE); 
+ LDCP  (Q,D,G,CLR,PRE); 
+
+******************************  Device Pin Out *****************************
+
+Device : XC9572XL-10-VQ64
+
+
+   -----------------------------------------------  
+  /48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 \
+ | 49                                           32 | 
+ | 50                                           31 | 
+ | 51                                           30 | 
+ | 52                                           29 | 
+ | 53                                           28 | 
+ | 54                                           27 | 
+ | 55                                           26 | 
+ | 56              XC9572XL-10-VQ64             25 | 
+ | 57                                           24 | 
+ | 58                                           23 | 
+ | 59                                           22 | 
+ | 60                                           21 | 
+ | 61                                           20 | 
+ | 62                                           19 | 
+ | 63                                           18 | 
+ | 64                                           17 | 
+ \ 1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 /
+   -----------------------------------------------  
+
+
+Pin Signal                         Pin Signal                        
+No. Name                           No. Name                          
+  1 KPR                              33 do<12>                        
+  2 KPR                              34 do<11>                        
+  3 VCC                              35 do<10>                        
+  4 KPR                              36 do<9>                         
+  5 KPR                              37 VCC                           
+  6 KPR                              38 KPR                           
+  7 KPR                              39 KPR                           
+  8 KPR                              40 KPR                           
+  9 KPR                              41 GND                           
+ 10 di<1>                            42 do<8>                         
+ 11 di<0>                            43 KPR                           
+ 12 KPR                              44 KPR                           
+ 13 KPR                              45 KPR                           
+ 14 GND                              46 KPR                           
+ 15 clk                              47 KPR                           
+ 16 KPR                              48 KPR                           
+ 17 KPR                              49 do<7>                         
+ 18 do<13>                           50 do<6>                         
+ 19 do<14>                           51 do<5>                         
+ 20 do<15>                           52 do<4>                         
+ 21 GND                              53 TDO                           
+ 22 KPR                              54 GND                           
+ 23 KPR                              55 VCC                           
+ 24 AntFlag_out                      56 ext_freq_dsbl                 
+ 25 LD_out                           57 KPR                           
+ 26 VCC                              58 KPR                           
+ 27 KPR                              59 do<0>                         
+ 28 TDI                              60 do<1>                         
+ 29 TMS                              61 do<2>                         
+ 30 TCK                              62 TCXO_dsbl                     
+ 31 SLRD                             63 do<3>                         
+ 32 SLWR                             64 KPR                           
+
+
+Legend :  NC  = Not Connected, unbonded pin
+         PGND = Unused I/O configured as additional Ground pin
+         TIE  = Unused I/O floating -- must tie to VCC, GND or other signal
+         KPR  = Unused I/O with weak keeper (leave unconnected)
+         VCC  = Dedicated Power Pin
+         GND  = Dedicated Ground Pin
+         TDI  = Test Data In, JTAG pin
+         TDO  = Test Data Out, JTAG pin
+         TCK  = Test Clock, JTAG pin
+         TMS  = Test Mode Select, JTAG pin
+  PROHIBITED  = User reserved pin
+****************************  Compiler Options  ****************************
+
+Following is a list of all global compiler options used by the fitter run.
+
+Device(s) Specified                         : xc9572xl-10-VQ64
+Optimization Method                         : SPEED
+Multi-Level Logic Optimization              : ON
+Ignore Timing Specifications                : OFF
+Default Register Power Up Value             : LOW
+Keep User Location Constraints              : ON
+What-You-See-Is-What-You-Get                : OFF
+Exhaustive Fitting                          : OFF
+Keep Unused Inputs                          : OFF
+Slew Rate                                   : FAST
+Power Mode                                  : STD
+Ground on Unused IOs                        : OFF
+Set I/O Pin Termination                     : KEEPER
+Global Clock Optimization                   : ON
+Global Set/Reset Optimization               : ON
+Global Ouput Enable Optimization            : ON
+Input Limit                                 : 54
+Pterm Limit                                 : 25
+</pre>
+<form><span class="pgRef"><table width="90%" align="center"><tr>
+<td align="left"><input type="button" onclick="javascript:parent.leftnav.showTop()" onmouseover="window.status='goto top of page'; return true;" onmouseout="window.status=''" value="back to top"></td>
+<td align="right"><input type="button" onclick="window.print()" onmouseover="window.status='print page'; return true;" onmouseout="window.status=''" value="print page"></td>
+</tr></table></span></form>
+</body></html>

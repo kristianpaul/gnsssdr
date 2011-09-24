@@ -1,0 +1,9 @@
+V3 3
+FL C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/data_packer.vhd 2010/06/25.13:34:06 K.31
+EN work/data_packer 1277458547 \
+      FL C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/data_packer.vhd \
+      PB ieee/std_logic_1164 1200023565 PB ieee/std_logic_arith 1200023566 \
+      PB ieee/STD_LOGIC_UNSIGNED 1200023567
+AR work/data_packer/synth 1277458548 \
+      FL C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/data_packer.vhd \
+      EN work/data_packer 1277458547

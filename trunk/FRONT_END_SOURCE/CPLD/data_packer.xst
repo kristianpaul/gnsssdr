@@ -1,0 +1,30 @@
+set -tmpdir "C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/xst/projnav.tmp"
+set -xsthdpdir "C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/xst"
+run
+-ifn data_packer.prj
+-ifmt mixed
+-ofn data_packer
+-ofmt NGC
+-p xc9500xl
+-top data_packer
+-opt_mode Speed
+-opt_level 1
+-iuc NO
+-lso data_packer.lso
+-keep_hierarchy YES
+-netlist_hierarchy as_optimized
+-rtlview Yes
+-hierarchy_separator /
+-bus_delimiter <>
+-case maintain
+-verilog2001 YES
+-fsm_extract YES -fsm_encoding Auto
+-safe_implementation Yes
+-mux_extract YES
+-resource_sharing YES
+-iobuf YES
+-pld_mp YES
+-pld_xp YES
+-pld_ce YES
+-wysiwyg NO
+-equivalent_register_removal YES

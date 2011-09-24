@@ -1,0 +1,63 @@
+m255
+13
+cModel Technology
+dC:\GavAI\GPS_rcv_final\CPLD_data_packer_v2\CPLD_data_packer
+Edata_packer
+w1277458446
+DP ieee std_logic_unsigned hEMVMlaNCR^<OOoVNV;m90
+DP ieee std_logic_arith GJbAT?7@hRQU9IQ702DT]2
+DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
+Fdata_packer.vhd
+l0
+L25
+VFb4SYBOC9H08A`oMBJQfR3
+OE;C;6.0;29
+31
+o-explicit -93
+tExplicit 1GenerateLoopIterationMax 100000
+Asynth
+DP ieee std_logic_unsigned hEMVMlaNCR^<OOoVNV;m90
+DP ieee std_logic_arith GJbAT?7@hRQU9IQ702DT]2
+DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
+DE work data_packer Fb4SYBOC9H08A`oMBJQfR3
+l58
+L52
+VU<@n518o>>eZ9a:JmjHCY2
+OE;C;6.0;29
+31
+M3 ieee std_logic_1164
+M2 ieee std_logic_arith
+M1 ieee std_logic_unsigned
+o-explicit -93
+tExplicit 1GenerateLoopIterationMax 100000
+Etest_data_packer
+w1277457472
+DP ieee numeric_std =NSdli^?T5OD8;4F<blj<3
+DP ieee std_logic_arith GJbAT?7@hRQU9IQ702DT]2
+DP ieee std_logic_unsigned hEMVMlaNCR^<OOoVNV;m90
+DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
+Ftest_data_packer.vhd
+l0
+L33
+VML0a>2hZM]dB@31ABTHG92
+OE;C;6.0;29
+31
+o-explicit -93
+tExplicit 1GenerateLoopIterationMax 100000
+Abehavior
+DP ieee numeric_std =NSdli^?T5OD8;4F<blj<3
+DP ieee std_logic_arith GJbAT?7@hRQU9IQ702DT]2
+DP ieee std_logic_unsigned hEMVMlaNCR^<OOoVNV;m90
+DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
+DE work test_data_packer ML0a>2hZM]dB@31ABTHG92
+l91
+L36
+V7=>SCFoSNlQj@nQ:MYAKa1
+OE;C;6.0;29
+31
+M4 ieee std_logic_1164
+M3 ieee std_logic_unsigned
+M2 ieee std_logic_arith
+M1 ieee numeric_std
+o-explicit -93
+tExplicit 1GenerateLoopIterationMax 100000
