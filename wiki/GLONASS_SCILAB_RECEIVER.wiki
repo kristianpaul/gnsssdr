@@ -1,0 +1,9 @@
+#summary GLONASS RECEIVER written in SCILAB.
+
+= Introduction =
+
+SoftGNSS is a famous GPS receiver wriiten in MatLab. This project is adoptation of SoftGNSS for GLONASS (Russian analogue of GPS). This is *the first open-source GLONASS software receiver*.
+
+= Details =
+
+Some details about this project can be found on the following page: http://gnss-sdr.ru/index.php?itemid=17
