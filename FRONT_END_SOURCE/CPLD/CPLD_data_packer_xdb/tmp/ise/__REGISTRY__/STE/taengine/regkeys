@@ -1,0 +1,6 @@
+CommandLine
+taengine -ise C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/CPLD_data_packer.ise
+s
+FormatString
+taengine 
+s

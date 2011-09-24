@@ -1,0 +1,53 @@
+Pin Freeze File:  version K.31
+
+9572XL64 XC9572XL-10-VQ64
+clk S:PIN15
+di<0> S:PIN11
+di<1> S:PIN10
+ext_freq_dsbl S:PIN56
+TCXO_dsbl S:PIN62
+SLRD S:PIN31
+LD_out S:PIN25
+AntFlag_out S:PIN24
+SLWR S:PIN32
+do<0> S:PIN59
+do<1> S:PIN60
+do<2> S:PIN61
+do<3> S:PIN63
+do<4> S:PIN52
+do<5> S:PIN51
+do<6> S:PIN50
+do<7> S:PIN49
+do<8> S:PIN42
+do<9> S:PIN36
+do<10> S:PIN35
+do<11> S:PIN34
+do<12> S:PIN33
+do<13> S:PIN18
+do<14> S:PIN19
+do<15> S:PIN20
+
+
+;The remaining section of the .gyd file is for documentation purposes only.
+;It shows where your internal equations were placed in the last successful fit.
+
+PARTITION FB1_10 data_out_reg<13>
+PARTITION FB1_15 data_out_reg<14>
+PARTITION FB1_17 data_out_reg<15>
+
+PARTITION FB2_2 data_out_reg<1>
+PARTITION FB2_4 data_out_reg<0> data_out_reg<2> SLRD_OBUF$BUF0
+PARTITION FB2_8 data_out_reg<3>
+PARTITION FB2_14 delay_line_reg<4> delay_line_reg<3> delay_line_reg<2> delay_line_reg<1>
+		 delay_line_reg<13>
+PARTITION FB3_1 state_reg_FFd3 state_reg_FFd2 SLRD_OBUF$BUF1 SLWR_OBUF
+		 SLRD_OBUF$BUF3 data_out_reg<11> state_reg_FFd1 SLRD_OBUF$BUF2
+		 delay_line_reg<9> delay_line_reg<8> data_out_reg<12> delay_line_reg<12>
+		 delay_line_reg<11> data_out_reg<10> data_out_reg<9> data_out_reg<8>
+		 delay_line_reg<10> delay_line_reg<0>
+PARTITION FB4_6 data_out_reg<7>
+PARTITION FB4_10 data_out_reg<5>
+PARTITION FB4_12 data_out_reg<4>
+PARTITION FB4_14 data_out_reg<6> SLRD_OBUF delay_line_reg<7> delay_line_reg<6>
+		 delay_line_reg<5>
+

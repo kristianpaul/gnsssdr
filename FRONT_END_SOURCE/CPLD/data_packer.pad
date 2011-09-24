@@ -1,0 +1,93 @@
+Release 8.1i - Fit K.31
+Copyright(c) 1995-2003 Xilinx Inc. All rights reserved
+
+ 6-25-2010  1:36PM
+
+NOTE: This file is designed to be imported into a spreadsheet program
+such as Microsoft Excel for viewing, printing and sorting. The pipe '|'
+character is used as the data field separator.
+This file is also designed to support parsing.
+
+Input file:  data_packer.ngd
+output file: data_packer.pad
+Part type:   xc9572xl
+Speed grade: -10
+Package:     vq64
+
+Pinout by Pin Number:
+
+-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+Pin Number|Signal Name|Pin Usage|Pin Name|Direction|IO Standard|IO Bank Number|{blank}|Slew Rate|Termination|{blank}|Voltage|Constraint|
+P1|TIE||I/O||||||||||
+P2|TIE||I/O/GTS2||||||||||
+P3|VCC||VCCINT||||||||||
+P4|TIE||I/O||||||||||
+P5|TIE||I/O/GTS1||||||||||
+P6|TIE||I/O||||||||||
+P7|TIE||I/O||||||||||
+P8|TIE||I/O||||||||||
+P9|TIE||I/O||||||||||
+P10|di<1>|I|I/O|INPUT|||||||||
+P11|di<0>|I|I/O|INPUT|||||||||
+P12|TIE||I/O||||||||||
+P13|TIE||I/O||||||||||
+P14|GND||GND||||||||||
+P15|clk|GCK|I/O/GCK1||||||||||
+P16|TIE||I/O/GCK2||||||||||
+P17|TIE||I/O/GCK3||||||||||
+P18|do<13>|O|I/O|OUTPUT|||||||||
+P19|do<14>|O|I/O|OUTPUT|||||||||
+P20|do<15>|O|I/O|OUTPUT|||||||||
+P21|GND||GND||||||||||
+P22|TIE||I/O||||||||||
+P23|TIE||I/O||||||||||
+P24|AntFlag_out|O|I/O|OUTPUT|||||||||
+P25|LD_out|O|I/O|OUTPUT|||||||||
+P26|VCC||VCCIO||||||||||
+P27|TIE||I/O||||||||||
+P28|TDI||TDI||||||||||
+P29|TMS||TMS||||||||||
+P30|TCK||TCK||||||||||
+P31|SLRD|O|I/O|OUTPUT|||||||||
+P32|SLWR|O|I/O|OUTPUT|||||||||
+P33|do<12>|O|I/O|OUTPUT|||||||||
+P34|do<11>|O|I/O|OUTPUT|||||||||
+P35|do<10>|O|I/O|OUTPUT|||||||||
+P36|do<9>|O|I/O|OUTPUT|||||||||
+P37|VCC||VCCINT||||||||||
+P38|TIE||I/O||||||||||
+P39|TIE||I/O||||||||||
+P40|TIE||I/O||||||||||
+P41|GND||GND||||||||||
+P42|do<8>|O|I/O|OUTPUT|||||||||
+P43|TIE||I/O||||||||||
+P44|TIE||I/O||||||||||
+P45|TIE||I/O||||||||||
+P46|TIE||I/O||||||||||
+P47|TIE||I/O||||||||||
+P48|TIE||I/O||||||||||
+P49|do<7>|O|I/O|OUTPUT|||||||||
+P50|do<6>|O|I/O|OUTPUT|||||||||
+P51|do<5>|O|I/O|OUTPUT|||||||||
+P52|do<4>|O|I/O|OUTPUT|||||||||
+P53|TDO||TDO||||||||||
+P54|GND||GND||||||||||
+P55|VCC||VCCIO||||||||||
+P56|ext_freq_dsbl|O|I/O|OUTPUT|||||||||
+P57|TIE||I/O||||||||||
+P58|TIE||I/O||||||||||
+P59|do<0>|O|I/O|OUTPUT|||||||||
+P60|do<1>|O|I/O|OUTPUT|||||||||
+P61|do<2>|O|I/O|OUTPUT|||||||||
+P62|TCXO_dsbl|O|I/O|OUTPUT|||||||||
+P63|do<3>|O|I/O|OUTPUT|||||||||
+P64|TIE||I/O/GSR||||||||||
+
+To preserve the pinout above for future design iterations in
+Project Navigator simply execute the (Lock Pins) process
+located under the (Implement Design) process in a toolbox named
+(Optional Implementation Tools) or invoke PIN2UCF from the
+command line. The location constraints will be written into your
+specified UCF file
+
+

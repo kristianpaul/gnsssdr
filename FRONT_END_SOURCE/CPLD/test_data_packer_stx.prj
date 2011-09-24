@@ -1,0 +1,2 @@
+vhdl isim_temp "data_packer.vhd"
+vhdl isim_temp "test_data_packer.vhd"

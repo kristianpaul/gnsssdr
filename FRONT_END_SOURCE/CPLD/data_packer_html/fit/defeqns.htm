@@ -1,0 +1,178 @@
+<html><head><link type='text/css' href='style.css' rel='stylesheet'></head><body class='pgBgnd'>
+<h3 align='center'>Equations</h3>
+<table width='90%' align='center' border='1' cellpadding='0' cellspacing='0'>
+<tr><td>
+</td></tr><tr><td>
+********** Mapped Logic **********
+</td></tr><tr><td>
+</td></tr><tr><td>
+AntFlag_out <= '0';
+</td></tr><tr><td>
+</td></tr><tr><td>
+LD_out <= '0';
+</td></tr><tr><td>
+</td></tr><tr><td>
+SLRD <= '0';
+</td></tr><tr><td>
+</td></tr><tr><td>
+SLWR <= NOT ((NOT state_reg_FFd3 AND NOT state_reg_FFd2)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	 XOR 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SLWR <= NOT (state_reg_FFd1);
+</td></tr><tr><td>
+</td></tr><tr><td>
+TCXO_dsbl <= '0';
+</td></tr><tr><td>
+FTCPE_delay_line_reg0: FTCPE port map (delay_line_reg(0),delay_line_reg_T(0),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(0) <= ((di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(0)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg1: FTCPE port map (delay_line_reg(1),delay_line_reg_T(1),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(1) <= ((di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(1))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(1)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg2: FTCPE port map (delay_line_reg(2),delay_line_reg_T(2),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(2) <= ((di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(2)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg3: FTCPE port map (delay_line_reg(3),delay_line_reg_T(3),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(3) <= ((di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(3))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(3)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg4: FTCPE port map (delay_line_reg(4),delay_line_reg_T(4),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(4) <= ((di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND NOT delay_line_reg(4))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND delay_line_reg(4)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg5: FTCPE port map (delay_line_reg(5),delay_line_reg_T(5),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(5) <= ((di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND NOT delay_line_reg(5))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND NOT state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND delay_line_reg(5)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg6: FTCPE port map (delay_line_reg(6),delay_line_reg_T(6),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(6) <= ((di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND NOT delay_line_reg(6))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND delay_line_reg(6)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg7: FTCPE port map (delay_line_reg(7),delay_line_reg_T(7),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(7) <= ((di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND NOT delay_line_reg(7))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND NOT state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND delay_line_reg(7)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg8: FTCPE port map (delay_line_reg(8),delay_line_reg_T(8),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(8) <= ((di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(8))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(8)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg9: FTCPE port map (delay_line_reg(9),delay_line_reg_T(9),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(9) <= ((di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(9))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(9)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg10: FTCPE port map (delay_line_reg(10),delay_line_reg_T(10),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(10) <= ((di(0) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(10))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(10)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg11: FTCPE port map (delay_line_reg(11),delay_line_reg_T(11),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(11) <= ((di(1) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND NOT delay_line_reg(11))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND state_reg_FFd1 AND state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT state_reg_FFd2 AND delay_line_reg(11)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg12: FTCPE port map (delay_line_reg(12),delay_line_reg_T(12),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(12) <= ((di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND NOT delay_line_reg(12))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(0) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND delay_line_reg(12)));
+</td></tr><tr><td>
+FTCPE_delay_line_reg13: FTCPE port map (delay_line_reg(13),delay_line_reg_T(13),clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_line_reg_T(13) <= ((di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND NOT delay_line_reg(13))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT di(1) AND state_reg_FFd1 AND NOT state_reg_FFd3 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	state_reg_FFd2 AND delay_line_reg(13)));
+</td></tr><tr><td>
+FDCPE_do0: FDCPE port map (do(0),delay_line_reg(0),clk,'0','0',do_CE(0));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(0) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do1: FDCPE port map (do(1),delay_line_reg(1),clk,'0','0',do_CE(1));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(1) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do2: FDCPE port map (do(2),delay_line_reg(2),clk,'0','0',do_CE(2));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(2) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do3: FDCPE port map (do(3),delay_line_reg(3),clk,'0','0',do_CE(3));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(3) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do4: FDCPE port map (do(4),delay_line_reg(4),clk,'0','0',do_CE(4));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(4) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do5: FDCPE port map (do(5),delay_line_reg(5),clk,'0','0',do_CE(5));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(5) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do6: FDCPE port map (do(6),delay_line_reg(6),clk,'0','0',do_CE(6));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(6) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do7: FDCPE port map (do(7),delay_line_reg(7),clk,'0','0',do_CE(7));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(7) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do8: FDCPE port map (do(8),delay_line_reg(8),clk,'0','0',do_CE(8));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(8) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do9: FDCPE port map (do(9),delay_line_reg(9),clk,'0','0',do_CE(9));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(9) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do10: FDCPE port map (do(10),delay_line_reg(10),clk,'0','0',do_CE(10));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(10) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do11: FDCPE port map (do(11),delay_line_reg(11),clk,'0','0',do_CE(11));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(11) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do12: FDCPE port map (do(12),delay_line_reg(12),clk,'0','0',do_CE(12));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(12) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do13: FDCPE port map (do(13),delay_line_reg(13),clk,'0','0',do_CE(13));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(13) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do14: FDCPE port map (do(14),di(0),clk,'0','0',do_CE(14));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(14) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FDCPE_do15: FDCPE port map (do(15),di(1),clk,'0','0',do_CE(15));
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_CE(15) <= (state_reg_FFd1 AND state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+</td></tr><tr><td>
+ext_freq_dsbl <= '0';
+</td></tr><tr><td>
+FTCPE_state_reg_FFd1: FTCPE port map (state_reg_FFd1,state_reg_FFd1_T,clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_reg_FFd1_T <= (state_reg_FFd3 AND state_reg_FFd2);
+</td></tr><tr><td>
+FTCPE_state_reg_FFd2: FTCPE port map (state_reg_FFd2,state_reg_FFd3,clk,'0','0');
+</td></tr><tr><td>
+FTCPE_state_reg_FFd3: FTCPE port map (state_reg_FFd3,'1',clk,'0','0');
+</td></tr><tr><td>
+Register Legend:
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FDCPE (Q,D,C,CLR,PRE,CE); 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FTCPE (Q,D,C,CLR,PRE,CE); 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LDCP  (Q,D,G,CLR,PRE); 
+</td></tr><tr><td>
+</td></tr>
+</table>
+<form><span class="pgRef"><table width="90%" align="center"><tr>
+<td align="left"><input type="button" onclick="javascript:parent.leftnav.showTop()" onmouseover="window.status='goto top of page'; return true;" onmouseout="window.status=''" value="back to top"></td>
+<td align="right"><input type="button" onclick="window.print()" onmouseover="window.status='print page'; return true;" onmouseout="window.status=''" value="print page"></td>
+</tr></table></span></form>
+</body></html>

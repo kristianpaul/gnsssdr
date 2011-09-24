@@ -1,0 +1,6 @@
+CommandLine
+C:\Xilinx\10.1\ISE\bin\nt\unwrapped\tsim.exe -ise C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/CPLD_data_packer.ise -intstyle ise data_packer data_packer.nga
+s
+FormatString
+tsim <design[.vm6]> [--intstyle ise|xflow|silent] [<outfile>] 
+s

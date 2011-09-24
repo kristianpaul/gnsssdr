@@ -1,0 +1,40 @@
+# Reading C:/Modeltech_6.0/tcl/vsim/pref.tcl 
+# //  ModelSim SE 6.0 Aug 19 2004 
+# //
+# //  Copyright Mentor Graphics Corporation 2004
+# //              All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND 
+# //  PROPRIETARY INFORMATION WHICH IS THE PROPERTY
+# //  OF MENTOR GRAPHICS CORPORATION OR ITS LICENSORS
+# //  AND IS SUBJECT TO LICENSE TERMS.
+# //
+# do {test_data_packer.fdo} 
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim SE vcom 6.0 Compiler 2004.08 Aug 19 2004
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Compiling entity data_packer
+# -- Compiling architecture synth of data_packer
+# Model Technology ModelSim SE vcom 6.0 Compiler 2004.08 Aug 19 2004
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package numeric_std
+# -- Compiling entity test_data_packer
+# -- Compiling architecture behavior of test_data_packer
+# vsim -lib work -t 1ps test_data_packer 
+# Loading C:\Modeltech_6.0\win32/../std.standard
+# Loading C:\Modeltech_6.0\win32/../ieee.std_logic_1164(body)
+# Loading C:\Modeltech_6.0\win32/../ieee.std_logic_arith(body)
+# Loading C:\Modeltech_6.0\win32/../ieee.std_logic_unsigned(body)
+# Loading C:\Modeltech_6.0\win32/../ieee.numeric_std(body)
+# Loading work.test_data_packer(behavior)
+# Loading work.data_packer(synth)
+# .wave
+# .main_pane.workspace
+# .main_pane.signals.interior.cs
+run

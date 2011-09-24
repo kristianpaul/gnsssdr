@@ -1,0 +1,6 @@
+CommandLine
+C:\Xilinx\10.1\ISE\bin\nt\unwrapped\XSLTProcess.exe -ise C:/GavAI/GPS_rcv_final/CPLD_data_packer_v2/CPLD_data_packer/CPLD_data_packer.ise data_packer_build.xml
+s
+FormatString
+xsltprocess [--intstyle ise|xflow|silent] <xmlfile> [-a] [-w] [--libxslt <limit:-1,10>] 
+s
