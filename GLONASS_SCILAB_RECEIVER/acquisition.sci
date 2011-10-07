@@ -44,62 +44,62 @@ function acqResults = acquisition(longSignal, settings)
 
 // Initialization =========================================================
 
-// Find number of samples per spreading code
-samplesPerCode = round(settings.samplingFreq / ...
-                       (settings.codeFreqBasis / settings.codeLength));
+  // Find number of samples per spreading code
+  samplesPerCode = round(settings.samplingFreq / ...
+                         (settings.codeFreqBasis / settings.codeLength));
 
-// Create two 5msec vectors of data to correlate with and one with zero DC
-signal1 = longSignal(1 : 5*samplesPerCode);
-signal2 = longSignal(5*samplesPerCode+1 : 10*samplesPerCode);
+  // Create two 5msec vectors of data to correlate with and one with zero DC
+  signal1 = longSignal(1 : 5*samplesPerCode);
+  signal2 = longSignal(5*samplesPerCode+1 : 10*samplesPerCode);
 
-signal0DC = longSignal - mean(longSignal);   //Problems here....
+  signal0DC = longSignal - mean(longSignal);   //Problems here....
 
-// Find sampling period
-ts = 1 / settings.samplingFreq;
+  // Find sampling period
+  ts = 1 / settings.samplingFreq;
 
-// Find phase points of the local carrier wave 
-phasePoints = (0 : (5*samplesPerCode-1)) * 2 * %pi * ts;
+  // Find phase points of the local carrier wave 
+  phasePoints = (0 : (5*samplesPerCode-1)) * 2 * %pi * ts;
 
-// Number of the frequency bins for the given acquisition band (100Hz steps)
-numberOfFrqBins = round(settings.acqSearchBand * 10) + 1;
+  // Number of the frequency bins for the given acquisition band (100Hz steps)
+  numberOfFrqBins = round(settings.acqSearchBand * 10) + 1;
 
-// Generate all C/A codes and sample them according to the sampling freq.
-caCodesTable = makeCaTable(settings);
-caCodesTable = [caCodesTable caCodesTable caCodesTable caCodesTable caCodesTable];
+  // Generate all C/A codes and sample them according to the sampling freq.
+  caCodesTable = makeCaTable(settings);
+  caCodesTable = [caCodesTable caCodesTable caCodesTable caCodesTable caCodesTable];
 
-//--- Initialize arrays to speed up the code -------------------------------
-// Search results of all frequency bins and code shifts (for one satellite)
-results     = zeros(numberOfFrqBins, samplesPerCode);
+  //--- Initialize arrays to speed up the code -------------------------------
+  // Search results of all frequency bins and code shifts (for one satellite)
+  results     = zeros(numberOfFrqBins, samplesPerCode);
 
-// Carrier frequencies of the frequency bins
-frqBins     = zeros(1, numberOfFrqBins);
-
+  // Carrier frequencies of the frequency bins
+  frqBins     = zeros(1, numberOfFrqBins);
 
 //--- Initialize acqResults ------------------------------------------------
-// Carrier frequencies of detected signals
-acqResults.carrFreq     = zeros(1, 14);
-// C/A code phases of detected signals
-acqResults.codePhase    = zeros(1, 14);
-// Correlation peak ratios of the detected signals
-acqResults.peakMetric   = zeros(1, 14);
+  // Carrier frequencies of detected signals
+  acqResults.carrFreq     = zeros(1, 14);
+  // C/A code phases of detected signals
+  acqResults.codePhase    = zeros(1, 14);
+  // Correlation peak ratios of the detected signals
+  acqResults.peakMetric   = zeros(1, 14);
+  // GLONASS satellite frequency number
+  acqResults.freqChannel  = zeros(1, 14);
 
-printf('(');
+  printf('(');
 
-// Perform search for all listed PRN numbers ...
-for PRN = settings.acqSatelliteList
-
-// Correlate signals ======================================================   
+  // Perform search for all listed PRN numbers ...
+  for PRN = settings.acqSatelliteList
+  
+  // Correlate signals ======================================================   
     //--- Perform DFT of C/A code ------------------------------------------
     caCodeFreqDom = conj(fft(caCodesTable(1, :)));
-
+    
     //--- Make the correlation for whole frequency band (for all freq. bins)
     for frqBinIndex = 1:numberOfFrqBins
-
         //--- Generate carrier wave frequency grid (0.1kHz step) -----------
         frqBins(frqBinIndex) = (settings.IF + PRN*0.5625e6) - ...
                                (settings.acqSearchBand/2) * 1000 + ...
                                0.1e3 * (frqBinIndex - 1);
-
+        
         //--- Generate local sine and cosine -------------------------------
         sigCarr = exp(%i*frqBins(frqBinIndex) * phasePoints);
         
@@ -108,16 +108,16 @@ for PRN = settings.acqSatelliteList
         Q1      = imag(sigCarr .* signal1);
         I2      = real(sigCarr .* signal2);
         Q2      = imag(sigCarr .* signal2);
-
+        
         //--- Convert the baseband signal to frequency domain --------------
         IQfreqDom1 = fft(I1 + %i*Q1);
         IQfreqDom2 = fft(I2 + %i*Q2);
-
+        
         //--- Multiplication in the frequency domain (correlation in time
         //domain)
         convCodeIQ1 = IQfreqDom1 .* caCodeFreqDom;
         convCodeIQ2 = IQfreqDom2 .* caCodeFreqDom;
-
+        
         //--- Perform inverse DFT and store correlation results ------------
         acqRes1 = abs(ifft(convCodeIQ1)) .^ 2;
         acqRes2 = abs(ifft(convCodeIQ2)) .^ 2;
@@ -162,16 +162,16 @@ for PRN = settings.acqSatelliteList
         codePhaseRange = [1:excludeRangeIndex1, ...
                           excludeRangeIndex2 : samplesPerCode];
     end
-
+    
     //--- Find the second highest correlation peak in the same freq. bin ---
     secondPeakSize = max(results(frequencyBinIndex, codePhaseRange));
-
+    
     //--- Store result -----------------------------------------------------
     acqResults.peakMetric(PRN) = peakSize/secondPeakSize;
     
     // If the result is above threshold, then there is a signal ...
     if (peakSize/secondPeakSize) > settings.acqThreshold
-
+    
 // Fine resolution frequency search =======================================
         
         //--- Indicate PRN number of the detected signal -------------------
@@ -184,7 +184,7 @@ for PRN = settings.acqSatelliteList
                                (1/settings.codeFreqBasis));
                            
         longCaCode = caCode((codeValueIndex-fix(codeValueIndex/511)*511 + 1));
-    
+        
         //--- Remove C/A code modulation from the original signal ----------
         // (Using detected C/A code phase)
         xCarrier = ...
@@ -220,14 +220,16 @@ for PRN = settings.acqSatelliteList
             acqResults.carrFreq(PRN)  = (-1)^(settings.fileType-1)*fftFreqBins(fftMaxIndex);
         end
         
-        acqResults.codePhase(PRN) = codePhase;
-    
+        acqResults.codePhase(PRN)   = codePhase;
+        //GLONASS satellite frequency channel (range is from -7 to +6 ):
+        acqResults.freqChannel(PRN) = PRN - 8;
+        
     else
         //--- No signal with this PRN --------------------------------------
         printf('. ');
     end   // if (peakSize/secondPeakSize) > settings.acqThreshold
     
-end    // for PRN = satelliteList
+  end    // for PRN = satelliteList
 
 //=== Acquisition is over ==================================================
 printf(')\n');
