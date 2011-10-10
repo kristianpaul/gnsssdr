@@ -124,6 +124,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
     if (channel(channelNr).SVN ~= 0)
       // Save additional information - each channel's tracked SVN
       trackResults(channelNr).SVN = channel(channelNr).SVN;
+      trackResults(channelNr).FCH = channel(channelNr).FCH;
       
       // Move the starting point of processing. Can be used to start the
       // signal processing at any point in the data record (e.g. for long
