@@ -31,18 +31,19 @@ function showChannelStatus(channel, settings)
 //Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 //USA.
 //--------------------------------------------------------------------------
-
+  
   printf('\n*=========*=====*===============*===========*=============*========*\n');
-  printf('| Channel | PRN |   Frequency   |  Doppler  | Code Offset | Status |\n');
+  printf('| Channel | FCH |   Frequency   |  Doppler  | Code Offset | Status |\n');
   printf('*=========*=====*===============*===========*=============*========*\n');
-
+  
   for channelNr = 1 : settings.numberOfChannels
     if (channel(channelNr).status ~= '-')
       printf('|      %2d | %3d |  %12.0f |   %5.0f   |    %6d   |     %1s  |\n', ...
               channelNr, ...
-              channel(channelNr).PRN, ...
+              channel(channelNr).FCH, ...
               channel(channelNr).acquiredFreq, ...
-              channel(channelNr).acquiredFreq - (settings.IF + channel(channelNr).PRN*0.5625e6), ...
+              channel(channelNr).acquiredFreq - ...
+                (settings.IF + channel(channelNr).SVN*settings.L1_IF_step), ...
               channel(channelNr).codePhase, ...
               channel(channelNr).status);
     else
@@ -50,7 +51,7 @@ function showChannelStatus(channel, settings)
               channelNr);
     end
   end
-
+  
   printf('*=========*=====*===============*===========*=============*========*\n\n');
-
+  
 endfunction

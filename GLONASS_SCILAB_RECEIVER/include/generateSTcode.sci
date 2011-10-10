@@ -1,19 +1,20 @@
-function plotAcquisition(acqResults)
-//Functions plots bar plot of acquisition results (acquisition metrics). No
-//bars are shown for the satellites not included in the acquisition list (in
-//structure SETTINGS). 
+function STcode = generateSTcode()
+// generateSTcode.m generates GLONASS ST-code (M-sequence).
 //
-//plotAcquisition(acqResults)
+// STcode = generateSTcode()
 //
 //   Inputs:
-//       acqResults    - Acquisition results from function acquisition.
-
+//       None.
+//
+//   Outputs:
+//       STcode      - a vector containing the desired ST code sequence 
+//                   (chips).
+  
 //--------------------------------------------------------------------------
 //                           SoftGNSS v3.0
 // 
 // Copyright (C) Darius Plausinaitis
-// Written by Darius Plausinaitis
-// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
+// Written for scilab 5.3.0 by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
 //modify it under the terms of the GNU General Public License
@@ -30,19 +31,14 @@ function plotAcquisition(acqResults)
 //Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 //USA.
 //--------------------------------------------------------------------------
-
-  // Plot all results =======================================================
-  figure(101);
   
-  bar(-7:1:6, acqResults.peakMetric, 'blue');
-  
-  xtitle('Acquisition results', 'FCH number (no bar - frequency channel is not in the acquisition list)', 'Acquisition Metric');
-  
-  // Mark acquired signals ==================================================
-  
-  acquiredSignals = acqResults.peakMetric .* (acqResults.carrFreq ~= 0);
-  
-  bar(-7:1:6, acquiredSignals, 'green');
-  legend('Not acquired signals', 'Acquired signals');
+  reg = -1*ones(1,9);
+  for i=1:511
+    g3(i)=reg(7);
+    msave=reg(5)*reg(9);
+    reg(2:9)=reg(1:8);
+    reg(1)=msave;
+  end;
+  STcode=-g3'; 
   
 endfunction

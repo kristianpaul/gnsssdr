@@ -38,10 +38,10 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 34000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess        = 4000;        //[ms]
+  settings.msToProcess        = 36000;        //[ms]
 
   // Number of channels to be used for signal processing
-  settings.numberOfChannels   = 1;
+  settings.numberOfChannels   = 7;
 
   // Move the starting point of processing. Can be used to start the signal
   // processing at any point in the data record (e.g. for long records). fseek
@@ -84,7 +84,7 @@ function settings = initSettings()
   settings.skipAcquisition    = 0;
   // List of satellites to look for. Some satellites can be excluded to speed
   // up acquisition
-  settings.acqSatelliteList   = 3:3;        //[PRN numbers]
+  settings.acqSatelliteList   = [2 3 4 9 10 11];        //[SVN numbers]
   // Band around IF to search for satellite signal. Depends on max Doppler
   settings.acqSearchBand      = 14;          //[kHz]
   // Threshold for the signal presence decision rule
