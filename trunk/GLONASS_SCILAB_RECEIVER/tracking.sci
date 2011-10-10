@@ -5,7 +5,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
 //
 //   Inputs:
 //       fid             - file identifier of the signal record.
-//       channel         - PRN, carrier frequencies and code phases of all
+//       channel         - SVN, carrier frequencies and code phases of all
 //                       satellites to be tracked (prepared by preRum.m from
 //                       acquisition results).
 //       settings        - receiver settings.
@@ -120,10 +120,10 @@ function [trackResults, channel]= tracking(fid, channel, settings)
   // Start processing channels ==============================================
   for channelNr = 1:settings.numberOfChannels
     
-    // Only process if PRN is non zero (acquisition was successful)
-    if (channel(channelNr).PRN ~= 0)
-      // Save additional information - each channel's tracked PRN
-      trackResults(channelNr).PRN = channel(channelNr).PRN;
+    // Only process if SVN is non zero (acquisition was successful)
+    if (channel(channelNr).SVN ~= 0)
+      // Save additional information - each channel's tracked SVN
+      trackResults(channelNr).SVN = channel(channelNr).SVN;
       
       // Move the starting point of processing. Can be used to start the
       // signal processing at any point in the data record (e.g. for long
@@ -134,7 +134,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
             (settings.skipNumberOfBytes + channel(channelNr).codePhase-1), fid);
 
       // Get a vector with the C/A code sampled 1x/chip
-      caCode = generateCAcode(101);
+      caCode = generateSTcode();
       // Then make it possible to do early and late versions
       caCode = [caCode(511) caCode caCode(1)];
 
@@ -196,8 +196,8 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         //Should be corrected in future! Doesn't work like original version :(
           try
             wbrMsg = strcat(['Tracking: Ch ' string(channelNr) ' of ' ...
-                            string(loopCnt_numberOfChannels) '; PRN#' ...
-                            string(channel(channelNr).PRN)]);
+                            string(loopCnt_numberOfChannels) '; FCH#' ...
+                            string(channel(channelNr).FCH)]);
             waitbar(loopCnt/codePeriods, wbrMsg, hwb); 
           catch
             // The progress bar was closed. It is used as a signal
@@ -372,7 +372,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       trackResults(channelNr).Q_L            = loopCnt_Q_L;
       
       
-    end // if a PRN is assigned
+    end // if a SVN is assigned
 end // for channelNr 
 
 // Close the waitbar

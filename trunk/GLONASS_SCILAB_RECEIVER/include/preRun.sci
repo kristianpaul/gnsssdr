@@ -41,14 +41,15 @@ function [channel] = preRun(acqResults, settings)
   // Initialize all channels ================================================
   channel                 = [];   // Clear, create the structure
 
-  channel.PRN             = 0;    // PRN number of the tracked satellite
+  channel.SVN             = 0;
+  channel.FCH             = 0;    // Frequency channel number of the tracked satellite
   channel.acquiredFreq    = 0;    // Used as the center frequency of the NCO
-  channel.codePhase       = 0;    // Position of the C/A  start
+  channel.codePhase       = 0;    // Position of the ST  start
 
   channel.status          = '-';  // Mode/status of the tracking channel
-                                // "-" - "off" - no signal to track
-                                // "T" - Tracking state
-
+                                  // "-" - "off" - no signal to track
+                                  // "T" - Tracking state
+  
   //--- Copy initial data to all channels ------------------------------------
   if settings.numberOfChannels > 0 then
     channel_tmp = channel;
@@ -60,19 +61,20 @@ function [channel] = preRun(acqResults, settings)
   else
     clear channel;
   end;
-
+  
   // Copy acquisition results ===============================================
-
+  
   //--- Sort peaks to find strongest signals, keep the peak index information
-  [junk, PRNindexes] = gsort(acqResults.peakMetric);
+  [junk, SVNindexes] = gsort(acqResults.peakMetric);
 
   //--- Load information about each satellite --------------------------------
   // Maximum number of initialized channels is number of detected signals, but
   // not more as the number of channels specified in the settings.
-  for ii = 1:min([settings.numberOfChannels, sum(acqResults.carrFreq ~= 0)])
-    channel(ii).PRN          = PRNindexes(ii);
-    channel(ii).acquiredFreq = acqResults.carrFreq(PRNindexes(ii));
-    channel(ii).codePhase    = acqResults.codePhase(PRNindexes(ii));
+  for ii = 1:min([settings.numberOfChannels, sum(acqResults.carrFreq ~= 0)]) //This condition should be reworked in future!
+    channel(ii).SVN          = SVNindexes(ii);
+    channel(ii).FCH          = acqResults.freqChannel(SVNindexes(ii));
+    channel(ii).acquiredFreq = acqResults.carrFreq(SVNindexes(ii));
+    channel(ii).codePhase    = acqResults.codePhase(SVNindexes(ii));
     
     // Set tracking into mode (there can be more modes if needed e.g. pull-in)
     channel(ii).status       = 'T';

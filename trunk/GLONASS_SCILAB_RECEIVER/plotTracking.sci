@@ -43,8 +43,8 @@ function plotTracking(channelList, trackResults, settings)
     // Figures drawn or opened by the user, will not be "overwritten" by
     // this function.
 
-    fgrMsg = strcat(['Channel ', string(channelNr), ' (PRN ', ...
-              string(trackResults(channelNr).PRN), ') results']);
+    fgrMsg = strcat(['Channel ', string(channelNr), ' (SVN ', ...
+              string(trackResults(channelNr).SVN), ') results']);
     figure(channelNr+200, "Figure_name", fgrMsg);
     clf(channelNr +200);
 

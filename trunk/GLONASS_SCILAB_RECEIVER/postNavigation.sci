@@ -52,7 +52,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   for i = 1:size(trackResults, 2)
     trkRslt_status(i)   = trackResults.status(i);
     trkRslt_I_P(i,:)    = trackResults(i).I_P;
-    trkRslt_PRN(i)      = trackResults(i).PRN;
+    trkRslt_SVN(i)      = trackResults(i).SVN;
     absoluteSample(i,:) = trackResults(i).absoluteSample;
   end
 
@@ -87,11 +87,11 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     //--- Convert prompt correlator output to +-1 ---------
     navBitsSamples = sign(navBitsSamples');
     //--- Decode data and extract ephemeris information ---
-    [eph(trkRslt_PRN(channelNr)), t] = ephemeris(navBitsSamples);
+    [eph(trkRslt_SVN(channelNr)), t] = ephemeris(navBitsSamples);
     //--- Exclude satellite if it does not have the necessary nav data -----
-    ///if (isempty(eph(trackResults(channelNr).PRN).tk_h) | ...
-    ///    isempty(eph(trackResults(channelNr).PRN).tk_m) | ...
-    ///    isempty(eph(trackResults(channelNr).PRN).tk_s))
+    ///if (isempty(eph(trackResults(channelNr).SVN).tk_h) | ...
+    ///    isempty(eph(trackResults(channelNr).SVN).tk_m) | ...
+    ///    isempty(eph(trackResults(channelNr).SVN).tk_s))
     ///
     ///    //--- Exclude channel from the list (from further processing) ------
     ///    activeChnList = setdiff(activeChnList, channelNr);
@@ -130,7 +130,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   //More local variables:
 
   [satPositions, satVelocities, satAccelerations, satTransmitTime, satClkCorr] = ...
-     satposg( (transmitTime-(set_navSolPeriod/1000)), [trkRslt_PRN(activeChnList)], eph );
+     satposg( (transmitTime-(set_navSolPeriod/1000)), [trkRslt_SVN(activeChnList)], eph );
 
   eph_taun   = eph.taun;
   eph_gamman = eph.gamman;
@@ -144,7 +144,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
                               readyChnList);
 
     // Save list of satellites used for position calculation
-    navSol_channel_PRN(activeChnList, currMeasNr) = trkRslt_PRN(activeChnList);
+    navSol_channel_SVN(activeChnList, currMeasNr) = trkRslt_SVN(activeChnList);
 
     // These two lines help the skyPlot function. The satellites excluded
     // do to elevation mask will not "jump" to possition (0,0) in the sky
@@ -161,7 +161,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     // Find satellites positions and clocks corrections =======================
     [satPositions, satVelocities, satTransmitTime, satClkCorr] = ...
      deltasatposg(satTransmitTime, (set_navSolPeriod/1000), ...
-                  trkRslt_PRN, ...
+                  trkRslt_SVN, ...
                   satPositions, satVelocities, satAccelerations, satClkCorr, ...
                   eph_taun, eph_gamman);
     // Find receiver position =================================================
@@ -273,7 +273,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   navSolutions.N                  = navSol_N;
   navSolutions.U                  = navSol_U;
   navSolutions.DOP                = navSol_DOP;
-  navSolutions.channel.PRN        = navSol_channel_PRN;
+  navSolutions.channel.SVN        = navSol_channel_SVN;
   navSolutions.channel.el         = navSol_channel_el;
   navSolutions.channel.az         = navSol_channel_az;
   navSolutions.channel.rawP       = navSol_channel_rawP;
