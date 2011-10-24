@@ -74,7 +74,7 @@ caCodesTable = [caCodesTable*-1 caCodesTable*-1 caCodesTable*-1 ...
 
 //--- Initialize arrays to speed up the code -------------------------------
 // Search results of all frequency bins and code shifts (for one satellite)
-results     = zeros(numberOfFrqBins, 10*samplesPerCode);
+results     = zeros(numberOfFrqBins, samplesPerCode);
 
 // Carrier frequencies of the frequency bins
 frqBins     = zeros(1, numberOfFrqBins);
@@ -102,21 +102,16 @@ for PRN = settings.acqSatelliteList
 
         //--- Generate carrier wave frequency grid (0.1kHz step) -----------
         frqBins(frqBinIndex) = settings.IF - ...
-                               (settings.acqSearchBand/2) * 100 + ...
+                               (settings.acqSearchBand/2) * 1000 + ...
                                0.5e2 * (frqBinIndex - 1);
         
         //--- Generate local sine and cosine -------------------------------
         sigCarr = exp(%i*frqBins(frqBinIndex) * phasePoints);
         
-        //--- "Remove carrier" from the signal -----------------------------
-        I1      = real(sigCarr .* signal1);
-        Q1      = imag(sigCarr .* signal1);
-        I2      = real(sigCarr .* signal2);
-        Q2      = imag(sigCarr .* signal2);
-
-        //--- Convert the baseband signal to frequency domain --------------
-        IQfreqDom1 = fft(I1 + %i*Q1);
-        IQfreqDom2 = fft(I2 + %i*Q2);
+        //--- "Remove carrier" from the signal and Convert -----------------
+        //--- the baseband signal to frequency domain ----------------------
+        IQfreqDom1 = fft(sigCarr .* signal1);
+        IQfreqDom2 = fft(sigCarr .* signal2);
 
         //--- Multiplication in the frequency domain (correlation in time
         //domain)
@@ -130,9 +125,9 @@ for PRN = settings.acqSatelliteList
         //--- Check which 10-msec had the greater power and save that, will
         //"blend" 1st and 2nd 10msec but will correct data bit issues
         if (max(acqRes1) > max(acqRes2))
-            results(frqBinIndex, :) = acqRes1;
+            results(frqBinIndex, :) = acqRes1(1:samplesPerCode);
         else
-            results(frqBinIndex, :) = acqRes2;
+            results(frqBinIndex, :) = acqRes2(1:samplesPerCode);
         end
     
     end // frqBinIndex = 1:numberOfFrqBins
@@ -148,7 +143,7 @@ for PRN = settings.acqSatelliteList
     [peakSize codePhase] = max(max(results, 'r'));
 
     //--- Find 1 chip wide C/A code phase exclude range around the peak ----
-    samplesPerCodeChip   = round(settings.samplingFreq / settings.codeFreqBasis);
+    samplesPerCodeChip = round(settings.samplingFreq / settings.codeFreqBasis);
     excludeRangeIndex1 = codePhase - samplesPerCodeChip;
     excludeRangeIndex2 = codePhase + samplesPerCodeChip;
 
@@ -157,15 +152,14 @@ for PRN = settings.acqSatelliteList
     if excludeRangeIndex1 < 2
         codePhaseRange = excludeRangeIndex2 : ...
                          (samplesPerCode + excludeRangeIndex1);
-                         
-    elseif excludeRangeIndex2 >= samplesPerCode
+    elseif excludeRangeIndex2 > samplesPerCode
         codePhaseRange = (excludeRangeIndex2 - samplesPerCode) : ...
                          excludeRangeIndex1;
     else
         codePhaseRange = [1:excludeRangeIndex1, ...
                           excludeRangeIndex2 : samplesPerCode];
     end
-
+    
     //--- Find the second highest correlation peak in the same freq. bin ---
     secondPeakSize = max(results(frequencyBinIndex, codePhaseRange));
 
@@ -214,14 +208,14 @@ for PRN = settings.acqSatelliteList
             if (   (fftNumPts-fix(fftNumPts/2)*2) == 0   )  //even number of points, so DC and Fs/2 computed
                 fftFreqBinsRev=-fftFreqBins((uniqFftPts-1):-1:2);
                 [fftMax, fftMaxIndex] = max(fftxc((uniqFftPts+1):length(fftxc)));
-                acqResults.carrFreq(PRN)  = -fftFreqBinsRev(fftMaxIndex);
+                acqResults.carrFreq(PRN)  = -fftFreqBinsRev(fftMaxIndex+1);
             else  //odd points so only DC is not included
                 fftFreqBinsRev=-fftFreqBins((uniqFftPts):-1:2);
                 [fftMax, fftMaxIndex] = max(fftxc((uniqFftPts+1):length(fftxc)));
-                acqResults.carrFreq(PRN)  = -fftFreqBinsRev(fftMaxIndex);
+                acqResults.carrFreq(PRN)  = -fftFreqBinsRev(fftMaxIndex+1);
             end
         else
-            acqResults.carrFreq(PRN)  = (-1)^(settings.fileType-1)*fftFreqBins(fftMaxIndex);
+            acqResults.carrFreq(PRN)  = (-1)^(settings.fileType-1)*fftFreqBins(fftMaxIndex+1);
         end
         
         acqResults.codePhase(PRN) = codePhase;

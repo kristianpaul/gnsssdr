@@ -38,7 +38,7 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 36000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess        = 1500;        //[ms]
+  settings.msToProcess        = 2000;        //[ms]
 
   // Number of channels to be used for signal processing
   settings.numberOfChannels   = 1;
@@ -47,7 +47,7 @@ function settings = initSettings()
   // processing at any point in the data record (e.g. for long records). fseek
   // function is used to move the file read point, therefore advance is byte
   // based only. 
-  settings.skipNumberOfBytes     = 1*24e6;
+  settings.skipNumberOfBytes     = 0*24e6;
 
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
@@ -61,12 +61,13 @@ function settings = initSettings()
   // File Types
   //1 - 8 bit real samples S0,S1,S2,...
   //2 - 8 bit I/Q samples I0,Q0,I1,Q1,I2,Q2,...                      
-  settings.fileType           = 2;
+  settings.fileType           = 1;
 
   // Intermediate, sampling and code frequencies
   //settings.IF                 = -4.5000e6;      //[Hz]
-  settings.IF                 = -2.025e6;      //[Hz]
-  settings.samplingFreq       = 24.0e6;       //[Hz]
+  //settings.IF                 = -2.025e6;      //[Hz]
+  settings.IF                 = 20.46e6;      //[Hz]
+  settings.samplingFreq       = 50.00e6;       //[Hz]
   settings.codeFreqBasis      = 10.230e6;      //[Hz]
 
   // Define number of chips in a code period
@@ -86,7 +87,7 @@ function settings = initSettings()
   // Tracking loops settings ================================================
   // Code tracking loop parameters
   settings.dllDampingRatio         = 0.7;
-  settings.dllNoiseBandwidth       = 2.0;       //[Hz]
+  settings.dllNoiseBandwidth       = 5.0;       //[Hz]
   settings.dllCorrelatorSpacing    = 0.5;       //[chips]
 
   // Carrier tracking loop parameters

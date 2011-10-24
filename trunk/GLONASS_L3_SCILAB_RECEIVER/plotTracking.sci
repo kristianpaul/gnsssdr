@@ -54,7 +54,7 @@ function plotTracking(channelList, trackResults, settings)
 
     //----- Discrete-Time Scatter Plot ---------------------------------
     subplot(3,3,1);
-    plot(trackResults(channelNr).I_P, trackResults(channelNr).Q_P, '.');
+    plot(trackResults(channelNr).I_P(400:settings.msToProcess), trackResults(channelNr).Q_P(400:settings.msToProcess), '.');
     xtitle('Discrete-Time Scatter Plot', 'I prompt', 'Q prompt');
         
     //----- PLL discriminator unfiltered--------------------------------
