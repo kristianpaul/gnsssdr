@@ -154,7 +154,7 @@ for channelNr = 1:settings.numberOfChannels
         //--- Perform various initializations ------------------------------
 
         // define initial code frequency basis of NCO
-        codeFreq      = settings.codeFreqBasis;
+        codeFreq      = settings.codeFreqBasis + (   (channel(channelNr).acquiredFreq - (settings.IF)) / (1202.025/10.23)   );
         // define residual code phase (in chips)
         remCodePhase  = 0.0;
         // define carrier frequency which is used over whole tracking period
