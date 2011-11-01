@@ -33,6 +33,7 @@ stacksize(115e6);
 
 //--- Include folders with functions ---------------------------------------
 exec('./include/calcLoopCoef.sci');
+exec('./include/calcFLLPLLLoopCoef.sci');
 exec('./include/ephemeris.sci');
 exec('./include/generateCAcode.sci');
 exec('./include/makeCaTable.sci');

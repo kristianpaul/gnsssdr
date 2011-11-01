@@ -118,6 +118,9 @@ PDIcarr = 0.001;
 [tau1carr, tau2carr] = calcLoopCoef(settings.pllNoiseBandwidth, ...
                                     settings.pllDampingRatio, ...
                                     0.25);
+//[k1 k2 k3] = calcFLLPLLLoopCoef(settings.pllNoiseBandwidth, ...
+//                               settings.fllNoiseBandwidth, PDIcarr);
+
 hwb = waitbar(0,'Tracking...');
 
 if (settings.fileType==1)
@@ -170,6 +173,13 @@ for channelNr = 1:settings.numberOfChannels
         //carrier/Costas loop parameters
         oldCarrNco   = 0.0;
         oldCarrError = 0.0;
+        
+        //frequency lock loop parameters
+        oldFreqNco   = 0.0;
+        oldFreqError = 0.0;
+        
+        //explain this!
+        I1 = 0.001; I2 = 0.001; Q1 = 0.001; Q2 = 0.001;
         
         //temp variables! We have to use them in order to speed up the code!
         //Structs are extemly slow in scilab 5.3.0 :(
@@ -325,7 +335,7 @@ for channelNr = 1:settings.numberOfChannels
             I_L2 = sum(lateCode2   .* iBasebandSignal);
             Q_L2 = sum(lateCode2   .* qBasebandSignal);
             
-// Find PLL error and update carrier NCO ----------------------------------
+//// Find PLL error and update carrier NCO ----------------------------------
 
             // Implement carrier loop discriminator (phase detector)
             carrError = atan(Q_P / I_P) / (2.0 * %pi);
@@ -343,6 +353,33 @@ for channelNr = 1:settings.numberOfChannels
             carrFreq = carrFreqBasis + carrNco;
 
             loopCnt_carrFreq(loopCnt) = carrFreq;
+
+// Find combined PLL/FLL error and update carrier NCO (FLL-assisted PLL) ------
+//        I2 = I1;  Q2 = Q1;
+//        I1 = I_P; Q1 = Q_P;
+//        cross = I1*Q2 - I2*Q1;
+//        dot   = abs(I1*I2 + Q1*Q2);
+//        
+//        // Implement carrier loop discriminator (frequency detector)
+//        //freqError = atan(cross, dot)/(2*%pi)/0.001/500; //0.001 - integration periode. 500 - maximum discriminator output.
+//        freqError = atan(cross, dot) / %pi;  //normalized output in the range from -1 to +1.
+//        
+//        // Implement carrier loop discriminator (phase detector)
+//        carrError = atan(Q_P / I_P) / (2.0 * %pi);
+//        
+//        //Implement carrier loop filter and generate NCO command; 
+//        carrNco = oldCarrNco + k1*carrError - k2*oldCarrError - k3*freqError;
+//        //(PLL Bw = 25 Hz; FLL Bw = 250 Hz).
+//        //carrNco = oldCarrNco + (68.92)*carrError - (66.70)*oldCarrError - (1.0)*freqError;
+//        //(PLL Bw = 7 Hz; FLL Bw = 250 Hz).
+//        //carrNco = oldCarrNco + (18.85)*carrError - (18.68)*oldCarrError - (1.0)*freqError;
+//        
+//        oldCarrNco = carrNco;
+//        oldCarrError = carrError;
+//        
+//        carrFreq = carrFreqBasis + carrNco;
+//        
+//        loopCnt_carrFreq(loopCnt) = carrFreq;
 
 // Find DLL error and update code NCO -------------------------------------
             codeError = (sqrt(I_E * I_E + Q_E * Q_E) -...
