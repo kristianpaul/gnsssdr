@@ -6,9 +6,11 @@ exec('./include/generateCAcode.sci');
 
 //------------Settings---------------------------------------------------------
 fileName1 = 'e:\GavAI\GPS\scilab_convert_data\routines\file_read\FFF005.DAT';
+fileType = 2;
 
 f_rf = 1202.025e6; //[Hz] GLONASS L3 nominal frequency;
-f_if = 20.46e6;    //[Hz] IF nominal frequency;
+//f_if = 20.46e6;    //[Hz] IF nominal frequency;
+f_if = -2.025e6;    //[Hz] IF nominal frequency;
 f_prn= 10.23e6;    //[Hz] Nominal PRN-generator clock frequency;
 f_nh = 1e3;        //[Hz] Nominal Neiman-Huffman-generator clock frequency;
 f_bk = 1e3;        //[Hz] Nominal Barker-generator clock frequency;
@@ -29,7 +31,8 @@ phi0_data = 0;      //[rad] Initial phase of data signal;
 f_d = 2800;         //[Hz] Initial Doppler frequeny for RF-signal;
 df  = -1.55;        //[Hz/sec] Initail Doppler frequency change rate for RF-signal;
 
-fs = 50.00e6;      //[Hz] Sampling frequency;
+//fs = 50.00e6;      //[Hz] Sampling frequency;
+fs = 24.00e6;      //[Hz] Sampling frequency;
 ts = 1/fs;         //[sec]
 T  = 4;            //[sec] Signal length to be generated;
 T_elem = 10e-3;    //[sec] The smallest signal part to be generated.
@@ -134,7 +137,9 @@ for k=1:T_parts
     signal_I = ( (carr_sin .* prn1) .* nh );
     signal_Q = (  ( (carr_cos .* prn2) .* bk  )  .*  data  );
     
-    signal_RSLT = (1/sqrt(2))*signal_I + (1/sqrt(2))*signal_Q;
+    //signal_RSLT = (1/sqrt(2))*signal_I + (1/sqrt(2))*signal_Q;
+    signal_RSLT(1:2:2*length(signal_I)-1) = signal_I;
+    signal_RSLT(2:2:2*length(signal_Q)) = signal_Q;
     
     //Next step is to pass signal througn bandpass filter;
     
