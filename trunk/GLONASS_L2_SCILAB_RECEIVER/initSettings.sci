@@ -38,16 +38,16 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 36000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess        = 1000;        //[ms]
+  settings.msToProcess        = 1500;        //[ms]
 
   // Number of channels to be used for signal processing
-  settings.numberOfChannels   = 1;
+  settings.numberOfChannels   = 2;
 
   // Move the starting point of processing. Can be used to start the signal
   // processing at any point in the data record (e.g. for long records). fseek
   // function is used to move the file read point, therefore advance is byte
   // based only. 
-  settings.skipNumberOfBytes     = 1*24e6;
+  settings.skipNumberOfBytes     = 0.5*16e6;
 
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
@@ -61,42 +61,52 @@ function settings = initSettings()
   // File Types
   //1 - 8 bit real samples S0,S1,S2,...
   //2 - 8 bit I/Q samples I0,Q0,I1,Q1,I2,Q2,...                      
-  settings.fileType           = 1;
+  settings.fileType           = 2;
 
   // Intermediate, sampling and code frequencies
   //settings.IF                 = -4.5000e6;      //[Hz]
-  //settings.IF                 = -2.025e6;      //[Hz]
-  settings.IF                 = 12.000e6;      //[Hz]
-  //settings.IF                 = 20.46e6;      //[Hz]
-  //settings.samplingFreq       = 100.00e6;       //[Hz]
-  //settings.samplingFreq       = 24.00e6;       //[Hz]
-  settings.samplingFreq       = 48.00e6;       //[Hz]
-  settings.codeFreqBasis      = 10.230e6;      //[Hz]
+  ///settings.IF                 = -6.0625e6;      //[Hz]
+  ///settings.IF                 = -7.0625e6;      //[Hz]
+//  settings.IF                 = -1.5e6;      //[Hz]
+  // As GLONASS uses FDMA each satellite uses it's own frequency and hence 
+  // has it's own IF frequency. Settings.IF corresponds to the zero channel 
+  // frequency, i.e. to the nominal satellite frequency 1602.0000 MHz.
+  // settings.IF = 1602.0e6 - 1601.0e6 = +1.0e6.
+  // Where 1601 - is heterodyne frequency in rf front-end.
+  settings.IF                 = 2.0e6;      //[Hz]
+  settings.L1_IF_step         = 0.4375e6;    //[Hz]
+  settings.samplingFreq       = 16.0e6;       //[Hz]
+  settings.codeFreqBasis      = 0.511e6;      //[Hz]
 
   // Define number of chips in a code period
-  settings.codeLength         = 10230;
+  settings.codeLength         = 511;
 
   // Acquisition settings ===================================================
   // Skips acquisition in the script postProcessing.sci if set to 1
   settings.skipAcquisition    = 0;
   // List of satellites to look for. Some satellites can be excluded to speed
   // up acquisition
-  settings.acqSatelliteList   = 30:30;         //[PRN numbers]
+  //settings.acqSatelliteList   = 1:14;         //[PRN numbers]
+  settings.acqFCHList         = -7:1:6;              // GLONASS frequency
+                                                     // channels list
   // Band around IF to search for satellite signal. Depends on max Doppler
-  settings.acqSearchBand      = 4;           //[kHz]
+  settings.acqSearchBand      = 14;           //[kHz]
   // Threshold for the signal presence decision rule
-  settings.acqThreshold       = 4.1;
+  settings.acqThreshold       = 2.5;
+  // Coherent integration time during acquisition (for GLONASS it can be from 1 
+  // to 5 ms for current acquisition implementation)
+  settings.acqCohIntegration  = 1;
 
   // Tracking loops settings ================================================
   // Code tracking loop parameters
   settings.dllDampingRatio         = 0.7;
-  settings.dllNoiseBandwidth       = 5.0;       //[Hz]
+  settings.dllNoiseBandwidth       = 2.0;       //[Hz]
   settings.dllCorrelatorSpacing    = 0.5;       //[chips]
 
   // Carrier tracking loop parameters
   settings.pllDampingRatio         = 0.7;
   settings.pllNoiseBandwidth       = 25;        //[Hz]
-  settings.fllNoiseBandwidth       = 250;       //[Hz]
+  settings.fllNoiseBandwidth       = 250;    //[Hz]
 
   // Navigation solution settings ===========================================
 

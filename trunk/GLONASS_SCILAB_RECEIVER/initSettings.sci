@@ -38,10 +38,10 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 34000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess        = 8000;        //[ms]
+  settings.msToProcess        = 1500;        //[ms]
   
   // Number of channels to be used for signal processing
-  settings.numberOfChannels   = 8;
+  settings.numberOfChannels   = 2;
   
   // Move the starting point of processing. Can be used to start the signal
   // processing at any point in the data record (e.g. for long records). fseek
@@ -81,6 +81,7 @@ function settings = initSettings()
   settings.skipAcquisition    = 0;
   // List of satellites frequency channels to look for. Some frequency channels
   // can be excluded to speed up acquisition
+  ///settings.acqFCHList         = -7:1:6;              // GLONASS frequency
   settings.acqFCHList         = -7:1:6;              // GLONASS frequency
                                                      // channels list
   // Band around IF to search for satellite signal. Depends on max Doppler
@@ -89,7 +90,7 @@ function settings = initSettings()
   settings.acqThreshold       = 3.0;         //this is empirical value;
   // Coherent integration time during acquisition (for GLONASS it can be from 1 
   // to 5 ms for current acquisition implementation)
-  settings.acqCohIntegration  = 4;
+  settings.acqCohIntegration  = 1;
   
   // Tracking loops settings ================================================
   // Code tracking loop parameters
