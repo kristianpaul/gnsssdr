@@ -1,0 +1,31 @@
+BOARD_DIR=../rtl
+CORES_DIR=../../../cores
+
+include common.mak
+
+include ../sources.mak
+SRC=$(BOARD_SRC) $(CORES_SRC)
+
+$(BUILDDIR)/system.ucf: common.ucf synplify.ucf
+	cat common.ucf synplify.ucf > $(BUILDDIR)/system.ucf
+
+$(BUILDDIR)/loadsources.tcl: $(SRC)
+	rm -f $(BUILDDIR)/loadsources.tcl
+	for i in `echo $^`; do \
+	    echo "add_file -verilog -lib work \"../$$i\"" >> $(BUILDDIR)/loadsources.tcl; \
+	done
+
+$(BUILDDIR)/system_ucf.tcl: $(BUILDDIR)/system.ucf
+	cd $(BUILDDIR) && ucf2mgc system.ucf
+
+$(BUILDDIR)/synplicity.ucf: $(BUILDDIR)/system.edf
+
+$(BUILDDIR)/synplify.prj: synplify.prj
+	cp synplify.prj $(BUILDDIR)/synplify.prj
+
+$(BUILDDIR)/system.edf: $(BUILDDIR)/loadsources.tcl $(BUILDDIR)/synplify.prj $(BUILDDIR)/system_ucf.tcl
+	cd $(BUILDDIR) && synplify_pro -batch synplify.prj
+
+$(BUILDDIR)/system.ngd: $(BUILDDIR)/system.edf $(BUILDDIR)/synplicity.ucf
+	cd $(BUILDDIR) && ngdbuild -uc synplicity.ucf system.edf
+

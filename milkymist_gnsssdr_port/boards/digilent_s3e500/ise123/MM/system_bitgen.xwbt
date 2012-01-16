@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\SoC\tests\testing\milkymist_my_port\boards\digilent_s3e500\ise123\MM\system.ncd
+OUTFILE=C:\SoC\tests\testing\milkymist_my_port\boards\digilent_s3e500\ise123\MM\system.bit
+FAMILY=Spartan3E
+PART=xc3s500e-4fg320
+WORKINGDIR=C:\SoC\tests\testing\milkymist_my_port\boards\digilent_s3e500\ise123\MM
+LICENSE=WebPack
+USER_INFO=0_0_112
