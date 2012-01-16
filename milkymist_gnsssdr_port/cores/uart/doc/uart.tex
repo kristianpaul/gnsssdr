@@ -1,0 +1,104 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{fullpage}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[normalem]{ulem}
+\usepackage[english]{babel}
+\usepackage{listings,babel}
+\lstset{breaklines=true,basicstyle=\ttfamily}
+\usepackage{graphicx}
+\usepackage{moreverb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{tabularx}
+
+\title{Simple UART}
+\author{S\'ebastien Bourdeauducq}
+\date{August 2010}
+\begin{document}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\maketitle{}
+\section{Specifications}
+The UART is based on a very simple design from Das Labor. Its purpose is basically to provide a debug console.
+
+The UART operates with 8 bits per character, no parity, and 1 stop bit. The default baudrate is configured during synthesis and can be modified at runtime using the divisor register.
+
+The divisor is computed as follows :
+\begin{equation*}
+\text{divisor} = \frac{\text{Clock frequency (Hz)}}{16 \cdot \text{Bitrate (bps)}}
+\end{equation*}
+
+\section{Registers}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\bf{Offset} & \bf{Read/Write} & \bf{Default} & \bf{Description} \\
+\hline
+0x00 & RW & 0x00 & Data register. Received bytes and bytes to transmit are read/written from/to this register. \\
+\hline
+0x04 & RW & for default bitrate & Divisor register (for bitrate selection). \\
+\hline
+0x08 & R, W1C & 0x01 & Status and event register. Events are cleared by writing 1. \\
+\hline
+0x0c & RW & 0x00 & Control register. \\
+\hline
+0x10 & RW & configurable & Debug register. \\
+\hline
+\end{tabularx}\\
+
+\subsection{Status and event register, offset 0x08}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\bf Bits & \bf Access & \bf Default & \bf Description \\
+\hline
+0 & R & 1 & (Transmit Holding Register Empty). If this bit is set, the transmit holding register is empty, eg. transmission is finished. \\
+\hline
+1 & R, W1C & 0 & (RX Event). See below. \\
+\hline
+2 & R, W1C & 0 & (TX Event). See below. \\
+\hline
+\end{tabularx}
+
+\subsection{Control register, offset 0x0c}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\bf Bits & \bf Access & \bf Default & \bf Description \\
+\hline
+0 & RW & 1 & (RX IRQ Enable). If this bit is set, a pending RX event will assert the interrupt output. \\
+\hline
+1 & RW & 1 & (TX IRQ Enable). If this bit is set, a pending TX event will assert the interrupt output. \\
+\hline
+2 & RW & 1 & (THRU). If this bit is set, MIDI thru mode is enabled. \\
+\hline
+\end{tabularx}
+
+\subsection{Debug control register, offset 0x10}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\bf Bits & \bf Access & \bf Default & \bf Description \\
+\hline
+0 & RW & 1 & (Break Enable). If this bit is set and the UART core receives a BREAK symbol, the break output will be pulsed and this bit is cleared automatically. \\
+\hline
+\end{tabularx}
+
+\section{Interrupts}
+The core has one active-high level-sensitive interrupt output.
+
+Whenever an event bit is set and the corresponding event is enabled in the control register, the interrupt output is asserted.
+
+\section{Events}
+The ``RX'' event is sent whenever a new character is received. The CPU should then read the data register immediately. If a new character is sent before the CPU has had time to read it, the first character will be lost.
+
+The ``TX'' interrupt is sent as soon as the UART finished transmitting a character. When the CPU has written to the data register, it must wait for the interrupt before writing again.
+
+\section{MIDI thru mode}
+TBD.
+
+\section{Using the core}
+Connect the CSR signals and the interrupt to the system bus and the interrupt controller. The \verb!uart_tx! and \verb!uart_rx! signals should go to the FPGA pads. You must also provide the desired default baudrate and the system clock frequency in Hz using the parameters. The \verb!break!  signal may be connected to your CPU debug unit to raise an exception on BREAK.
+
+\section*{Copyright notice}
+Copyright \copyright 2007-2010 S\'ebastien Bourdeauducq. \\
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included in the LICENSE.FDL file at the root of the Milkymist source distribution.
+
+\end{document}
