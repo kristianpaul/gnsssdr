@@ -14,191 +14,7 @@
 
   <version xil_pn:ise_version="12.3" xil_pn:schema_version="2"/>
 
-  <files>
-    <file xil_pn:name="ddram.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="s3e500.ucf" xil_pn:type="FILE_UCF">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="system.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/conbus/rtl/conbus_arb5.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/conbus/rtl/conbus5x6.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/csrbrg/rtl/csrbrg.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/uart/rtl/uart_transceiver.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/uart/rtl/uart.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/minimac2/rtl/minimac2.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/minimac2/rtl/minimac2_ctlif.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/minimac2/rtl/minimac2_psync.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/minimac2/rtl/minimac2_rx.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/minimac2/rtl/minimac2_sync.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/minimac2/rtl/minimac2_tx.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/minimac2/minimac2_memory_s3.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/norflash16/rtl/norflash16.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/fmlarb/fmlarb.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/fmlbrg_32/rtl/fmlbrg_tagmem.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/fmlbrg_32/rtl/fmlbrg.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/fmlbrg_32/rtl/fmlbrg_datamem.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/hpdmc_mgmt.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/hpdmc.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/hpdmc_banktimer.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/hpdmc_busif.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/hpdmc_ctlif50.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/hpdmc_datactl.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/hpdmc_oddr16.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/fdce2.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/fdce16.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/hpdmc_ddrio.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/hpdmc_iddr16.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/hpdmc_iobuf16.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/hpdmc_obuft2.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/hpdmc_ddr16/rtl/SPARTAN3E/hpdmc_oddr2.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/monitor/rtl/monitor.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/sysctl/rtl/sysctl.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/accumulator.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/carrier_mixer.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/carrier_nco.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/code_gen.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/code_nco.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/epoch_counter.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/simplified_gps_baseband.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/time_base.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gavai/namuru/rtl/tracking_channel.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_others/wbabrg/rtl/wb_abrg1.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../gen_capabilities.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_top.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_cpu_s3.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_interrupt.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_load_store_unit.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_logic_op.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_mc_arithmetic.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_multiplier.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_shifter.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_adder.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_decoder.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_instruction_unit.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_addsub.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/ram32x32d.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-    <file xil_pn:name="../../../../cores/lm32/rtl/lm32_debug.v" xil_pn:type="FILE_VERILOG">
-      <association xil_pn:name="Implementation"/>
-    </file>
-  </files>
+  <files/>
 
   <properties>
     <property xil_pn:name="Add I/O Buffers" xil_pn:value="true" xil_pn:valueState="default"/>
@@ -209,7 +25,7 @@
     <property xil_pn:name="Allow Unmatched Timing Group Constraints" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Asynchronous To Synchronous" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Auto Implementation Compile Order" xil_pn:value="true" xil_pn:valueState="default"/>
-    <property xil_pn:name="Auto Implementation Top" xil_pn:value="false" xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Auto Implementation Top" xil_pn:value="true" xil_pn:valueState="default"/>
     <property xil_pn:name="Automatic BRAM Packing" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Automatically Insert glbl Module in the Netlist" xil_pn:value="true" xil_pn:valueState="default"/>
     <property xil_pn:name="Automatically Run Generate Target PROM/ACE File" xil_pn:value="false" xil_pn:valueState="default"/>
@@ -293,9 +109,9 @@
     <property xil_pn:name="ISim UUT Instance Name" xil_pn:value="UUT" xil_pn:valueState="default"/>
     <property xil_pn:name="Ignore User Timing Constraints Map" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Ignore User Timing Constraints Par" xil_pn:value="false" xil_pn:valueState="default"/>
-    <property xil_pn:name="Implementation Top" xil_pn:value="Module|system" xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Implementation Top" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Implementation Top File" xil_pn:value="system.v" xil_pn:valueState="non-default"/>
-    <property xil_pn:name="Implementation Top Instance Path" xil_pn:value="/system" xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Implementation Top Instance Path" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Include 'uselib Directive in Verilog File" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Include SIMPRIM Models in Verilog File" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Include UNISIM Models in Verilog File" xil_pn:value="false" xil_pn:valueState="default"/>
@@ -351,7 +167,7 @@
     <property xil_pn:name="Other XPWR Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Other XST Command Line Options" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Output Extended Identifiers" xil_pn:value="false" xil_pn:valueState="default"/>
-    <property xil_pn:name="Output File Name" xil_pn:value="system" xil_pn:valueState="default"/>
+    <property xil_pn:name="Output File Name" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Overwrite Compiled Libraries" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Pack I/O Registers into IOBs" xil_pn:value="Auto" xil_pn:valueState="default"/>
     <property xil_pn:name="Pack I/O Registers/Latches into IOBs" xil_pn:value="Off" xil_pn:valueState="default"/>
@@ -363,10 +179,10 @@
     <property xil_pn:name="Place And Route Mode" xil_pn:value="Normal Place and Route" xil_pn:valueState="default"/>
     <property xil_pn:name="Placer Effort Level (Overrides Overall Level)" xil_pn:value="None" xil_pn:valueState="default"/>
     <property xil_pn:name="Port to be used" xil_pn:value="Auto - default" xil_pn:valueState="default"/>
-    <property xil_pn:name="Post Map Simulation Model Name" xil_pn:value="system_map.v" xil_pn:valueState="default"/>
-    <property xil_pn:name="Post Place &amp; Route Simulation Model Name" xil_pn:value="system_timesim.v" xil_pn:valueState="default"/>
-    <property xil_pn:name="Post Synthesis Simulation Model Name" xil_pn:value="system_synthesis.v" xil_pn:valueState="default"/>
-    <property xil_pn:name="Post Translate Simulation Model Name" xil_pn:value="system_translate.v" xil_pn:valueState="default"/>
+    <property xil_pn:name="Post Map Simulation Model Name" xil_pn:value="_map.v" xil_pn:valueState="default"/>
+    <property xil_pn:name="Post Place &amp; Route Simulation Model Name" xil_pn:value="_timesim.v" xil_pn:valueState="default"/>
+    <property xil_pn:name="Post Synthesis Simulation Model Name" xil_pn:value="_synthesis.v" xil_pn:valueState="default"/>
+    <property xil_pn:name="Post Translate Simulation Model Name" xil_pn:value="_translate.v" xil_pn:valueState="default"/>
     <property xil_pn:name="Power Reduction Map" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Power Reduction Par" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Preferred Language" xil_pn:value="Verilog" xil_pn:valueState="default"/>
@@ -488,9 +304,7 @@
     <property xil_pn:name="PROP_intWorkingDirUsed" xil_pn:value="No" xil_pn:valueState="non-default"/>
   </properties>
 
-  <bindings>
-    <binding xil_pn:location="/system" xil_pn:name="s3e500.ucf"/>
-  </bindings>
+  <bindings/>
 
   <libraries/>
 
@@ -501,10 +315,6 @@
     <!-- Do not hand-edit this section, as it will be overwritten when the    -->
     <!-- project is analyzed based on files automatically identified as       -->
     <!-- include files.                                                       -->
-    <file xil_pn:name="setup.v" xil_pn:type="FILE_VERILOG"/>
-    <file xil_pn:name="lm32_include.v" xil_pn:type="FILE_VERILOG"/>
-    <file xil_pn:name="../../../../cores/lm32/rtl/lm32_functions.v" xil_pn:type="FILE_VERILOG"/>
-    <file xil_pn:name="../../../../cores_gk2/lm32/rtl/lm32_functions.v" xil_pn:type="FILE_VERILOG"/>
   </autoManagedFiles>
 
 </project>
