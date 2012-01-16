@@ -394,9 +394,9 @@ static void mdiow(char *reg, char *value)
 static void help()
 {
 	puts("Milkymist(tm) BIOS (bootloader)");
-	puts("Don't know what to do? Try 'flashboot'.\n");
+	///puts("Don't know what to do? Try 'flashboot'.\n");
 	puts("Available commands:");
-	puts("cons       - switch console mode");
+	///puts("cons       - switch console mode");
 	puts("flush      - flush FML bridge cache");
 	puts("mr         - read address space");
 	puts("mw         - write address space");
@@ -404,7 +404,7 @@ static void help()
 	puts("crc        - compute CRC32 of a part of the address space");
 	puts("rcsr       - read processor CSR");
 	puts("wcsr       - write processor CSR");
-	puts("ls         - list files on the filesystem");
+	///puts("ls         - list files on the filesystem");
 	///puts("load       - load a file from the filesystem");
 	///puts("netboot    - boot via TFTP");
 	puts("serialboot - boot via SFL");
@@ -439,14 +439,14 @@ static void do_command(char *c)
 
 	token = get_token(&c);
 
-	if(strcmp(token, "cons") == 0) vga_set_console(!vga_get_console());
-	else if(strcmp(token, "flush") == 0) flush_bridge_cache();
+	///if(strcmp(token, "cons") == 0) vga_set_console(!vga_get_console());
+	/*else*/ if(strcmp(token, "flush") == 0) flush_bridge_cache();
 	else if(strcmp(token, "mr") == 0) mr(get_token(&c), get_token(&c));
 	else if(strcmp(token, "mw") == 0) mw(get_token(&c), get_token(&c), get_token(&c));
 	else if(strcmp(token, "mc") == 0) mc(get_token(&c), get_token(&c), get_token(&c));
 	else if(strcmp(token, "crc") == 0) crc(get_token(&c), get_token(&c));
 
-	else if(strcmp(token, "ls") == 0) ls(get_token(&c));
+	///else if(strcmp(token, "ls") == 0) ls(get_token(&c));
 	else if(strcmp(token, "load") == 0) load(get_token(&c), get_token(&c), get_token(&c));
 
 	///else if(strcmp(token, "netboot") == 0) netboot();
