@@ -5,6 +5,5 @@ run
 -opt_mode SPEED
 -opt_level 2
 -resource_sharing no
--reduce_control_sets auto
 -ofn system.ngc
--p xc6slx45-fgg484-2
+-p xc3s500e-4-fg320

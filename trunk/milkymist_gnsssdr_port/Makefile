@@ -8,7 +8,7 @@
 BASEDIR=${CURDIR}
 
 SYNTOOL?=xst
-BOARD?=milkymist-one
+BOARD?=digilent_s3e500
 
 SDK_DIRS=libbase libhal libfpvm libnet
 SW_DIRS=${SDK_DIRS} libhpdmc libfpvm libfpvm/x86-linux libfpvm/lm32-linux bios
