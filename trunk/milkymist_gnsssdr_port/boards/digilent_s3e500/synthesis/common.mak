@@ -34,8 +34,8 @@ $(BUILDDIR)/system.bit: $(BUILDDIR)/system-routed.ncd
 
 $(BUILDDIR)/system.bin: $(BUILDDIR)/system.bit
 
-$(BUILDDIR)/system.fpg: $(BUILDDIR)/system.bin
-	$(MMDIR)/tools/byteswap $(BUILDDIR)/system.bin $(BUILDDIR)/system.fpg
+#$(BUILDDIR)/system.fpg: $(BUILDDIR)/system.bin
+#	$(MMDIR)/tools/byteswap $(BUILDDIR)/system.bin $(BUILDDIR)/system.fpg
 
 $(BUILDDIR)/system-routed.xdl: $(BUILDDIR)/system-routed.ncd
 	cd $(BUILDDIR) && xdl -ncd2xdl system-routed.ncd system-routed.xdl
