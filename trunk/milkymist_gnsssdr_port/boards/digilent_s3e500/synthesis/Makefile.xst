@@ -10,7 +10,7 @@ include ../sources.mak
 SRC=$(BOARD_SRC) $(CORES_SRC) $(TOP_SRC)
 
 $(BUILDDIR)/system.ucf: ../ise123/MM/s3e500.ucf xst.ucf
-	cat common.ucf xst.ucf > $(BUILDDIR)/system.ucf
+	cat ../ise123/MM/s3e500.ucf xst.ucf > $(BUILDDIR)/system.ucf
 
 $(BUILDDIR)/system.prj: $(SRC)
 	rm -f $(BUILDDIR)/system.prj
