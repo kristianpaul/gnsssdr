@@ -1,0 +1,196 @@
+NET clk50   LOC = "C9"  | IOSTANDARD = LVCMOS33; # 50 MHz 
+###NET clk16   LOC = "E10" | IOSTANDARD = LVCMOS33 | CLOCK_DEDICATED_ROUTE = FALSE; # 16 MHz Artyom changes!
+NET res     LOC = "K17" | IOSTANDARD = LVCMOS33 | PULLDOWN;
+
+INST "clkgen_sys"       LOC = DCM_X0Y1;
+INST "ddram/clkgen_dqs" LOC = DCM_X1Y0;
+
+#====================== FLASH 16 bit mode =========================================
+#NET "flash_adr<0>"   LOC = "H17"; 
+NET "flash_adr<0>"   LOC = "J13"; 
+NET "flash_adr<1>"   LOC = "J12"; 
+NET "flash_adr<2>"   LOC = "J14"; 
+NET "flash_adr<3>"   LOC = "J15"; 
+NET "flash_adr<4>"   LOC = "J16"; 
+NET "flash_adr<5>"   LOC = "J17"; 
+NET "flash_adr<6>"   LOC = "K14"; 
+NET "flash_adr<7>"   LOC = "K15"; 
+NET "flash_adr<8>"   LOC = "K12"; 
+NET "flash_adr<9>"   LOC = "K13"; 
+NET "flash_adr<10>"  LOC = "L15"; 
+NET "flash_adr<11>"  LOC = "L16"; 
+NET "flash_adr<12>"  LOC = "T18"; 
+NET "flash_adr<13>"  LOC = "R18"; 
+NET "flash_adr<14>"  LOC = "T17"; 
+NET "flash_adr<15>"  LOC = "U18";
+NET "flash_adr<16>"  LOC = "T16";
+NET "flash_adr<17>"  LOC = "U15";
+NET "flash_adr<18>"  LOC = "V15";
+NET "flash_adr<19>"  LOC = "T12";
+NET "flash_adr<20>"  LOC = "V13";
+NET "flash_adr<21>"  LOC = "V12";
+NET "flash_adr<22>"  LOC = "N11";
+NET "flash_adr<23>"  LOC = "F9"; ## LED<7>
+
+#========= Big endian ======================
+NET "flash_d<8>"  LOC = "N10";
+NET "flash_d<9>"  LOC = "P10";
+NET "flash_d<10>" LOC = "R10";
+NET "flash_d<11>" LOC = "V9"; 
+NET "flash_d<12>" LOC = "U9"; 
+NET "flash_d<13>" LOC = "R9"; 
+NET "flash_d<14>" LOC = "M9"; 
+NET "flash_d<15>" LOC = "N9"; 
+
+NET "flash_d<0>"  LOC = "R15";
+NET "flash_d<1>"  LOC = "R16"; 
+NET "flash_d<2>"  LOC = "P17"; 
+NET "flash_d<3>"  LOC = "M15"; 
+NET "flash_d<4>"  LOC = "M16"; 
+NET "flash_d<5>"  LOC = "P6";  
+NET "flash_d<6>"  LOC = "R8";  
+NET "flash_d<7>"  LOC = "T8"; 
+
+NET "flash_adr(*)" IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 4;				#Change SLEW=SLOW
+NET "flash_d(*)"   IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 4 | PULLDOWN;	#Change SLEW=SLOW
+
+NET "flash_ce_n"  LOC = "D16" | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 4;#Change SLEW=SLOW
+NET "flash_oe_n"  LOC = "C18" | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 4;#Change SLEW=SLOW
+NET "flash_we_n"  LOC = "D17" | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 4;#Change SLEW=SLOW
+NET "flash_rst_n" LOC = "C17" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 2; # word mode #Change SLEW=SLOW
+#NET "flash_sts"   LOC = "B18" | IOSTANDARD = LVCMOS33 | PULLUP;
+
+#========================== UART ==================================================
+#=============== com =======
+NET "uart_rx"     LOC = "R7"  | IOSTANDARD= LVTTL | PULLUP; #remove PULLUP;
+NET "uart_tx"     LOC = "M14" | IOSTANDARD= LVTTL | DRIVE = 8 | SLEW=SLOW;
+
+#========================== Pushbuttons 3==========================================
+NET "btn1"        LOC = "L13" | IOSTANDARD = LVTTL | PULLUP;
+NET "btn2"        LOC = "L14" | IOSTANDARD = LVTTL | PULLUP;
+NET "btn3"        LOC = "H18" | IOSTANDARD = LVTTL | PULLUP;
+
+#Art!==TEST_POINTS=================================================================
+NET "test_point_01" LOC = "B14" | IOSTANDARD = LVCMOS33;
+NET "test_point_02" LOC = "A14" | IOSTANDARD = LVCMOS33;
+NET "test_point_03" LOC = "D5"  | IOSTANDARD = LVCMOS33;
+NET "test_point_04" LOC = "C5"  | IOSTANDARD = LVCMOS33;
+NET "test_point_05" LOC = "A6"  | IOSTANDARD = LVCMOS33;
+
+#Art!==Correlator==================================================================
+NET "sign_i"    LOC = "D7"  | IOSTANDARD = LVCMOS33;
+NET "sign_q"    LOC = "C7"  | IOSTANDARD = LVCMOS33;
+NET "accum_int" LOC = "E8"  | IOSTANDARD = LVCMOS33;
+NET "inpt_01"   LOC = "B13" | IOSTANDARD = LVCMOS33;
+
+#========================== LEDs 2=================================================
+NET "led1"        LOC = "F12" | IOSTANDARD = LVTTL | SLEW = SLOW | DRIVE = 8;
+NET "led2"        LOC = "E12" | IOSTANDARD = LVTTL | SLEW = SLOW | DRIVE = 8;
+
+#========================== Ethernet ==============================================
+NET "phy_tx_er"      LOC = R6  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+NET "phy_tx_data(3)" LOC = T5  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+NET "phy_tx_data(2)" LOC = R5  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+NET "phy_tx_data(1)" LOC = T15 | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+NET "phy_tx_data(0)" LOC = R11 | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+
+NET "phy_tx_en"      LOC = P15 | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+NET "phy_tx_clk"     LOC = T7  | IOSTANDARD = LVCMOS33 | CLOCK_DEDICATED_ROUTE = FALSE;
+
+NET "phy_rx_er"      LOC = U14 | IOSTANDARD = LVCMOS33;
+NET "phy_rx_data(3)" LOC = V14 | IOSTANDARD = LVCMOS33;
+NET "phy_rx_data(2)" LOC = U11 | IOSTANDARD = LVCMOS33;
+NET "phy_rx_data(1)" LOC = T11 | IOSTANDARD = LVCMOS33;
+NET "phy_rx_data(0)" LOC = V8  | IOSTANDARD = LVCMOS33;
+
+NET "phy_dv"         LOC = V2  | IOSTANDARD = LVCMOS33;
+NET "phy_rx_clk"     LOC = V3  | IOSTANDARD = LVCMOS33 | CLOCK_DEDICATED_ROUTE = FALSE;
+
+#NET "phy_crs"        LOC = U13 | IOSTANDARD = LVCMOS33;
+#NET "phy_col"        LOC = U6  | IOSTANDARD = LVCMOS33;
+
+NET "phy_mii_clk"    LOC = P9  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+NET "phy_mii_data"   LOC = U5  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 8;
+
+# Timing
+
+NET "phy_rx_clk" TNM_NET   = "GRPphy_rx_clk";
+NET "phy_tx_clk" TNM_NET   = "GRPphy_tx_clk";
+TIMESPEC "TSphy_rx_clk"    = PERIOD "GRPphy_rx_clk" 40 ns HIGH 50%;
+TIMESPEC "TSphy_tx_clk"    = PERIOD "GRPphy_tx_clk" 40 ns HIGH 50%;
+TIMESPEC "TSphy_tx_clk_io" = FROM "GRPphy_tx_clk" TO "PADS" 10 ns;
+TIMESPEC "TSphy_rx_clk_io" = FROM "PADS" TO "GRPphy_rx_clk" 10 ns;
+
+#========================== DDR SDRAM 42 ==========================================
+NET sdram_clk_p    LOC=J5 | IOSTANDARD = SSTL2_I;
+NET sdram_clk_n    LOC=J4 | IOSTANDARD = SSTL2_I;
+
+NET sdram_adr<12>  LOC=P2 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<11>  LOC=N5 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<10>  LOC=T2 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<9>   LOC=N4 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<8>   LOC=H2 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<7>   LOC=H1 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<6>   LOC=H3 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<5>   LOC=H4 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<4>   LOC=F4 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<3>   LOC=P1 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<2>   LOC=R2 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<1>   LOC=R3 | IOSTANDARD = SSTL2_I;
+NET sdram_adr<0>   LOC=T1 | IOSTANDARD = SSTL2_I;
+
+NET sdram_ba<1>    LOC=K6 | IOSTANDARD = SSTL2_I;
+NET sdram_ba<0>    LOC=K5 | IOSTANDARD = SSTL2_I;
+
+NET sdram_dq<15>   LOC=H5 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<14>   LOC=H6 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<13>   LOC=G5 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<12>   LOC=G6 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<11>   LOC=F2 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<10>   LOC=F1 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<9>    LOC=E1 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<8>    LOC=E2 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<7>    LOC=M6 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<6>    LOC=M5 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<5>    LOC=M4 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<4>    LOC=M3 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<3>    LOC=L4 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<2>    LOC=L3 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<1>    LOC=L1 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+NET sdram_dq<0>    LOC=L2 | IOSTANDARD = SSTL2_I | PULLUP | NODELAY;
+
+CONFIG PROHIBIT = D2;
+CONFIG PROHIBIT = G4;
+CONFIG PROHIBIT = J6;
+CONFIG PROHIBIT = L5;
+CONFIG PROHIBIT = R4;
+
+NET sdram_dm(0)   LOC=J2 | IOSTANDARD = SSTL2_I;
+NET sdram_dm(1)   LOC=J1 | IOSTANDARD = SSTL2_I;
+
+NET sdram_dqs(0)  LOC=L6 | IOSTANDARD = SSTL2_I; 
+NET sdram_dqs(1)  LOC=G3 | IOSTANDARD = SSTL2_I;
+
+NET "sdram_cas_n" LOC=C2 | IOSTANDARD = SSTL2_I;
+NET "sdram_cke"   LOC=K3 | IOSTANDARD = SSTL2_I;
+NET "sdram_cs_n"  LOC=K4 | IOSTANDARD = SSTL2_I;
+NET "sdram_ras_n" LOC=C1 | IOSTANDARD = SSTL2_I;
+NET "sdram_we_n"  LOC=D1 | IOSTANDARD = SSTL2_I;
+
+#========================== LCD display ===========================================
+# (Disable LCD display to ensure no contention with StratFlash memory). 
+#
+NET "lcd_rw"   LOC = "L17" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 4;
+NET "lcd_e"    LOC = "M18" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 4;
+NET "lcd_rs"   LOC = "L18" | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 4;
+# SPI devices 
+#
+# (Disable to prevent contention with StratFlash memory data bit0). 
+NET "spi_rom_cs" LOC = "U3"    | IOSTANDARD =  LVCMOS33 | SLEW = SLOW | DRIVE = 2;
+NET "spi_adc_conv" LOC = "P11" | IOSTANDARD =  LVCMOS33 | SLEW = SLOW | DRIVE = 2;
+NET "spi_dac_cs"   LOC = "N8"  | IOSTANDARD =  LVCMOS33 | SLEW = SLOW | DRIVE = 2;
+#
+# Platform Flash memory
+# (Disable to prevent contention with StratFlash memory data bit0). 
+#
+NET "pf_oe" LOC = "T3" |IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 2;

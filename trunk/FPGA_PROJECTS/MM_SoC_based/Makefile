@@ -1,0 +1,48 @@
+#
+# Authors: Xiangfu Liu <xiangfu@sharism.cc>
+#                      bitcoin: 1CGeqFzCZnAPEEcigr8LzmWTqf8cvo8toW
+#
+# License GPLv3 or later.  NO WARRANTY.
+#
+
+BASEDIR=${CURDIR}
+
+SYNTOOL?=xst
+BOARD?=digilent_s3e500
+
+SDK_DIRS=libbase libhal libnet
+SW_DIRS=${SDK_DIRS} libhpdmc bios gps
+
+CORE_DIRS=ac97 bt656cap conbus fmlbrg fmlmeter hpdmc_ddr32 \
+	 sysctl uart
+
+host:
+	make -C ${BASEDIR}/tools
+
+bios: host
+	make -C ${BASEDIR}/software/bios
+
+gps: host
+	make -C ${BASEDIR}/software/gps
+
+bitstream: host
+	make -C ${BASEDIR}/boards/${BOARD}/synthesis -f Makefile.${SYNTOOL}
+
+sdk: host
+	for d in $(SDK_DIRS); do make -C ${BASEDIR}/software/$$d || exit 1; done
+
+#load-bitstream: bitstream
+#	make -C ${BASEDIR}/boards/${BOARD}/synthesis -f Makefile.${SYNTOOL} load
+
+#docs:
+#	make -C ${BASEDIR}/doc
+#	for d in $(CORE_DIRS); do make -C ${BASEDIR}/cores/$$d/doc || exit 1; done
+
+.PHONY: clean load-bitstream
+clean:
+	make -C ${BASEDIR}/boards/${BOARD}/synthesis -f common.mak clean
+	#make -C ${BASEDIR}/doc clean
+	make -C ${BASEDIR}/tools clean
+	#for d in $(CORE_DIRS); do make -C ${BASEDIR}/cores/$$d/doc clean || exit 1; done
+	for d in $(SW_DIRS); do make -C ${BASEDIR}/software/$$d clean || exit 1; done
+	
