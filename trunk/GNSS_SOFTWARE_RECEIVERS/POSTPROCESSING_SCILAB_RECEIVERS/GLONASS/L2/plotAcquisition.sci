@@ -34,7 +34,9 @@ function plotAcquisition(acqResults)
   // Plot all results =======================================================
   figure(101);
 
-  bar(6:-1:-7, acqResults.peakMetric, 'blue');
+  ///bar(6:-1:-7, acqResults.peakMetric, 'blue');
+  bar(7:-1:-6, acqResults.peakMetric, 'blue'); //Remember that due to frequency convertor
+                                               //we have spectrum inverse!
 
   xtitle('Acquisition results', 'FCH number (no bar - SV is not in the acquisition list)', 'Acquisition Metric');
 
@@ -42,7 +44,9 @@ function plotAcquisition(acqResults)
 
   acquiredSignals = acqResults.peakMetric .* (acqResults.carrFreq ~= 0);
 
-  bar (6:-1:-7, acquiredSignals, 'green');
+  ///bar (6:-1:-7, acquiredSignals, 'green');
+  bar (7:-1:-6, acquiredSignals, 'green');  //Remember that due to frequency convertor
+                                            //we have spectrum inverse!
   legend('Not acquired signals', 'Acquired signals');
 
 endfunction

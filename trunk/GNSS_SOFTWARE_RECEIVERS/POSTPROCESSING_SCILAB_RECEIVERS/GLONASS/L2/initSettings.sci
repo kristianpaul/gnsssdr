@@ -38,10 +38,10 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 36000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess        = 1500;        //[ms]
+  settings.msToProcess        = 36000;        //[ms]
 
   // Number of channels to be used for signal processing
-  settings.numberOfChannels   = 2;
+  settings.numberOfChannels   = 7;
 
   // Move the starting point of processing. Can be used to start the signal
   // processing at any point in the data record (e.g. for long records). fseek
@@ -73,7 +73,8 @@ function settings = initSettings()
   // frequency, i.e. to the nominal satellite frequency 1602.0000 MHz.
   // settings.IF = 1602.0e6 - 1601.0e6 = +1.0e6.
   // Where 1601 - is heterodyne frequency in rf front-end.
-  settings.IF                 = 2.0e6;      //[Hz]
+  ///!working///settings.IF                 = 2.0e6;      //[Hz]
+  settings.IF                 = -3.0e6;      //[Hz]
   settings.L1_IF_step         = 0.4375e6;    //[Hz]
   settings.samplingFreq       = 16.0e6;       //[Hz]
   settings.codeFreqBasis      = 0.511e6;      //[Hz]
@@ -95,7 +96,7 @@ function settings = initSettings()
   settings.acqThreshold       = 2.5;
   // Coherent integration time during acquisition (for GLONASS it can be from 1 
   // to 5 ms for current acquisition implementation)
-  settings.acqCohIntegration  = 1;
+  settings.acqCohIntegration  = 2;
 
   // Tracking loops settings ================================================
   // Code tracking loop parameters
@@ -116,8 +117,8 @@ function settings = initSettings()
   // Elevation mask to exclude signals from satellites at low elevation
   settings.elevationMask      = 0;           //[degrees 0 - 90]
   // Enable/dissable use of tropospheric correction
-  settings.useTropCorr        = 1;            // 0 - Off
-                                            // 1 - On
+  settings.useTropCorr        = 1;           // 0 - Off
+                                             // 1 - On
 
   // True position of the antenna in UTM system (if known). Otherwise enter
   // all NaN's and mean position will be used as a reference .
