@@ -82,7 +82,7 @@ if (fid > 0)
         xtitle('Time domain plot', 'Time (ms)', 'Amplitude');
     else
 
-        data = data(1:2:$) + %i.*data(2:2:$);
+        data = data(1:2:$) - %i.*data(2:2:$);
         subplot(3, 2, 4);
         plot(1000 * timeScale(1:round(samplesPerCode/50)), ...
             real(data(1:round(samplesPerCode/50))));
@@ -104,9 +104,8 @@ if (fid > 0)
         plot(sm(1:length(sm)/2));
     else // I/Q Data
         subplot(3,1,1);
-        //subplot(2,1,1);
         sm = 10*log10( pspect(settings.samplingFreq/1000 - 1000, settings.samplingFreq/1000, 'hm', data) );
-        plot(-length(sm)/2:1:length(sm)/2-1 ,sm);
+        plot(-length(sm)/2:1:length(sm)/2-1 ,[sm($/2+1:$) sm(1:$/2)]);
     end
 
     xtitle('Frequency domain plot', 'Frequency (kHz)', 'Magnitude');
