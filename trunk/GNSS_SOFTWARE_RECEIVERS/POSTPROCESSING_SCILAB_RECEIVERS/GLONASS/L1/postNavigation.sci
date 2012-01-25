@@ -95,7 +95,13 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     ///
     ///    //--- Exclude channel from the list (from further processing) ------
     ///    activeChnList = setdiff(activeChnList, channelNr);
-    ///end    
+    ///end
+    
+    //--- Exclude satellite if it has MSB of health flag set:
+    if ( eph(trackResults(channelNr).SVN).Bn == 4 )
+        activeChnList = setdiff(activeChnList, channelNr);
+    end
+    
   end
 
   // Check if the number of satellites is still above 3 =====================
@@ -161,7 +167,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     // Find satellites positions and clocks corrections =======================
     [satPositions, satVelocities, satTransmitTime, satClkCorr] = ...
      deltasatposg(satTransmitTime, (set_navSolPeriod/1000), ...
-                  trkRslt_SVN, ...
+                  trkRslt_SVN(activeChnList), ...
                   satPositions, satVelocities, satAccelerations, satClkCorr, ...
                   eph_taun, eph_gamman);
     // Find receiver position =================================================
@@ -169,11 +175,11 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     // 3D receiver position can be found only if signals from more than 3
     // satellites are available
     if length(activeChnList) > 3
-
+      
       //=== Calculate receiver position ==================================
-      [aa bb cc dd] = leastSquarePos(satPositions(:,activeChnList), ...
+      [aa bb cc dd] = leastSquarePos(satPositions, ...
                          navSol_channel_rawP(activeChnList, currMeasNr)' - ...
-                         satClkCorr(activeChnList) * set_c, ...
+                         satClkCorr * set_c, ...
                          set_c, set_useTropCorr);
        //Transform from PZ90.02 to WGS84!
        aaa = aa(1:3);
@@ -198,7 +204,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
       //=== Correct pseudorange measurements for clocks errors ===========
       navSol_channel_corrP(activeChnList, currMeasNr) = ...
               navSol_channel_rawP(activeChnList, currMeasNr) - ...
-              satClkCorr(activeChnList)' * set_c + navSol_dt(currMeasNr);
+              satClkCorr' * set_c + navSol_dt(currMeasNr);
 
       // Coordinate conversion ==================================================
 

@@ -96,6 +96,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     ///    //--- Exclude channel from the list (from further processing) ------
     ///    activeChnList = setdiff(activeChnList, channelNr);
     ///end
+    
     //--- Exclude satellite if it has MSB of health flag set:
     if ( eph(trackResults(channelNr).SVN).Bn == 4 )
         activeChnList = setdiff(activeChnList, channelNr);
@@ -111,7 +112,6 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     eph          = [];
     return
   end
-  //pause;
   
   // Initialization =========================================================
 
@@ -175,6 +175,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     // 3D receiver position can be found only if signals from more than 3
     // satellites are available
     if length(activeChnList) > 3
+      
       //=== Calculate receiver position ==================================
       [aa bb cc dd] = leastSquarePos(satPositions, ...
                          navSol_channel_rawP(activeChnList, currMeasNr)' - ...

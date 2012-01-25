@@ -47,7 +47,8 @@ function [eph, t] = ephemeris(data)
         string_1_pos = i;
 
       case 2 then //String №2.
-        eph.Bn        = bin2dec(  strcat( dec2bin(decoded_str(80:-1:78)) )  );
+        //old_version//eph.Bn        = bin2dec(  strcat( dec2bin(decoded_str(80:-1:78)) )  );
+        eph.Bn        = bin2dec(  strcat( dec2bin(decoded_str(80)      ) )  ) * 4; //According to ICD only highest bit of Bn is used!
         eph.P2        = bin2dec(  strcat( dec2bin(decoded_str(65)      ) )  );
         eph.tb        = bin2dec(  strcat( dec2bin(decoded_str(76:-1:70)) )  ) * 15;
         eph.ydot      = bin2dec(  strcat( dec2bin(decoded_str(63:-1:41)) )  ) * ((-1)^decoded_str(64)) * (2^-20);
