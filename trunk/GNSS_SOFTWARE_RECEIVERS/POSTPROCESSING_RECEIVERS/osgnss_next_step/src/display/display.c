@@ -6,6 +6,7 @@
 #include <windows.h>
 
 #include ".\..\include\globals.h"
+#include ".\..\correlator\correlator.h"
 
 void clear_screen(void)
 {
@@ -100,7 +101,7 @@ display (void)
           //   ichan[ch].CNo);
           printf
             (" %2d %2d  %2d  %3d   %4.0f  %3.0f   %6.0f   %4d  %4d  %2d  %3d  %3d%5d     %2d\n",
-             ch, 0, chan[ch].state, chan[ch].n_freq,
+             ch, REG_write[ch<<3], chan[ch].state, chan[ch].n_freq,
              (double)chan[ch].codes,
              0.0, 0.0,
              0, 0, 0,
