@@ -76,6 +76,10 @@ void simple_cold_allocate(void)
   // turn on one channel:
   ch_cntl(0, 27);       //set PRN number for 1-st correlator channels.
   ch_cntl(8, 9);
+  //ch_cntl(1, 17);
+  //ch_cntl(2, 15);
+  //ch_cntl(3, 28);
+  //ch_cntl(4, 26);
 }
 
 /******************************************************************************
