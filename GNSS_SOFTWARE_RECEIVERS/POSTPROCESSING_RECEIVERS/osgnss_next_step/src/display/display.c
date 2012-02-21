@@ -87,8 +87,10 @@ display (void)
     0, 0, 0, 0, 0);
   if (display_page == 0)
     {
+      //printf
+        //(" ch prn state n_freq az el doppler t_count n_frame sfid ura page missed CNo\n");
       printf
-        (" ch prn state n_freq az el doppler t_count n_frame sfid ura page missed CNo\n");
+        (" ch prn state n_freq codes ch_time sign_count ms_cnt_corr ms_cnt sfid ura page missed CNo\n");
       for (ch = 0; ch < N_CHANNELS; ch++)
         {
           //printf
@@ -100,11 +102,11 @@ display (void)
           //   gps_eph[ichan[ch].prn].ura, schan[ch].page5, ichan[ch].missed,
           //   ichan[ch].CNo);
           printf
-            (" %2d %2d  %2d  %3d   %4.0f  %3.0f   %6.0f   %4d  %4d  %2d  %3d  %3d%5d     %2d\n",
+            (" %2d %2d  %2d  %3d   %4.0f  %4.0f   %6.0f   %4d  %4d  %2d  %3d  %3d%5d     %2d\n",
              ch, REG_write[ch<<3], chan[ch].state, chan[ch].n_freq,
              (double)chan[ch].codes,
-             0.0, 0.0,
-             0, 0, 0,
+             (double)chan[ch].ch_time, (double)chan[ch].sign_count,
+             (REG_read[ch*8+7] & 255 ), chan[ch].ms_count, 0,
              0, 0, 0,
              0);
         }

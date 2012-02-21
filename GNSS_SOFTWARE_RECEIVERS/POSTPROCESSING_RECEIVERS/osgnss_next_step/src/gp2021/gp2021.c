@@ -122,3 +122,9 @@ ch_cntl (int ch, int data)
 {
   to_gps (ch << 3, data);
 }
+
+void
+ch_epoch_load (int ch, unsigned int data)
+{
+  to_gps ((ch << 3) + 7, data);
+}

@@ -114,6 +114,13 @@ struct tracking_channel
 
   int           sign_pos, prev_sign_pos;        // Expected bits edges: current and previous.
   int           sign_count;                     // How many times expected bit lasted more then 19 ms!
+  unsigned long ms_sign;                        // Variable used to track bit edge.
+  int           ms_count;                       // Counter for ms.
+  int           ms_set;                         // counter ms_count is initialized during pull-in process.
+  unsigned long fifo0;                          // FIFO for tracking last 32(?) received navigation data bits.
+  unsigned long fifo1;                          // FIFO for tracking last 32(?) received navigation data bits.
+
+  char          bit;                            // Current bit received during signal tracking.
 
   int           search_max_PRN_delay;           // PRN_delay search range in half-chips (2045 half chip for GPS, 1021 for GLONASS).
   int           search_max_f;                   // Doppler search range in kHz.

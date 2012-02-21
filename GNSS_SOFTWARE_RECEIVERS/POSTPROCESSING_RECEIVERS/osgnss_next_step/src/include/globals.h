@@ -72,6 +72,12 @@ int FLL_a_PLL_i3;          /* FLL-assisted-PLL loop filter third coefficient. Pr
 int DLL_i1;                /* DLL loop filter first coefficient. Practical integer value for real NCO.                                   */
 int DLL_i2;                /* DLL loop filter second coefficient. Practical integer value for real NCO.                                  */
 
+/* Array for storing navigation data for maximum 16 channels */
+unsigned short data_mesg[1500];    /* Each array element keeps 16-bit data. (1-bit corresponds to 1-channel). */
+                                   /* More comments reqired!!! */
+unsigned short data_message[1500]; /* Each array element keeps 16-bit data. (1-bit corresponds to 1-channel). */
+                                   /* More comments reqired!!! */
+
 int display_page = 0;      /* Current page number to be displayed on screen by display()-function. */
 int key;                   /* Current key pressed. Used in display()-function. */
 
@@ -119,6 +125,11 @@ extern int FLL_a_PLL_i2;          /* FLL-assisted-PLL loop filter second coeffic
 extern int FLL_a_PLL_i3;          /* FLL-assisted-PLL loop filter third coefficient. Practical integer value for real NCO.                      */
 extern int DLL_i1;                /* DLL loop filter first coefficient. Practical integer value for real NCO.                                   */
 extern int DLL_i2;                /* DLL loop filter second coefficient. Practical integer value for real NCO.                                  */
+
+extern unsigned short data_mesg[1500];    /* Each array element keeps 16-bit data. (1-bit corresponds to 1-channel). */
+                                   /* More comments reqired!!! */
+extern unsigned short data_message[1500]; /* Each array element keeps 16-bit data. (1-bit corresponds to 1-channel). */
+                                   /* More comments reqired!!! */
 
 extern int display_page;          /* Current page number to be displayed on screen by disply()-function. */
 extern int key;                   /* Current key pressed. Used in display()-function. */
