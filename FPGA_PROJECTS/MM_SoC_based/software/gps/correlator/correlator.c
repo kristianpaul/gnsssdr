@@ -155,7 +155,7 @@ void correlator_init(void)
 	program_accum_int(0x00005DBF);	//set ACCUM_INT periode (0.0005sec = 0.5ms).
 
 
-	ch_cntl (0, 3);			//set PRN number;
+	ch_cntl (0, 4);			//set PRN number;
 	ch_carrier(0, CARRIER_REF);	//set carrier freq;
 	ch_code(0, CODE_REF);		//set code_generator clock freq;
 

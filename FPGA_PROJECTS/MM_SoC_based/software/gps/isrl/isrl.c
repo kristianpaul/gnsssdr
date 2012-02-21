@@ -29,7 +29,7 @@ static unsigned short astat;
 struct tracking_channel chan[N_CHANNELS]; // array of structures that describe each correlator channel;
 
 /* Next two variables should be unites in a structure. Each structure should be assigned to one channel. May be tracking_channel structure should be used? */
-#define ACQ_THRESH 1600 //acquisition threshold (set empirically);
+#define ACQ_THRESH 2500 //acquisition threshold (set empirically);
 #define SEARCH_MAX_F 5  //Half of Doppler search range (in doppler step units: 2*5*1000 = 10000Hz);
 
 //test vectors for debugging:
@@ -213,10 +213,10 @@ WRITTEN BY
         http://algolist.manual.ru/maths/count_fast/intsqrt.php
 
 ******************************************************************************/
-unsigned sqrt_newton(long L)
+static unsigned sqrt_newton(long L)
 {
   long temp, div;
-  unsigned rslt = (unsigned)L;
+  unsigned long rslt = (unsigned long)L;
 
   if (L <= 0)
     return 0;
@@ -236,7 +236,7 @@ unsigned sqrt_newton(long L)
     div = temp >> 1;
     div += temp & 1;
     if (rslt > div)
-      rslt = (unsigned)div;
+      rslt = (unsigned long)div;
     else {
         if (1/rslt == rslt-1 && 1%rslt==0)
           rslt--;
@@ -514,6 +514,15 @@ ch_pull_in (int ch)
     c->codeError = (c->codeError * 8192);
     c->codeError = c->codeError / ( fix_sqrt(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early) +
                                     fix_sqrt(c->accum.i_late*c->accum.i_late   + c->accum.q_late*c->accum.q_late));
+
+    /*c->codeError =                sqrt_newton(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
+    c->codeError = c->codeError - sqrt_newton(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
+    c->codeError = (c->codeError * 8192);
+    c->codeError = c->codeError / ( (int)sqrt_newton(c->accum.i_early*c->accum.i_early + 
+                                                     c->accum.q_early*c->accum.q_early) +
+                                    (int)sqrt_newton(c->accum.i_late*c->accum.i_late   + 
+                                                     c->accum.q_late*c->accum.q_late) );*/
+
   }
   else
     c->codeError = c->oldCodeError; //Temporary solution! Should be corrected!
@@ -576,7 +585,7 @@ ch_pull_in (int ch)
 
 
   //Debug info:
-  if ( (c->ch_time < 1000) ) {
+  if ( (c->ch_time < TEST_VECTOR_MAX_LENGTH) ) {
     test_vectors_length++;
     test_vector_01[c->ch_time] = c->accum.i_early;
     test_vector_02[c->ch_time] = c->accum.q_early;
