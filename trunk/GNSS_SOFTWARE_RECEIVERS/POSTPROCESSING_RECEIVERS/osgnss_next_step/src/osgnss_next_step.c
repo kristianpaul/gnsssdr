@@ -53,6 +53,7 @@ void reset_all_correlator_channles(void)
     chan[ch].n_freq = 0;
     chan[ch].search_max_PRN_delay = 2045; // PRN delay search range in half-chips (2045 for GPS, 1021 for GLONASS).
     chan[ch].search_max_f = 5;            // Doppler search range in kHz.
+    chan[ch].ms_set = 0;                        // ms counter is not synchronized.
   }
 }
 

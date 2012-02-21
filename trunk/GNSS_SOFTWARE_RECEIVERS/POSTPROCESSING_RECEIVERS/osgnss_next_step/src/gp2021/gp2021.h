@@ -15,5 +15,6 @@ extern void ch_code_slew (int, int);
 extern void ch_carrier (int, long);
 extern void ch_code (int, long);
 extern void ch_cntl (int, int);
+extern void ch_epoch_load (int, unsigned int);
 
 #endif /* GP2021_H_ */

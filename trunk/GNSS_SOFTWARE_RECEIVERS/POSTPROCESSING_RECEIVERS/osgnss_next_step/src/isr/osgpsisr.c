@@ -21,6 +21,7 @@ static int test_vector_06[TEST_VECTOR_MAX_LENGTH];
 #endif
 
 #define sign(x) (x > 0 ? 1 : (x == 0) ? 0 : -1) // sign(x) function definition.
+#define bsign(x) (x > 0 ? 1 : 0)                //
 
 // bit manipulation functions:
 #define  test_bit(bit_n, data) ((*((uint16_t *)(data))) &   (0x1 << (bit_n)))
@@ -30,6 +31,7 @@ static int test_vector_06[TEST_VECTOR_MAX_LENGTH];
 static void ch_acq (int);
 static void ch_confirm (int);
 static void ch_pull_in (int);
+static void ch_track (int ch);
 
 /******************************************************************************
 FUNCTION output_test_data()
@@ -396,6 +398,7 @@ void gpsisr (void)
         ch_pull_in(ch);
         break;
       case CHANNEL_TRACKING:
+        ch_track(ch);
         //printf("LOCK is archived!\n\n");
         //exit(0);
         break;
@@ -496,6 +499,7 @@ static void ch_confirm (int ch)
       c->state = CHANNEL_PULL_IN;
       c->CN0 = 0;
       c->ch_time = 0;
+      c->ms_set = 0;
 
       c->oldCarrNco    = c->oldCodeNco = c->oldCarrError = c->oldCodeError = 0;
       c->codeFreqBasis = gps_code_ref;
@@ -610,6 +614,25 @@ static void ch_pull_in (int ch)
   }
   //===========bits edges detection - END.=====================================
 
+  //=========== ms-counter initialization:=====================================
+  c->ms_count++;
+  //check if last 20ms have the same sign:
+  if ((sign (c->accum.i_prompt) == -1 && (c->ms_sign & 0xfffff) == 0x00000) ||
+      (sign (c->accum.i_prompt) == 1  && (c->ms_sign & 0xfffff) == 0xfffff)) {
+      if ( sign(c->accum.i_prompt) == -sign(c->prev_accum.i_prompt) ) {
+        c->ms_count = 0;        // set up counters to keep.
+        ch_epoch_load (ch, 0x1);// track of them.
+        c->ms_set = 1;          // data bit set.
+      }
+  }
+
+  c->ms_sign = c->ms_sign << 1;     /* shift sign left */
+    if (c->accum.i_prompt < 0)
+      c->ms_sign = c->ms_sign | 0x1; /* set bit to 1 if negative */
+
+  c->ms_count = c->ms_count % 20;
+  //=========== ms-counter initialization - END.==============================
+
   //Debug info:
   #ifdef DEBUG_TRACKING
   if ( (c->ch_time < TEST_VECTOR_MAX_LENGTH) ) {
@@ -625,16 +648,252 @@ static void ch_pull_in (int ch)
 
   c->ch_time++;
 
-  if ( (c->sign_count > 30) ) { // pull-in condition. Here we count how many times bits
-                                // lasted more then 19 ms. This method seems bad but it works.
+  if ( (c->sign_count > 30) && (c->ms_set) ) { // pull-in condition. Here we count how many times bits
+                                               // lasted more then 19 ms. This method seems bad but it works.
     output_test_data();
     c->state = CHANNEL_TRACKING;
-    printf("c->carrFreqBasis = %lu", c->carrFreqBasis);
   }
   if (c->ch_time == 3000) {    // Pull-in process lasts not more then 3 seconds.
                                // If 3 seconds passed and lock is not achieved then
                                // acquisition process starts from the beginnig.
+    output_test_data();
+
+    // Make this step to overcome...: (Should be removed after precious optimization of tracking loops (fixed-point optimization required!)):
+    chan[ch].del_freq = 1;
+    chan[ch].n_freq = 0;
+    ch_carrier (ch, gps_carrier_ref);
+    ch_code(ch, gps_code_ref);
+    c->codes = 0;
+
+    c->ch_time = 0;
+
     c->state = CHANNEL_ACQUISITION;
   }
 
 }
+
+/******************************************************************************
+FUNCTION ch_track(char ch)
+RETURNS  None.
+
+PARAMETERS
+                        ch  char  channel number
+
+PURPOSE  to track in carrier and code the GPS satellite and partially
+                        decode the navigation message (to determine
+                        TOW, subframe etc.)
+
+WRITTEN BY
+        Clifford Kelley
+          added Carrier Aiding as suggested by Jenna Cheng, UCR
+UPDATED BY
+        Gavrilov Artyom
+******************************************************************************/
+static void ch_track (int ch)
+{
+  tracking_channel *c = &chan[ch];
+
+  //===========phase+frequency tracking loop:==================================
+  if ( (c->accum.i_prompt!=0) && (c->accum.q_prompt!=0) && (c->prev_accum.i_prompt!=00) && (c->prev_accum.q_prompt!=0) ){
+    // calculate "cross" and "dot" values:
+    c->cross = c->accum.i_prompt*c->prev_accum.q_prompt - c->prev_accum.i_prompt*c->accum.q_prompt;
+    c->dot   = labs(c->accum.i_prompt*c->prev_accum.i_prompt + c->accum.q_prompt*c->prev_accum.q_prompt);
+
+    // test code (to overcome overflow):
+    c->cross = c->cross >> 8; //Temporary solution! Should be reworked in future!
+    c->dot   = c->dot   >> 8; //Temporary solution! Should be reworked in future!
+    // test code - END.
+
+    // frequency discriminator:
+    c->freqError = fix_atan2(c->cross, c->dot);
+    // carrier discriminator:
+    c->carrError = fix_atan2( (c->accum.q_prompt*sign(c->accum.i_prompt)), labs(c->accum.i_prompt) ) / 2;
+  }
+  else {
+    c->freqError = 0;
+    c->carrError = c->oldCarrError;
+  }
+
+  // closed loop filter:
+  //TODO: WRITE FUNCTION THAT CALCULATES MAGIC NUMBER!!!
+  c->carrNco =  c->oldCarrNco + (FLL_a_PLL_i1*c->carrError - FLL_a_PLL_i2*c->oldCarrError - FLL_a_PLL_i3*c->freqError)/51472;
+
+  c->oldCarrNco   = c->carrNco;
+  c->oldCarrError = c->carrError;
+
+  //calculate final value:
+  c->carrFreq = c->carrFreqBasis + c->carrNco;
+  //===========phase+frequency tracking loop - END.============================
+
+  //updating channel settings:
+  ch_carrier(ch, c->carrFreq); // Set new carrier frequency.
+
+  //===========code tracking loop:=============================================
+  if ( (c->accum.i_early!=0) && (c->accum.q_early!=0) && (c->accum.i_late!=0) &&(c->accum.q_late!=0) ){
+    // Code non-coherent discriminator:
+    c->codeError =                sqrt_newton(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
+    c->codeError = c->codeError - sqrt_newton(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
+    c->codeError = (8192)*c->codeError;
+    c->codeError = c->codeError / ( (int)sqrt_newton(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early) +
+                                    (int)sqrt_newton(c->accum.i_late*c->accum.i_late   + c->accum.q_late*c->accum.q_late) );
+  }
+  else
+    c->codeError = c->oldCodeError; // Temporary solution! Should be checked in future!
+
+  // closed loop filter:
+  //TODO: WRITE FUNCTION THAT CALCULATES MAGIC NUMBER!!!
+  // (DLL_i1+1) is used instead of DLL_i1 because this way DLL works more stable! In theory DLL_i1 should be used.
+  // Advanced research about stability issues of fixed point math is required!!!
+  c->codeNco = c->oldCodeNco + ( ((DLL_i1+1)*c->codeError - (DLL_i2)*c->oldCodeError) / 8192 );
+
+  c->oldCodeNco   = c->codeNco;
+  c->oldCodeError = c->codeError;
+
+  // calculate final value:
+  c->codeFreq = c->codeFreqBasis - c->codeNco;
+  //===========Code tracking loop - END.=======================================
+
+  //updating channels settings:
+  ch_code(ch, c->codeFreq); // Set new code clock frequency.
+
+
+
+  c->ms_count = (++c->ms_count) % 20;
+  if (c->ms_count == 19) {
+    c->bit = bsign(c->accum.i_prompt);
+    // see if we can find the preamble:
+    ///pream (ch, c->bit);
+  }
+
+}
+
+/******************************************************************************
+FUNCTION pream(char ch, char bit)
+RETURNS  None.
+
+PARAMETERS
+
+        ch   channel number (0-11)
+        bit  the latest data bit from the satellite
+
+PURPOSE
+        This function finds the preamble in the navigation message and
+        synchronizes to the nav message
+
+WRITTEN BY
+        Clifford Kelley
+made changes suggested by Jenna Cheng, UCR to make routine more readable
+******************************************************************************/
+/*static void pream (int ch, char bit)
+{
+  static unsigned long pream = 0x22c00000L;
+  unsigned long parity0, parity1;
+  static unsigned long pb1 = 0xbb1f3480L, pb2 = 0x5d8f9a40L, pb3 =
+    0xaec7cd00L;
+  static unsigned long pb4 = 0x5763e680L, pb5 = 0x6bb1f340L, pb6 =
+    0x8b7a89c0L;
+  unsigned long TOWs, HOW, TLM, TLMs;
+  int sfid_s;
+  struct interface_channel *ic = &ichan[ch];
+  tracking_channel *c = &chan[ch];
+
+  if (c->fifo1 & 0x20000000L) {
+    c->fifo0 = (c->fifo0 << 1) + 1;
+  }
+  else {
+    c->fifo0 = c->fifo0 << 1;
+  }
+
+  c->fifo1 = (c->fifo1 << 1) + bit;
+
+  if (c->fifo0 & 0x40000000L) {
+    TLM = c->fifo0 ^ 0x3fffffc0L;
+  }
+  else {
+    TLM = c->fifo0;
+  }
+
+  if (c->fifo1 & 0x40000000L) {
+    HOW = c->fifo1 ^ 0x3fffffc0L;
+  }
+  else {
+    HOW = c->fifo1;
+  }
+  //ic->sfid = 1;  for debugging purposes.
+  if (((pream ^ TLM) & 0x3fc00000L) == 0) {     // preamble pattern found?
+    //ic->sfid = 2;  preamble found.
+    parity0 = (Parity (TLM & pb1) << 5) + (Parity (TLM & pb2) << 4) +
+      (Parity (TLM & pb3) << 3) + (Parity (TLM & pb4) << 2) +
+      (Parity (TLM & pb5) << 1) + (Parity (TLM & pb6));
+
+    if (parity0 == (TLM & 0x3f)) {      // is parity of TLM ok?
+      parity1 = (Parity (HOW & pb1) << 5) + (Parity (HOW & pb2) << 4) +
+        (Parity (HOW & pb3) << 3) + (Parity (HOW & pb4) << 2) +
+        (Parity (HOW & pb5) << 1) + (Parity (HOW & pb6));
+      // ic->sfid =3;  TLM parity is ok.
+      if (parity1 == (HOW & 0x3f)) {    // is parity of HOW ok?
+        long d_tow;
+        // ic->sfid = 4; HOW parity is ok.
+        // compute the subframe id number.
+        sfid_s = (int) ((HOW & 0x700) >> 8);
+        TLMs = (TLM >> 2) & 0x3fff;
+        TOWs = (HOW & 0x3fffffffL) >> 13;
+        if ((sfid_s > 0) && (sfid_s < 6) && (TOWs < 100800)) {
+          d_tow = clock_tow - TOWs * 6 + 5;  // 5 sec because TOWs is next subframe.
+          c->offset = c->t_count - 59 - (sfid_s - 1) * 300;
+          ch_epoch_load (ch, (0x1f & ch_epoch_chk (ch)) | 0xa00); // cwk.
+          if (c->offset < 0)
+            c->offset += 1500;
+          c->tr_bit_time = TOWs * 300 - 240;
+          ic->TOW = TOWs * 6;
+          ic->tow_sync = 1;
+          c->tow_sync_time =- d_tow;
+          clock_tow = TOWs * 6 - 5;
+          ic->sfid = sfid_s;
+          ic->TLM = TLMs;
+        }
+      }
+    }
+  }
+  //  a 1500 bit frame of data is ready to be read.
+  if ((((c->t_count - c->offset + 1500) % 1500) == 0)
+      && ic->tow_sync) {
+    int i, ready = 1, gather_cnt = 0;
+
+    // another channel is done.
+    ic->frame_ready = 1;
+
+    // check to see if we've done all that are sync'd.
+    for (i = 0; i < N_channels; i++) {
+      if ((ichan[i].state == track) && ichan[i].tow_sync
+          && !ichan[i].frame_ready) {
+        ready = 0;
+        break;
+      }
+      gather_cnt++;
+    }
+
+    if (ready && (gather_cnt > 0) && (data_frame_ready==0)) {
+
+      // Ok we've got them all, package and send it out.
+      memcpy (data_message, data_mesg, sizeof (short) * 1500);
+
+      // Clear the active copy.
+      memset (data_mesg, 0, sizeof (short) * 1500);
+
+      // Move over the overflow.
+      memcpy (data_mesg, data_overflow, sizeof (short) * 16);
+
+      // Clear out the overflow.
+      memset (data_overflow, 0, sizeof (short) * 16);
+
+      // Reset the frame ready counter.
+      for (i = 0; i < N_channels; i++)
+        ic->frame_ready = 0;
+
+      // Set the data message ready semaphore.
+      data_frame_ready = 1;
+    }
+
+  }
+}*/
