@@ -6,33 +6,11 @@
 
 #include <irq.h>
 
-#define IRQ_CRLTR	(0x00020000) /* 17 */
-#define LED00		(*(volatile unsigned int *)(1610616836))
-
-/* correlator channels numer */
-#define N_CHANNELS 1
-/* Carrier and code reference frequencies */
-#define CODE_REF    0x015D2F1A  //code clock rate nominal frequency: (2.046e6*2^29)/48e6;
-                                // 29 - number of bits in code_nco phase accumulator;
-                                // (2.046e6 = 1.023e6*2) - doubled chip rate;
-                                // 48e6 - correlator clock frequency;
-#define CARRIER_REF 0x033A06D3  // carrier nominal frequency: (2.42e6*2^30)/48e6;
-                                // 30 - number of bits in carrier_nco phase accumulator;
-                                // 2.42e6 - nominal IF in rf-front-end;
-                                // 48e6 - correlator clock frequency;
-//#define D_FREQ 0x5761           //Doppler search step (1000Hz): (1000*2^30)/48e6;
-#define D_FREQ 0x2BB0           //Doppler search step (500Hz): (1000*2^30)/48e6;
-
-static unsigned short astat;
-
-/* GLOBAL VARIABLE! IT IS USED IN MAIN.C DURING INITIALIZATIONè! */
-struct tracking_channel chan[N_CHANNELS]; // array of structures that describe each correlator channel;
-
-/* Next two variables should be unites in a structure. Each structure should be assigned to one channel. May be tracking_channel structure should be used? */
-#define ACQ_THRESH 2500 //acquisition threshold (set empirically);
-#define SEARCH_MAX_F 5  //Half of Doppler search range (in doppler step units: 2*5*1000 = 10000Hz);
+#include "./../include/globals.h"
 
 //test vectors for debugging:
+#define DEBUG_TRACKING
+#ifdef DEBUG_TRACKING
 #define TEST_VECTOR_MAX_LENGTH 10000
 static int test_vectors_length;
 static int test_vector_01[TEST_VECTOR_MAX_LENGTH];
@@ -45,13 +23,15 @@ static int test_vector_06[TEST_VECTOR_MAX_LENGTH];
 //MM-port test variables:
 int max_prompt = 0;
 int min_prompt = 100000;
+#endif
 
-#define CONFIRM_M      3   // Acquisition confirmation steps number;
-#define N_OF_M_THRESH  2   // Required number of confirmations to move to pull-in process;
-
-#define sign(x) (x > 0 ? 1 : (x == 0) ? 0 : -1) //function sign(x)
+#define sign(x) (x > 0 ? 1 : (x == 0) ? 0 : -1) // sign(x) function definition.
+#define bsign(x) (x > 0 ? 1 : 0)                //
 
 /* bit-manipulation functions */
+//#define  test_bit(bit_n, data) ((*((unsigned int *)(data))) &   (0x1 << (bit_n)))
+//#define   set_bit(bit_n, data) ((*((unsigned int *)(data))) |=  (0x1 << (bit_n)))
+//#define clear_bit(bit_n, data) ((*((unsigned int *)(data))) &= ~(0x1 << (bit_n)))
 #define  test_bit(bit_n, data) ((*((unsigned short *)(data))) &   (0x1 << (bit_n)))
 #define   set_bit(bit_n, data) ((*((unsigned short *)(data))) |=  (0x1 << (bit_n)))
 #define clear_bit(bit_n, data) ((*((unsigned short *)(data))) &= ~(0x1 << (bit_n)))
@@ -59,7 +39,7 @@ int min_prompt = 100000;
 static void ch_acq (int);
 static void ch_confirm (int);
 static void ch_pull_in (int);
-
+static void ch_track (int ch);
 
 /******************************************************************************
 FUNCTION abs()
@@ -111,8 +91,7 @@ WRITTEN BY
         Clifford Kelley. Updated by Gavrilov Artyom.
 
 ******************************************************************************/
-static void
-output_test_data ()
+static void output_test_data ()
 {
   int i;
 
@@ -137,10 +116,7 @@ WRITTEN BY
         Clifford Kelley
 
 ******************************************************************************/
-
-//static int
-int
-rss (int a, int b)
+static int rss (int a, int b)
 {
   int result, c, d;
   c = abs (a);
@@ -170,9 +146,7 @@ WRITTEN BY
         Clifford Kelley
 
 ******************************************************************************/
-
-static long
-fix_sqrt (long x)
+static long fix_sqrt (long x)
 {
   long xt, scr;
   int i;
@@ -213,7 +187,7 @@ WRITTEN BY
         http://algolist.manual.ru/maths/count_fast/intsqrt.php
 
 ******************************************************************************/
-static unsigned sqrt_newton(long L)
+/*static unsigned sqrt_newton(long L)
 {
   long temp, div;
   unsigned long rslt = (unsigned long)L;
@@ -243,6 +217,66 @@ static unsigned sqrt_newton(long L)
           return rslt;
     }
   }
+}*/
+
+static long sqrt_newton(long L)
+{
+  long temp, div;
+  unsigned long rslt = (unsigned long)L;
+
+  if (L <= 0)
+    return 0;
+  else
+    if (L & 0xFFFF0000)
+      if (L & 0xFF000000)
+        div = 0x3FFF;
+      else
+        div = 0x3FF;
+    else
+      if (L & 0x0FF00)
+        div = 0x3F;
+      else div = (L > 4) ? 0x7 : L;
+
+  while (1) {
+    temp = L/div + div;
+    div = temp >> 1;
+    div += temp & 1;
+    if (rslt > div)
+      rslt = (unsigned long)div;
+    else {
+        if (1/rslt == rslt-1 && 1%rslt==0)
+          rslt--;
+          return rslt;
+    }
+  }
+}
+
+/******************************************************************************
+FUNCTION test_sqrt(long x)
+RETURNS  long integer
+
+PARAMETERS
+      x long integer
+
+PURPOSE
+        This function tests sqrt functions.
+
+WRITTEN BY
+        Clifford Kelley
+
+******************************************************************************/
+void test_sqrt(void)
+{
+  long i;
+  long sqrt1, sqrt2;
+
+  for(i=10; i<20000; i=i+1000){
+    sqrt1 = fix_sqrt(i);
+    sqrt2 = 128*sqrt_newton(i);
+    mprintf("i=%d \n     fixsqrt = %d \n sqrt_newton = %d \n\n", i, sqrt1, sqrt2);
+  }
+
+  return 0;
 }
 
 /******************************************************************************
@@ -264,10 +298,7 @@ WRITTEN BY
         Fixed for y==x added special code for x==0 suggested by Joel
         Barnes, UNSW
 ******************************************************************************/
-
-
-static long
-fix_atan2 (long y, long x)
+static long fix_atan2 (long y, long x)
 {
   static long const SCALED_PI_ON_2 = 25736L;
   static long const SCALED_PI = 51472L;
@@ -302,6 +333,117 @@ fix_atan2 (long y, long x)
 }
 
 /******************************************************************************
+FUNCTION calc_FLL_assisted_PLL_loop_filter_coefs(long pll_bw, long fll_bw, long integration_t, float *k1, float *k2, float *k3)
+RETURNS  long integer
+
+PARAMETERS
+                pll_bw  long   phased locked loop noise bandwidth [Hz]
+                fll_bw  long   frequency locked loop noise bandwidth [Hz]
+                int_t   long   integration period [ms]
+                *k1, *k2, *k3 float   loop filer coefficients
+
+PURPOSE
+      This function computes FLL-assisted-PLL loop filter coefficients.
+      Refer to "Understanding GPS. Principles and Applications. Second edition"
+      by Elliott D. Kaplan, Christopher J. Hegarty. 2006.
+      pp. 179-183.
+
+WRITTEN BY
+        Gavrilov Artyom
+******************************************************************************/
+void calc_FLL_assisted_PLL_filter_loop_coefs(long pll_bw, long fll_bw, long integration_t, float *k1, float *k2, float *k3)
+{
+  float wnp, wnf;
+  float T;
+  float a2;
+
+  wnp = pll_bw / 0.53;
+  wnf = fll_bw / 0.25;
+  T = (float)integration_t / 1000;
+  a2 = 1.414;
+
+  *k1 = T*(wnp*wnp) + a2*wnp;
+  *k2 = a2*wnp;
+  *k3 = T*wnf;
+}
+
+/******************************************************************************
+FUNCTION convert_FLL_assisted_PLL_loop_filter_coefs_to_integer(float k1, float k2, float k3, int *i1, int *i2, int *i3)
+RETURNS  long integer
+
+PARAMETERS
+                k1, k2, k3  FLL-assisted-PLL loop filter coefficients [float values]
+                i1, i2, i3  FLL-assisted-PLL loop filter coefficients [integer values]
+
+PURPOSE
+      This function converts float values to integer values. It takes into consideration
+      carrier NCO frequency resolution.
+
+WRITTEN BY
+        Gavrilov Artyom
+******************************************************************************/
+void convert_FLL_assisted_PLL_loop_filter_coefs_to_integer(float k1, float k2, float k3, int *i1, int *i2, int *i3)
+{
+  *i1 = (int) (  k1 * ((1<<CARRIER_NCO_DIGIT_CAPACITY) / (SAMP_RATE*SYSTEM_CLOCK_MULTIPLIER))  );
+  *i2 = (int) (  k2 * ((1<<CARRIER_NCO_DIGIT_CAPACITY) / (SAMP_RATE*SYSTEM_CLOCK_MULTIPLIER))  );
+  *i3 = (int) (  k3 * ((1<<CARRIER_NCO_DIGIT_CAPACITY) / (SAMP_RATE*SYSTEM_CLOCK_MULTIPLIER))  );
+}
+
+/******************************************************************************
+FUNCTION calc_DLL_loop_filter_coefs(long dll_bw, long integration_t, float *k1, float *k2)
+RETURNS  long integer
+
+PARAMETERS
+                dll_bw  long   delay locked loop noise bandwidth [Hz]
+                int_t   long   integration period [ms]
+                *k1, *k2   float   loop filer coefficients
+
+PURPOSE
+      This function computes DLL loop filter coefficients (simple second
+      order loop is used).
+      Refer to "Understanding GPS. Principles and Applications. Second edition"
+      by Elliott D. Kaplan, Christopher J. Hegarty. 2006.
+      pp. 179-183.
+
+WRITTEN BY
+        Gavrilov Artyom
+******************************************************************************/
+void calc_DLL_loop_filter_coefs(long dll_bw, long integration_t, float *k1, float *k2)
+{
+  float w;
+  float T;
+  float a2;
+
+  w = dll_bw / 0.53;
+  T = (float)integration_t / 1000;
+  a2 = 1.414;
+
+  *k1 = T*(w*w) + a2*w;
+  *k2 = a2*w;
+}
+
+/******************************************************************************
+FUNCTION convert_DLL_loop_filter_coefs_to_integer(float k1, float k2, int *i1, int *i2)
+RETURNS  long integer
+
+PARAMETERS
+                k1, k2, k3  FLL-assisted-PLL loop filter coefficients [float values]
+                i1, i2, i3  FLL-assisted-PLL loop filter coefficients [integer values]
+
+PURPOSE
+      This function converts float values to integer values. It takes into consideration
+      carrier NCO frequency resolution.
+
+WRITTEN BY
+        Gavrilov Artyom
+******************************************************************************/
+void convert_DLL_loop_filter_coefs_to_integer(float k1, float k2, int *i1, int *i2)
+{
+  *i1 = (int) (  k1 * ((1<<CODE_NCO_DIGIT_CAPACITY) / (SAMP_RATE*SYSTEM_CLOCK_MULTIPLIER))  );
+  *i2 = (int) (  k2 * ((1<<CODE_NCO_DIGIT_CAPACITY) / (SAMP_RATE*SYSTEM_CLOCK_MULTIPLIER))  );
+}
+
+/******************************************************************************
 FUNCTION GPS_Interrupt()
 
 RETURNS  None.
@@ -317,13 +459,11 @@ WRITTEN BY
         Clifford Kelley
 
 ******************************************************************************/
-void
-gpsisr (void)
+void gpsisr (void)
 {
   unsigned short status;
   int ch;
-
-	//irq_ack(IRQ_CRLTR);//test!
+  unsigned short astat;
 
   status = get_status();
   astat = accum_status (); // check what channels are ready to output data from correlators;
@@ -331,7 +471,7 @@ gpsisr (void)
   for (ch = 0; ch < N_CHANNELS; ch++) {
     struct tracking_channel *c = &chan[ch];
     if (test_bit (ch, (void *)&astat)) {
-      c->prev2_accum = c->accum; //Save previous correlator accumulators values (they are used in FLL).
+      c->prev_accum = c->accum; //Save previous correlator accumulators values (they are used in FLL).
 
       //read correlator accumulators for current channel:
       c->accum.i_early   = ch_i_early(ch);
@@ -348,6 +488,7 @@ gpsisr (void)
     if (test_bit (ch, (void *)&astat)) {
       switch (chan[ch].state) {
       case CHANNEL_OFF:
+        //exit(0);
         break;
       case CHANNEL_ACQUISITION:
         ch_acq(ch);
@@ -358,14 +499,12 @@ gpsisr (void)
       case CHANNEL_PULL_IN:
         ch_pull_in(ch);
         break;
-      case CHANNEL_BIT_SYNC:
-        break;
-      case CHANNEL_LOCK:
+      case CHANNEL_TRACKING:
+        ch_track(ch);
         break;
       }
     }
   }
-///  clear_status(); //drop interrupt signal in correlator.
 }
 
 /******************************************************************************
@@ -382,54 +521,45 @@ WRITTEN BY
         Clifford Kelley
 
 ******************************************************************************/
-static void
-ch_acq (int ch)
+static void ch_acq (int ch)
 {
-	long prompt_mag;
-	struct tracking_channel *c = &chan[ch];
+  long prompt_mag;
+  tracking_channel *c = &chan[ch];
 
-  if (abs (c->n_freq) <= SEARCH_MAX_F) { //search frequencies;
-    prompt_mag = rss (c->accum.i_prompt, c->accum.q_prompt); //calculate prompt-magnitude;
+  if (abs (c->n_freq) <= c->search_max_f) { // search frequencies.
+    prompt_mag = rss (c->accum.i_prompt, c->accum.q_prompt); //calculate prompt-magnitude.
 
-
-	if (prompt_mag > max_prompt){
-		max_prompt = prompt_mag;
-	}
-	if (prompt_mag < min_prompt){
-		min_prompt = prompt_mag;
-	}
-
-
-    if (prompt_mag > ACQ_THRESH) {
-      c->state = CHANNEL_CONFIRM; //start confirmation process;
+    if (prompt_mag > acq_thresh) {
+      c->state = CHANNEL_CONFIRM; //start confirmation process.
       c->i_confirm = 0;
-      c->n_thresh  = 0;
-      mprintf("ACQUISITION SUCCESS!!! NEXT STEP IS CONFIRMATION.\n\n");
+      c->n_thresh = 0;
+      /* test additions */
+      c->accum_mean.early_mag = c->accum_mean.prompt_mag = c->accum_mean.late_mag = 0;
     }
     else {
-      ch_code_slew(ch, 1); //make half chip delay.
+      ch_code_slew (ch, 1); //make half chip delay.
       c->codes += 1;
     }
-    if (c->codes == 2044) {//all delays are passed for this Doppler bin so move to next one.
+    if (c->codes >= c->search_max_PRN_delay) { //all delays are passed for this Doppler bin so move to next one.
       c->n_freq += c->del_freq;
       c->del_freq = -(c->del_freq + sign (c->del_freq));
-      c->carrier_freq = CARRIER_REF + c->carrier_cold_corr + D_FREQ * c->n_freq;
+      c->carrier_freq = gps_carrier_ref + c->carrier_cold_corr + d_freq * c->n_freq;
       ch_carrier (ch, c->carrier_freq);
       c->codes = 0;
-      mprintf("NEXT DOPPLER BIN: %d \t DELAY STEP=%d \t CARR_FREQ=%d \n\n", 
-              c->n_freq, c->codes, c->carrier_freq);
+      ///mprintf("NEXT DOPPLER BIN: %d \t DELAY STEP=%d \t CARR_FREQ=%d \n\n", 
+      ///        c->n_freq, c->codes, c->carrier_freq);
     }
   }
-  else {
-    mprintf("RESET ACQUISITION \t max_prompt=%d \t min_prompt = %d \n\n", max_prompt, min_prompt); //Start acquisition from the begining.
-    c->n_freq   = 0;
+  else { //Start acquisition from the beginning:
+    c->n_freq = 0;
     c->del_freq = 1;
-    c->carrier_freq = CARRIER_REF + c->carrier_cold_corr;
+    c->carrier_freq = gps_carrier_ref + c->carrier_cold_corr + d_freq * c->n_freq;
     ch_carrier (ch, c->carrier_freq);
     c->codes = 0;
-	max_prompt = 0;
-	min_prompt = 100000;
+    //Start acquisition from the begining:
+    ///mprintf("RESET ACQUISITION! \n\n");
   }
+  c->CN0 = 0;
 }
 
 /******************************************************************************
@@ -446,35 +576,53 @@ WRITTEN BY
         Clifford Kelley
 
 ******************************************************************************/
-static void
-ch_confirm (int ch)
+static void ch_confirm (int ch)
 {
-  int prompt_mag;
-  struct tracking_channel *c = &chan[ch];
+  long prompt_mag, early_mag, late_mag;
+  tracking_channel *c = &chan[ch];
 
-  prompt_mag = rss (c->accum.i_prompt, c->accum.q_prompt); //calculate prompt-magnitude;
+  prompt_mag = rss (c->accum.i_prompt, c->accum.q_prompt); // prompt_arm energy calculation.
+  late_mag   = rss (c->accum.i_late,   c->accum.q_late  ); // late_arm   energy calculation.
+  early_mag  = rss (c->accum.i_early,  c->accum.q_early ); // early_arm  energy calculation.
 
-  if (prompt_mag > ACQ_THRESH)
+  c->accum_mean.early_mag  = c->accum_mean.early_mag  +  early_mag;
+  c->accum_mean.prompt_mag = c->accum_mean.prompt_mag +  prompt_mag;
+  c->accum_mean.late_mag   = c->accum_mean.late_mag   +  late_mag;
+
+  if (prompt_mag > acq_thresh)
     c->n_thresh++;
+
   if (c->i_confirm == CONFIRM_M) {
     if (c->n_thresh >= N_OF_M_THRESH) {
-      mprintf("CONFIRMATION SUCCESS!!! NEXT STEP IS PULL-IN.\n\n");
-      c->state   = CHANNEL_PULL_IN;
-      c->CN0     = 0;
+      //test additions (Change PRN generator delay 
+      //in order to make prompt code synchronous with 
+      //incoming signal as much as possible):
+      //if ( (c->accum_mean.early_mag > c->accum_mean.prompt_mag) && 
+      //     (c->accum_mean.early_mag > c->accum_mean.late_mag) )
+      //  ch_code_slew(ch, 2);
+      //if ( (c->accum_mean.late_mag > c->accum_mean.early_mag) && 
+      //     (c->accum_mean.late_mag > c->accum_mean.prompt_mag) )
+      //  ch_code_slew(ch, 2044);
+
+      c->state = CHANNEL_PULL_IN;
+      c->CN0 = 0;
       c->ch_time = 0;
+      c->ms_set = 0;
 
       c->oldCarrNco    = c->oldCodeNco = c->oldCarrError = c->oldCodeError = 0;
-      c->codeFreqBasis = CODE_REF;
+      c->codeFreqBasis = gps_code_ref;
       c->carrFreqBasis = c->carrier_freq;
 
       c->sign_pos = c->prev_sign_pos = 0;
 
-      test_vectors_length = 0;        //test vectors are used during pull-in process. Before using them set their current length.
+      #ifdef DEBUG_TRACKING
+      //test vectors are used during pull-in process. 
+      //Before using them set their current length:
+      test_vectors_length = 0;
+      #endif
     }
-    else {
-      mprintf("CONFIRMATION FAIL! BACK TO ACQUISITION.\n\n");
-      c->state = CHANNEL_ACQUISITION; //Confirmation failed! Go back to acquisition.
-    }
+    else
+      c->state = CHANNEL_ACQUISITION;
   }
   c->i_confirm++;
 }
@@ -494,97 +642,118 @@ WRITTEN BY
         Clifford Kelley. Updated by Gavrilov Artyom.
 
 ******************************************************************************/
-static void
-ch_pull_in (int ch)
+static void ch_pull_in (int ch)
 {
-  long early_mag, late_mag;
+  tracking_channel *c = &chan[ch];
 
-  struct tracking_channel *c = &chan[ch];
-  /* Code tracking loop: */
-  if ( (c->accum.i_early!=0) && (c->accum.q_early!=0) && (c->accum.i_late!=0) &&(c->accum.q_late!=0) ){
+  //===========phase+frequency tracking loop:==================================
+  if ( (c->accum.i_prompt!=0) && (c->accum.q_prompt!=0) && (c->prev_accum.i_prompt!=00) && (c->prev_accum.q_prompt!=0) ){
+    // calculate "cross" and "dot" values:
+    c->cross = c->accum.i_prompt*c->prev_accum.q_prompt - c->prev_accum.i_prompt*c->accum.q_prompt;
+    c->dot   = labs(c->accum.i_prompt*c->prev_accum.i_prompt + c->accum.q_prompt*c->prev_accum.q_prompt);
 
-    /*early_mag = sqrt_newton(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early);
-    late_mag  = sqrt_newton(c->accum.i_late *c->accum.i_late  + c->accum.q_late *c->accum.q_late );
-    c->codeError = ((early_mag - late_mag) * 8192);
-    c->codeError = c->codeError / (early_mag + late_mag);*/
+    // test code (to overcome overflow):
+    c->cross = c->cross >> 8; //Temporary solution! Should be reworked in future!
+    c->dot   = c->dot   >> 8; //Temporary solution! Should be reworked in future!
+    // test code - END.
 
-    //DLL discriminator:
-    c->codeError =                fix_sqrt(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
-    c->codeError = c->codeError - fix_sqrt(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
-    c->codeError = (c->codeError * 8192);
-    c->codeError = c->codeError / ( fix_sqrt(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early) +
-                                    fix_sqrt(c->accum.i_late*c->accum.i_late   + c->accum.q_late*c->accum.q_late));
-
-    /*c->codeError =                sqrt_newton(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
-    c->codeError = c->codeError - sqrt_newton(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
-    c->codeError = (c->codeError * 8192);
-    c->codeError = c->codeError / ( (int)sqrt_newton(c->accum.i_early*c->accum.i_early + 
-                                                     c->accum.q_early*c->accum.q_early) +
-                                    (int)sqrt_newton(c->accum.i_late*c->accum.i_late   + 
-                                                     c->accum.q_late*c->accum.q_late) );*/
-
-  }
-  else
-    c->codeError = c->oldCodeError; //Temporary solution! Should be corrected!
-
-  //DLL loop filter:
-  c->codeNco = c->oldCodeNco + ((36*c->codeError - 35*c->oldCodeError) / 8192 );
-  c->oldCodeNco   = c->codeNco;
-  c->oldCodeError = c->codeError;
-
-  c->codeFreq = c->codeFreqBasis - c->codeNco;
-  /* Code tracking loop - END. */
-
-  // Send control-word in correlator. Uppdate PRN code-rate:
-  ch_code(ch, c->codeFreq);
-
-
-  /* phase+frequency tracking loop: */
-  if ( (c->accum.i_prompt!=0) && (c->accum.q_prompt!=0) && (c->prev2_accum.i_prompt!=00) && (c->prev2_accum.i_prompt!=0) ){
-    c->cross = c->accum.i_prompt*c->prev2_accum.q_prompt - c->prev2_accum.i_prompt*c->accum.q_prompt;
-    c->dot   = labs(c->accum.i_prompt*c->prev2_accum.i_prompt + c->accum.q_prompt*c->prev2_accum.q_prompt);
-
-    /* test code (to overcome overflow): */
-    c->cross = c->cross >> 8;
-    c->dot   = c->dot   >> 8;
-    /* test code - END */
-
-    //frequency discriminator:
+    // frequency discriminator:
     c->freqError = fix_atan2(c->cross, c->dot);
-    //phase discriminator:
+    // carrier discriminator:
     c->carrError = fix_atan2( (c->accum.q_prompt*sign(c->accum.i_prompt)), labs(c->accum.i_prompt) ) / 2;
   }
   else {
-    c->freqError = 0;               //Temporary solution! Should be corrected!
-    c->carrError = c->oldCarrError; //Temporary solution! Should be corrected!
+    c->freqError = 0;
+    c->carrError = c->oldCarrError;
   }
 
-  //FLL-assisted PLL loop filter:
-  c->carrNco =  c->oldCarrNco + ((925)* c->carrError - (895)* c->oldCarrError - (75)* c->freqError)/51472;
+  // closed loop filter:
+  //TODO: WRITE FUNCTION THAT CALCULATES MAGIC NUMBER!!!
+  c->carrNco =  c->oldCarrNco + (FLL_a_PLL_i1*c->carrError - FLL_a_PLL_i2*c->oldCarrError - FLL_a_PLL_i3*c->freqError)/51472;
 
   c->oldCarrNco   = c->carrNco;
   c->oldCarrError = c->carrError;
 
+  //calculate final value:
   c->carrFreq = c->carrFreqBasis + c->carrNco;
-  /* phase+frequency tracking loop - END. */
+  //===========phase+frequency tracking loop - END.============================
 
-  // Send control-word in correlator. Update carrier frequency:
-  ch_carrier(ch, c->carrFreq);
+  //updating channel settings:
+  ch_carrier(ch, c->carrFreq); // Set new carrier frequency.
 
+  //===========code tracking loop:=============================================
+  if ( (c->accum.i_early!=0) && (c->accum.q_early!=0) && (c->accum.i_late!=0) &&(c->accum.q_late!=0) ){
+    // Code non-coherent discriminator:
+    c->codeError = 128*sqrt_newton(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
+    c->codeError = c->codeError - 
+                   128*sqrt_newton(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
+    c->codeError = (8192)*c->codeError;
+    c->codeError = c->codeError / 
+                   ( (int)128*sqrt_newton(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early) +
+                     (int)128*sqrt_newton(c->accum.i_late*c->accum.i_late   + c->accum.q_late*c->accum.q_late) );
+    /*c->codeError = fix_sqrt(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
+    c->codeError = c->codeError - 
+                   fix_sqrt(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
+    c->codeError = (8192)*c->codeError;
+    c->codeError = c->codeError / 
+                   ( (int)fix_sqrt(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early) +
+                     (int)fix_sqrt(c->accum.i_late*c->accum.i_late   + c->accum.q_late*c->accum.q_late) );*/
+  }
+  else
+    c->codeError = c->oldCodeError; // Temporary solution! Should be checked in future!
 
-  if ( sign(c->accum.i_prompt) == -sign(c->prev2_accum.i_prompt) ) { //detect bits edges according to sign change of prompt in-phase correlator output.
+  // closed loop filter:
+  //TODO: WRITE FUNCTION THAT CALCULATES MAGIC NUMBER!!!
+  // (DLL_i1+1) is used instead of DLL_i1 because this way DLL works more stable! In theory DLL_i1 should be used.
+  // Advanced research about stability issues of fixed point math is required!!!
+  c->codeNco = c->oldCodeNco + ( ((DLL_i1+1)*c->codeError - (DLL_i2)*c->oldCodeError) / 8192 );
+
+  c->oldCodeNco   = c->codeNco;
+  c->oldCodeError = c->codeError;
+
+  // calculate final value:
+  c->codeFreq = c->codeFreqBasis - c->codeNco;
+  //===========Code tracking loop - END.=======================================
+
+  //updating channels settings:
+  ch_code(ch, c->codeFreq); // Set new code clock frequency.
+
+  //===========bits edges detection:===========================================
+  // bits edges detection according to sign change of In-phase_PROMPT correlator channel output:
+  if ( sign(c->accum.i_prompt) == -sign(c->prev_accum.i_prompt) ) {
     c->prev_sign_pos = c->sign_pos;
     c->sign_pos = c->ch_time;
 
-    if ( (c->sign_pos - c->prev_sign_pos) > 19 ) // Bits edges always multiples of 20ms.
-                                                 // (Here we use simplified check: each bit should last more then 19 ms).
+    if ( (c->sign_pos - c->prev_sign_pos) > 19 ) // Bits edges are always multiple of 20 ms (20 ms for GPS and 10 ms for GLONASS).
+                                                 //(Though noise process can also satisfy this condition...
+                                                 //
       c->sign_count++;
     else
       c->sign_count = 0;
   }
+  //===========bits edges detection - END.=====================================
 
+  //=========== ms-counter initialization:=====================================
+  c->ms_count++;
+  //check if last 20ms have the same sign:
+  if ((sign (c->accum.i_prompt) == -1 && (c->ms_sign & 0xfffff) == 0x00000) ||
+      (sign (c->accum.i_prompt) == 1  && (c->ms_sign & 0xfffff) == 0xfffff)) {
+      if ( sign(c->accum.i_prompt) == -sign(c->prev_accum.i_prompt) ) {
+        c->ms_count = 0;        // set up counters to keep.
+        //ch_epoch_load (ch, 0x1);// track of them.
+        c->ms_set = 1;          // data bit set.
+      }
+  }
+
+  c->ms_sign = c->ms_sign << 1;     /* shift sign left */
+    if (c->accum.i_prompt < 0)
+      c->ms_sign = c->ms_sign | 0x1; /* set bit to 1 if negative */
+
+  c->ms_count = c->ms_count % 20;
+  //=========== ms-counter initialization - END.==============================
 
   //Debug info:
+  #ifdef DEBUG_TRACKING
   if ( (c->ch_time < TEST_VECTOR_MAX_LENGTH) ) {
     test_vectors_length++;
     test_vector_01[c->ch_time] = c->accum.i_early;
@@ -594,30 +763,127 @@ ch_pull_in (int ch)
     test_vector_05[c->ch_time] = c->accum.i_late;
     test_vector_06[c->ch_time] = c->accum.q_late;
   }
-
-  /*if ( (c->ch_time < 1200)&&(c->ch_time > 200) ) {
-    test_vector_01[test_vectors_length] = c->accum.i_early;
-    test_vector_02[test_vectors_length] = c->accum.q_early;
-    test_vector_03[test_vectors_length] = c->accum.i_prompt;
-    test_vector_04[test_vectors_length] = c->accum.q_prompt;
-    test_vector_05[test_vectors_length] = c->accum.i_late;
-    test_vector_06[test_vectors_length] = c->accum.q_late;
-    test_vectors_length++;
-  }*/
+  #endif
 
   c->ch_time++;
 
-  if ( (c->sign_count > 30) ) { // pull-in condition. Here we count how many times bits lasted more then 19 ms. This method seems bad but it works.
-    mprintf("YESSSSSSS!!!!!!!!!!\n\n\n\n");
-    output_test_data(); //Output debug data through RS-232.
-    c->state = CHANNEL_BIT_SYNC;
-    mprintf("YESSSSSSS!!!!!!!!!!\n\n\n\n");
+  if ( (c->sign_count > 30) && (c->ms_set) ) { // pull-in condition. Here we count how many times bits
+                                               // lasted more then 19 ms. This method seems bad but it works.
+    ///output_test_data();
+    c->state = CHANNEL_TRACKING;
+  }
+  if (c->ch_time == 3000) {    // Pull-in process lasts not more then 3 seconds.
+                               // If 3 seconds passed and lock is not achieved then
+                               // acquisition process starts from the beginnig.
+    ///output_test_data();
+
+    // Make this step to overcome...: (Should be removed after precious optimization of tracking loops (fixed-point optimization required!)):
+    chan[ch].del_freq = 1;
+    chan[ch].n_freq = 0;
+    ch_carrier (ch, gps_carrier_ref);
+    ch_code(ch, gps_code_ref);
+    c->codes = 0;
+
+    c->ch_time = 0;
+
+    c->state = CHANNEL_ACQUISITION;
   }
 
-  if (c->ch_time == 3000) {    // Pull-in process lasts not more then 3 seconds. If 3 seconds passed and lock is not achieved then acquisition process starts from the beginnig.
-    mprintf("Acquisition failed!!!\n\n");
-    output_test_data(); //Output debug data through RS-232.
-    c->state = CHANNEL_ACQUISITION;
+}
+
+/******************************************************************************
+FUNCTION ch_track(char ch)
+RETURNS  None.
+
+PARAMETERS
+                        ch  char  channel number
+
+PURPOSE  to track in carrier and code the GPS satellite and partially
+                        decode the navigation message (to determine
+                        TOW, subframe etc.)
+
+WRITTEN BY
+        Clifford Kelley
+          added Carrier Aiding as suggested by Jenna Cheng, UCR
+UPDATED BY
+        Gavrilov Artyom
+******************************************************************************/
+static void ch_track (int ch)
+{
+  tracking_channel *c = &chan[ch];
+
+  //===========phase+frequency tracking loop:==================================
+  if ( (c->accum.i_prompt!=0) && (c->accum.q_prompt!=0) && (c->prev_accum.i_prompt!=00) && (c->prev_accum.q_prompt!=0) ){
+    // calculate "cross" and "dot" values:
+    c->cross = c->accum.i_prompt*c->prev_accum.q_prompt - c->prev_accum.i_prompt*c->accum.q_prompt;
+    c->dot   = labs(c->accum.i_prompt*c->prev_accum.i_prompt + c->accum.q_prompt*c->prev_accum.q_prompt);
+
+    // test code (to overcome overflow):
+    c->cross = c->cross >> 8; //Temporary solution! Should be reworked in future!
+    c->dot   = c->dot   >> 8; //Temporary solution! Should be reworked in future!
+    // test code - END.
+
+    // frequency discriminator:
+    c->freqError = fix_atan2(c->cross, c->dot);
+    // carrier discriminator:
+    c->carrError = fix_atan2( (c->accum.q_prompt*sign(c->accum.i_prompt)), labs(c->accum.i_prompt) ) / 2;
+  }
+  else {
+    c->freqError = 0;
+    c->carrError = c->oldCarrError;
+  }
+
+  // closed loop filter:
+  //TODO: WRITE FUNCTION THAT CALCULATES MAGIC NUMBER!!!
+  c->carrNco =  c->oldCarrNco + (FLL_a_PLL_i1*c->carrError - FLL_a_PLL_i2*c->oldCarrError - FLL_a_PLL_i3*c->freqError)/51472;
+
+  c->oldCarrNco   = c->carrNco;
+  c->oldCarrError = c->carrError;
+
+  //calculate final value:
+  c->carrFreq = c->carrFreqBasis + c->carrNco;
+  //===========phase+frequency tracking loop - END.============================
+
+  //updating channel settings:
+  ch_carrier(ch, c->carrFreq); // Set new carrier frequency.
+
+  //===========code tracking loop:=============================================
+  if ( (c->accum.i_early!=0) && (c->accum.q_early!=0) && (c->accum.i_late!=0) &&(c->accum.q_late!=0) ){
+    // Code non-coherent discriminator:
+    c->codeError = 128*sqrt_newton(c->accum.i_early * c->accum.i_early + c->accum.q_early * c->accum.q_early);
+    c->codeError = c->codeError -
+                   128*sqrt_newton(c->accum.i_late  * c->accum.i_late  + c->accum.q_late  * c->accum.q_late);
+    c->codeError = (8192)*c->codeError;
+    c->codeError = c->codeError /
+                   ( (int)128*sqrt_newton(c->accum.i_early*c->accum.i_early + c->accum.q_early*c->accum.q_early) +
+                     (int)128*sqrt_newton(c->accum.i_late*c->accum.i_late   + c->accum.q_late*c->accum.q_late) );
+  }
+  else
+    c->codeError = c->oldCodeError; // Temporary solution! Should be checked in future!
+
+  // closed loop filter:
+  //TODO: WRITE FUNCTION THAT CALCULATES MAGIC NUMBER!!!
+  // (DLL_i1+1) is used instead of DLL_i1 because this way DLL works more stable! In theory DLL_i1 should be used.
+  // Advanced research about stability issues of fixed point math is required!!!
+  c->codeNco = c->oldCodeNco + ( ((DLL_i1+1)*c->codeError - (DLL_i2)*c->oldCodeError) / 8192 );
+
+  c->oldCodeNco   = c->codeNco;
+  c->oldCodeError = c->codeError;
+
+  // calculate final value:
+  c->codeFreq = c->codeFreqBasis - c->codeNco;
+  //===========Code tracking loop - END.=======================================
+
+  //updating channels settings:
+  ch_code(ch, c->codeFreq); // Set new code clock frequency.
+
+
+
+  c->ms_count = (++c->ms_count) % 20;
+  if (c->ms_count == 19) {
+    c->bit = bsign(c->accum.i_prompt);
+    // see if we can find the preamble:
+    ///pream (ch, c->bit);
   }
 
 }

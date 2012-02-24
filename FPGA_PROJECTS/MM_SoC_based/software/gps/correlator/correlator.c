@@ -14,27 +14,13 @@
 #include "correlator.h"
 #include "./../gp2021/gp2021.h"
 #include "./../isrl/isrl.h"
+#include "./../include/globals.h"
 
 #include <irq.h>
 
-#define IRQ_CRLTR			(0x00020000) /* 17 */
+//#include "./../softfloat/softfloat-glue.h"
 
-/*=========================================================================*/
-/*  DEFINE: Definition of all local Data                                   */
-/*=========================================================================*/
-#define CODE_REF    0x015D2F1A  //code clock rate nominal frequency: (2.046e6*2^29)/48e6;
-                                // 29 - number of bits in code_nco phase accumulator;
-                                // (2.046e6 = 1.023e6*2) - doubled chip rate;
-                                // 48e6 - correlator clock frequency;
-#define CARRIER_REF 0x033A06D3  // carrier nominal frequency: (2.42e6*2^30)/48e6;
-                                // 30 - number of bits in carrier_nco phase accumulator;
-                                // 2.42e6 - nominal IF in rf-front-end;
-                                // 48e6 - correlator clock frequency;
-/*=========================================================================*/
-/*  DEFINE: All code exported                                              */
-/*=========================================================================*/
-extern struct tracking_channel chan[1]; // array of structures that describe 
-					// each correlator channel;
+#define IRQ_CRLTR			(0x00020000) /* 17 */
 
 /*****************************************************************************
 ** Function name:               new_rand
@@ -139,25 +125,31 @@ int memory_test (void)
 *****************************************************************************/
 void correlator_init(void)
 {
-	unsigned int mask;
+  // carrier frequency resolution (carrier NCO resolution):
+  Carrier_DCO_Delta = SYSTEM_CLOCK_MULTIPLIER*SAMP_RATE / (1 << CARRIER_NCO_DIGIT_CAPACITY);
+  // PRN clock frequency resolution (code clock NCO resolution):
+  Code_DCO_Delta    = SYSTEM_CLOCK_MULTIPLIER*SAMP_RATE / (1 << CODE_NCO_DIGIT_CAPACITY);
 
-	chan[0].state = CHANNEL_ACQUISITION;	//Set initial correlator-channel 
-						//status - "signal acquisition".
-	chan[0].carrier_cold_corr = 0;		//Correction for CARRIER_REF when 
-						//apriori information about 
-						//satellite Doppler.
-	chan[0].carrier_freq = CARRIER_REF;
+  // Carrier and code reference frequencies for GPS signals:
+  // nominal value of code clock NCO control-word. For GPS signals:
+  gps_code_ref    = 2 * GPS_CODE_F  / Code_DCO_Delta;
+  // nominal value of carrier NCO control-word. For GPS signals:
+  gps_carrier_ref = GPS_CARRIER_IF / Carrier_DCO_Delta; 
+  // Carrier and code reference frequencies for GLONASS signals:
+  // nominal value of code clock NCO control-word. For GLONASS signals:
+  glonass_code_ref    = GLONASS_CODE_F  / Code_DCO_Delta;
+  // nominal value of carrier NCO control-word. For GLONASS signals:
+  glonass_carrier_ref = GLONASS_CARRIER_IF / Carrier_DCO_Delta;
 
-	chan[0].del_freq = 1;
-	chan[0].n_freq = 0;
+  // Acquisition Doppler bin size (NCO control-word value):
+  d_freq = (int) freq_bin_width / Carrier_DCO_Delta;
 
-	program_TIC(0x00493DFF);	//set TIC-periode (0.1sec or 0.5sec?).
-	program_accum_int(0x00005DBF);	//set ACCUM_INT periode (0.0005sec = 0.5ms).
+//============================================================================
 
-
-	ch_cntl (0, 4);			//set PRN number;
-	ch_carrier(0, CARRIER_REF);	//set carrier freq;
-	ch_code(0, CODE_REF);		//set code_generator clock freq;
+  //set TIC-periode:
+  program_TIC(TIC_CODE);	    
+  //set ACCUM_INT periode:
+  program_accum_int(ACCUM_INT_CODE);
 
 }
 

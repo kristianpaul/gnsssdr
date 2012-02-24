@@ -18,7 +18,7 @@ all: gps.bin
 gps.elf: linker.ld $(OBJECTS)
 
 %.elf:
-	$(LD) $(LDFLAGS) -T $< -N -o $@ $(OBJECTS)  -L$(MMDIR)/software/libbase -L$(MMDIR)/software/libhal  --start-group  -lbase-light -lhal  --end-group
+	$(LD) $(LDFLAGS) -T $< -N -o $@ $(OBJECTS)  -L$(MMDIR)/software/libbase -L$(MMDIR)/software/libhal  --start-group  -lbase -lhal  --end-group
 	chmod -x $@
 	
 
