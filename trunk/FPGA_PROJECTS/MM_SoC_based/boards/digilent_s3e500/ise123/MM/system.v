@@ -754,7 +754,7 @@ wire usb_irq;
 wire [31:0] cpu_interrupt;
 
 assign cpu_interrupt = {16'd0,
-	1'b0,//usb_irq,
+	~namuru_irq,//namuru_irq,
 	1'b0,//ir_irq,
 	1'b0,//midi_irq,
 	1'b0,//videoin_irq,
