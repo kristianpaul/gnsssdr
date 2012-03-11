@@ -47,7 +47,7 @@ function settings = initSettings()
   // processing at any point in the data record (e.g. for long records). fseek
   // function is used to move the file read point, therefore advance is byte
   // based only. 
-  settings.skipNumberOfBytes     = 0*16e6;
+  settings.skipNumberOfBytes     = 1*16e6;
 
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
@@ -65,8 +65,8 @@ function settings = initSettings()
   settings.fileType           = 2;
 
   // Intermediate, sampling and code frequencies
-  settings.IF                 = 0.000e6;      //[Hz]
-  settings.samplingFreq       = 16.368e6;       //[Hz]
+  settings.IF                 = 0.098e6;      //[Hz]
+  settings.samplingFreq       = 16.000e6;       //[Hz]
   settings.codeFreqBasis      = 2.046e6;      //[Hz]
 
   // Define number of chips in a code period
