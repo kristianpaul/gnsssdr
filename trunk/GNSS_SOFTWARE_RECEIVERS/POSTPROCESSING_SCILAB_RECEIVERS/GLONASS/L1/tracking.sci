@@ -85,7 +85,27 @@ function [trackResults, channel]= tracking(fid, channel, settings)
   // Initialize tracking variables ==========================================
 
   codePeriods = settings.msToProcess;     // For GLONASS one open code is one ms
-
+  
+  // CodeLength:
+  settings_codeLength = settings.codeLength;
+  
+  // GLONASS zero frequency:
+  settings_GLONASS_zero_channel = settings.GLONASS_zero_channel;
+  
+  // GLONASS nominal IF:
+  settings_IF = settings.IF;
+  
+  // GLONASS channel spacing:
+  settings_L1_IF_step = settings.L1_IF_step;
+  
+  // Nominal code frequency:
+  settings_codeFreqBasis = settings.codeFreqBasis;
+  
+  // Copy frequency channels numbers:
+  for i = 1:length(channel.FCH)
+    channel_FCH(i) = channel(i).FCH;
+  end
+  
   //--- DLL variables --------------------------------------------------------
   // Define early-late offset (in chips)
   earlyLateSpc = settings.dllCorrelatorSpacing;
@@ -137,7 +157,8 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       // Get a vector with the C/A code sampled 1x/chip
       caCode = generateSTcode();
       // Then make it possible to do early and late versions
-      caCode = [caCode(511) caCode caCode(1)];
+      ///caCode = [caCode(511) caCode caCode(1)];
+      caCode = [caCode($) caCode caCode(1)];
 
       //--- Perform various initializations ------------------------------
 
@@ -259,7 +280,8 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         tcode2      = ceil(tcode) + 1;
         promptCode  = caCode(tcode2);
         
-        remCodePhase = (tcode(blksize) + codePhaseStep) - 511.0;
+        ///remCodePhase = (tcode(blksize) + codePhaseStep) - 511.0;
+        remCodePhase = (tcode(blksize) + codePhaseStep) - settings_codeLength;
 
 // Generate the carrier frequency to mix the signal to baseband -----------
         time    = (0:blksize) ./ loopCnt_samplingFreq;
@@ -326,17 +348,24 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         oldCodeError = codeError;
         
         // Modify code freq based on NCO command
-        codeFreq = loopCnt_codeFreqBasis - codeNco;
+        ///codeFreq = loopCnt_codeFreqBasis - codeNco;
+        codeFreq = loopCnt_codeFreqBasis - codeNco + ...
+                   (  carrFreq - (settings_IF + settings_L1_IF_step*channel_FCH(channelNr))  ) / ...
+                   ( (settings_GLONASS_zero_channel + channel_FCH(channelNr)*settings_L1_IF_step) / ...
+                      settings_codeFreqBasis );
         
         //example of PLL/FLL-assisted DLL for GPS. For GLONASS should be reworked!
         //codeFreq = settings.codeFreqBasis - codeNco + ( (carrFreq - settings.IF)/1540 );
-        //codeFreq = settings.codeFreqBasis - codeNco + ( (carrFreq - settings.IF)/() );
         
         loopCnt_codeFreq(loopCnt) = codeFreq;
         
 // Record various measures to show in postprocessing ----------------------
         // Record sample number (based on 8bit samples)
-        loopCnt_absoluteSample(loopCnt) =(mtell(fid))/dataAdaptCoeff;
+        ///loopCnt_absoluteSample(loopCnt) =(mtell(fid))/dataAdaptCoeff;
+        ///loopCnt_absoluteSample(loopCnt) = (mtell(fid))/dataAdaptCoeff - remCodePhase*16000/511;
+        loopCnt_absoluteSample(loopCnt) = (mtell(fid))/dataAdaptCoeff - ...
+                                          remCodePhase * ...
+                                          (loopCnt_samplingFreq/1000)/settings_codeLength;
         
         loopCnt_dllDiscr(loopCnt)       = codeError;
         loopCnt_dllDiscrFilt(loopCnt)   = codeNco;
