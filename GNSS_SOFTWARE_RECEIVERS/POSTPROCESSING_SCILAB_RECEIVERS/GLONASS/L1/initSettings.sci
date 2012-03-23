@@ -71,7 +71,8 @@ function settings = initSettings()
   // settings.IF = 1602.0e6 - 1601.0e6 = +1.0e6.
   // Where 1601 - is heterodyne frequency in rf front-end.
   settings.IF                 = 1.0000e6;   //[Hz]
-  settings.L1_IF_step         = 0.5625e6;    //[Hz]
+  settings.L1_IF_step         = 0.5625e6;   //[Hz]
+  settings.GLONASS_zero_channel = 1602e6;   //[Hz]
   
   // Define number of chips in a code period
   settings.codeLength         = 511;
@@ -95,8 +96,8 @@ function settings = initSettings()
   // Tracking loops settings ================================================
   // Code tracking loop parameters
   settings.dllDampingRatio         = 0.7;
-  settings.dllNoiseBandwidth       = 2.0;    //[Hz]
-  settings.dllCorrelatorSpacing    = 0.5;    //[chips]
+  settings.dllNoiseBandwidth       = 0.5;    //[Hz]
+  settings.dllCorrelatorSpacing    = 0.05;    //[chips]
   
   // Carrier tracking loop parameters
   settings.pllDampingRatio         = 0.7;
