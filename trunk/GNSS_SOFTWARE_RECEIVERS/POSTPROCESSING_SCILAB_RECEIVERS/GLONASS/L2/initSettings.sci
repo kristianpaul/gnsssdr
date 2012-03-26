@@ -38,7 +38,7 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 36000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess        = 36000;        //[ms]
+  settings.msToProcess        = 37000;        //[ms]
 
   // Number of channels to be used for signal processing
   settings.numberOfChannels   = 7;
@@ -47,7 +47,7 @@ function settings = initSettings()
   // processing at any point in the data record (e.g. for long records). fseek
   // function is used to move the file read point, therefore advance is byte
   // based only. 
-  settings.skipNumberOfBytes     = 0.5*16e6;
+  settings.skipNumberOfBytes     = 6.5*16e6;
 
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
@@ -64,20 +64,17 @@ function settings = initSettings()
   settings.fileType           = 2;
 
   // Intermediate, sampling and code frequencies
-  //settings.IF                 = -4.5000e6;      //[Hz]
-  ///settings.IF                 = -6.0625e6;      //[Hz]
-  ///settings.IF                 = -7.0625e6;      //[Hz]
-//  settings.IF                 = -1.5e6;      //[Hz]
   // As GLONASS uses FDMA each satellite uses it's own frequency and hence 
   // has it's own IF frequency. Settings.IF corresponds to the zero channel 
-  // frequency, i.e. to the nominal satellite frequency 1602.0000 MHz.
-  // settings.IF = 1602.0e6 - 1601.0e6 = +1.0e6.
-  // Where 1601 - is heterodyne frequency in rf front-end.
-  ///!working///settings.IF                 = 2.0e6;      //[Hz]
+  // frequency, i.e. to the nominal satellite frequency 1246.0000 MHz.
+  // Don't forget that while converting from L2 to L1 spectrum inversion occures!
+  // This is because heterodyne frequency used in external frequency convertor
+  // is 2840 MHz.
   settings.IF                 = -3.0e6;      //[Hz]
-  settings.L1_IF_step         = 0.4375e6;    //[Hz]
-  settings.samplingFreq       = 16.0e6;       //[Hz]
-  settings.codeFreqBasis      = 0.511e6;      //[Hz]
+  settings.L2_IF_step         = 0.4375e6;    //[Hz]
+  settings.GLONASS_L2_zero_channel = 1246e6; //[Hz]
+  settings.samplingFreq       = 16.0e6;      //[Hz]
+  settings.codeFreqBasis      = 0.511e6;     //[Hz]
 
   // Define number of chips in a code period
   settings.codeLength         = 511;
@@ -101,13 +98,13 @@ function settings = initSettings()
   // Tracking loops settings ================================================
   // Code tracking loop parameters
   settings.dllDampingRatio         = 0.7;
-  settings.dllNoiseBandwidth       = 2.0;       //[Hz]
-  settings.dllCorrelatorSpacing    = 0.5;       //[chips]
+  settings.dllNoiseBandwidth       = 0.5;       //[Hz]
+  settings.dllCorrelatorSpacing    = 0.05;       //[chips]
 
   // Carrier tracking loop parameters
   settings.pllDampingRatio         = 0.7;
   settings.pllNoiseBandwidth       = 25;        //[Hz]
-  settings.fllNoiseBandwidth       = 250;    //[Hz]
+  settings.fllNoiseBandwidth       = 250;       //[Hz]
 
   // Navigation solution settings ===========================================
 
