@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<document>
+<!--The data in this file is primarily intended for consumption by Xilinx tools.
+The structure and the elements are likely to change over the next few releases.
+This means code written to parse this file will need to be revisited each subsequent release.-->
+<application name="impact" timeStamp="Fri Jun 08 10:40:33 2012">
+<section name="Project Information" visible="false">
+<property name="ProjectID" value="d41ac1e7bc8a4efe9278fae77b88067c"/>
+<property name="ProjectIteration" value="1"/>
+</section>
+<section name="iMPACT Project Info" visible="true">
+<property name="Use Project File" value="No"/>
+<property name="Project Entry" value="ise"/>
+<property name="OS Name" value="Microsoft Windows XP"/>
+<property name="User Lic. Info" value="176454237_0_0_415"/>
+</section>
+<section name="iMPACT One Step SVF File Mode" visible="true">
+<item name="Chain Summary">
+<property name="Number of device" value="2"/>
+<property name="Number of Xilinx device" value="2"/>
+<property name="Number of Non-Xilinx device" value="0"/>
+</item>
+<item name="Chain Description">
+<property name="Device1" value="xcf"/>
+<property name="Part1" value="xcf04s"/>
+<property name="Device2" value="spartan3e"/>
+<property name="Part2" value="xc3s500e"/>
+</item>
+<item name="Boundary Scan Operations Statistics">
+<property name="BSCAN Operation" value="Program -p 1
+"/>
+</item>
+<item name="Cable Summary">
+<property name="Cable Type" value=""/>
+<property name="Cable Speed" value="0"/>
+<property name="Port" value="NULL"/>
+<property name="Local_Server_Mode" value="Local"/>
+</item>
+</section>
+<section name="iMPACT Serial PROM File Generation Mode" visible="true">
+<item name="Chain Description">
+<property name="Number of device" value="1"/>
+<property name="Device1" value="spartan3e"/>
+<property name="Part1" value="xc3s500e"/>
+</item>
+</section>
+</application>
+</document>

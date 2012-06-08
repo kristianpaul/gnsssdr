@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -o "C:/ARM/Correlator_multichannel/tb_dump_mask_signal_test_isim_beh.exe" -prj "C:/ARM/Correlator_multichannel/tb_dump_mask_signal_test_beh.prj" "work.tb_dump_mask_signal_test" "work.glbl" 
