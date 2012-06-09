@@ -33,8 +33,8 @@ Engineer: Artyom Gavrilov, gnss-sdr.com, 2012
 
 #define PullInTime	3000 // = 3 seconds
 
-#define outpw(A,D) wb_write(0x00000000+A, D); wait_clock_simple()
-#define inpw(A) wb_read(0x00000000+A); wait_clock_simple()
+#define outpw(A,D) bus_write(0x00000000+A, D); wait_clock_simple()
+#define inpw(A) bus_read(0x00000000+A); wait_clock_simple()
 
 #define PRN_KEY			0x00
 #define CARR_NCO_LOW		0x02
@@ -120,10 +120,11 @@ vluint64_t sys_cycle_count;  // global variable for counting current cycle.
 bool start_int_processing;   // start interrupt processing after all correlator settings are made:
 char IF[32000];              // array with GPS signal samples to be processed.
                              // The size is chosen in order to store 1ms of IQ-data.
+
 // gnss-file with signal record:
 FILE *ifdata;
 char IF_Filename[255] = "/home/Artyom/verilator/FFF005.DAT"; // Name of the file with GPS signal record.
-int ifdata_curr_pos;         // Current position in the IF-buffer.
+int ifdata_curr_pos;                                         // Current position in the IF-buffer.
 
 // output file for external analysis:
 FILE *extfile;
@@ -132,8 +133,8 @@ char EXT_Filename[255] = "/home/Artyom/verilator/FFF005.TXT"; // Name of the fil
 // Some helpful functions definitions:
 void wait_clock();
 void wait_clock_simple();
-void wb_write(int address, int data);
-int  wb_read(int address);
+void bus_write(int address, int data);
+short int bus_read(int address);
 void read_sample_from_file(unsigned char *i, unsigned char *q);
 void alloc_task();
 void accum_task();
@@ -160,8 +161,6 @@ WRITTEN BY
 ******************************************************************************/
 void wait_clock()
 {
-  int i, j;
-
   // check if we have interrupt request:
   if (start_int_processing) { // start interrupt processing only after correlator is initialized! 
                               // Otherwise wishbone cross requests problem will ocuure!
@@ -214,7 +213,7 @@ void wait_clock_simple()
 }
 
 /******************************************************************************
-FUNCTION   void wb_write(int address, int data)
+FUNCTION   void bus_write(int address, int data)
 
 RETURNS    None.
 
@@ -222,14 +221,14 @@ PARAMETERS address - address in memory where data should be written.
            data    - data to be written.
 
 PURPOSE
-           Wishbone write function.
+           Async memory bus write function.
 
 WRITTEN BY
 
            Gavrilov Artyom. Based on MM SoC sources.
 
 ******************************************************************************/
-void wb_write(int address, int data)
+void bus_write(int address, int data)
 {
   top->address_a   = address;
   top->data        = data;
@@ -250,21 +249,21 @@ void wb_write(int address, int data)
 }
 
 /******************************************************************************
-FUNCTION   int wb_read(int address)
+FUNCTION   int bus_read(int address)
 
 RETURNS    Read data.
 
 PARAMETERS address - address in memory from where data should be read.
 
 PURPOSE
-           Wishbone read function.
+           Async memory bus read function
 
 WRITTEN BY
 
            Gavrilov Artyom. Based on MM SoC sources.
 
 ******************************************************************************/
-int wb_read(int address)
+short int bus_read(int address)
 {
   top->address_a = address;
   top->wen_a     = 1;
@@ -272,10 +271,6 @@ int wb_read(int address)
   top->csn_a     = 0;
   
   wait_clock_simple();
-  //wait_clock_simple();
-  //wait_clock_simple();
-  //wait_clock_simple();
-  //wait_clock_simple();
   
   top->wen_a = 1;
   top->oen_a = 1;
@@ -670,23 +665,23 @@ int main(int argc, char **argv, char **env) {
   wait_clock_simple();//[Art]
   wait_clock_simple();//[Art]
   
-  // wishbone bus test:
-  wb_write(0x00000300, 0x11111111); wait_clock();
-  wb_write(0x00000302, 0x22222222); wait_clock();
-  wb_write(0x00000304, 0x33333333); wait_clock();
-  wb_write(0x00000306, 0x44444444); wait_clock();
-  wb_write(0x00000308, 0x55555555); wait_clock();
-  wb_write(0x0000030A, 0x66666666); wait_clock();
-  wb_write(0x0000030C, 0x77777777); wait_clock();
-  wb_write(0x0000030E, 0x88888888); wait_clock();
-  wb_read(0x00000310); wait_clock();
-  wb_read(0x00000312); wait_clock();
-  wb_read(0x00000314); wait_clock();
-  wb_read(0x00000316); wait_clock();
-  wb_read(0x00000318); wait_clock();
-  wb_read(0x0000031A); wait_clock();
-  wb_read(0x0000031C); wait_clock();
-  wb_read(0x0000031E); wait_clock();
+  // async memory bus test:
+  bus_write(0x00000300, 0x11111111); wait_clock();
+  bus_write(0x00000302, 0x22222222); wait_clock();
+  bus_write(0x00000304, 0x33333333); wait_clock();
+  bus_write(0x00000306, 0x44444444); wait_clock();
+  bus_write(0x00000308, 0x55555555); wait_clock();
+  bus_write(0x0000030A, 0x66666666); wait_clock();
+  bus_write(0x0000030C, 0x77777777); wait_clock();
+  bus_write(0x0000030E, 0x88888888); wait_clock();
+  bus_read(0x00000310); wait_clock();
+  bus_read(0x00000312); wait_clock();
+  bus_read(0x00000314); wait_clock();
+  bus_read(0x00000316); wait_clock();
+  bus_read(0x00000318); wait_clock();
+  bus_read(0x0000031A); wait_clock();
+  bus_read(0x0000031C); wait_clock();
+  bus_read(0x0000031E); wait_clock();
 
 //=================Takuji Ebinuma code===========================================
   // Reset baseband processor:
@@ -722,7 +717,7 @@ int main(int argc, char **argv, char **env) {
   alloc_task();//test addition! [GavAI]
 
   //and make reset to make everything rolling:
-  /*wb_write(RESET, 0x00000000);*/outpw(RESET, 0); wait_clock();//[Art] temporary commented!
+  ///outpw(RESET, 0); wait_clock();//[Art] temporary commented!
 
   //allow interrupt processing:
   start_int_processing = true;
