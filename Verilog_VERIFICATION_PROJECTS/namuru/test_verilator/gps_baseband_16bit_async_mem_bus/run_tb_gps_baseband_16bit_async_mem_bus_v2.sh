@@ -17,7 +17,7 @@ cp ../../rtl/code_nco.v ./
 cp ../../rtl/epoch_counter.v ./
 
 # run Verilator to translate Verilog into C++, include C++ testbench
-verilator --cc --trace gps_baseband_16bit_async_mem_bus.v --exe tb_gps_baseband_16bit_async_mem_bus.cpp
+verilator --cc --trace gps_baseband_16bit_async_mem_bus.v --exe tb_gps_baseband_16bit_async_mem_bus_v2.cpp
 # build C++ project
 make -j -C obj_dir/ -f Vgps_baseband_16bit_async_mem_bus.mk Vgps_baseband_16bit_async_mem_bus
 # run executable simulation

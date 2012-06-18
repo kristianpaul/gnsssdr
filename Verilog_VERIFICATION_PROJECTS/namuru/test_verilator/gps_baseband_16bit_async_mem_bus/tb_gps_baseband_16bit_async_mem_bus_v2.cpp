@@ -23,14 +23,11 @@ Engineer: Artyom Gavrilov, gnss-sdr.com, 2012
 #define NCO_RESOLUTION	0.074505806         // = 16MHz*5 / 2^30 //!(GavAI) in original code division coef=2^29 (why???)
 
 #define CODE_REF		13730473UL  // = 1.023MHz / NCO_RESOLUTION
-#define CARR_REF		32480690UL  // = 2.420MHz / NCO_RESOLUTION
-///#define CARR_REF		34628173UL  // = 2.580MHz / NCO_RESOLUTION
-///#define CARR_REF_SIGN           0           // [Art] 1 - corresponds to +1 and 0 to -1.
-#define CARR_REF_SIGN           1           // [Art] 1 - corresponds to +1 and 0 to -1.
+#define CARR_REF		34628173UL  // = 2.580MHz / NCO_RESOLUTION
+#define CARR_REF_SIGN           0           // [Art] 1 - corresponds to +1 and 0 to -1.
 
 #define NoiseFloor		13400  //[ART] 68750  // FIXME: Much larger than expected. Why?
-#define AcqThresh		10*53600 //[ART]273699 // SNR = 6dB
-///#define AcqThresh		4*53600 //[ART]273699 // SNR = 6dB
+#define AcqThresh		4*53600 //[ART]273699 // SNR = 6dB
 #define LossThresh		26800 //[ART]137174 // SNR = 3dB
 
 #define CodesrchStep	4    // = 500Hz / 1540 / NCO_RESOLUTION
@@ -130,9 +127,8 @@ char IF[32000];              // array with GPS signal samples to be processed.
 
 // gnss-file with signal record:
 FILE *ifdata;
-///char IF_Filename[255] = "/home/Artyom/verilator/-2.58e6_iq_16e6.DAT"; // Name of the file with GPS signal record.
-char IF_Filename[255] = "/home/Artyom/verilator/2.42e6_iq_16e6.DAT"; // Name of the file with GPS signal record.
-int ifdata_curr_pos;                                         // Current position in the IF-buffer.
+char IF_Filename[255] = "/home/Artyom/verilator/-2.58e6_iq_16e6.DAT"; // Name of the file with GPS signal record.
+int ifdata_curr_pos;                                                  // Current position in the IF-buffer.
 
 // output file for external analysis:
 FILE *extfile;
@@ -368,7 +364,7 @@ WRITTEN BY
 void alloc_task()
 {
   int i,k,already_allocated;
-  static int sv = 26;//15;//22;//12;//15;//26;//0; //[Art] to reduce acquisition time!
+  static int sv = 15;//0; //[Art] to reduce acquisition time!
   int sv_index[2] = {27, 17};
   
   ///while (1) {
@@ -777,7 +773,7 @@ int main(int argc, char **argv, char **env) {
     // dump variables into VCD file and toggle clock
     wait_clock();
 
-    if (sys_cycle_count == 1000*80000) run = false;
+    if (sys_cycle_count == 8500*80000) run = false;
 
     if (Verilated::gotFinish())  exit(0);
   }

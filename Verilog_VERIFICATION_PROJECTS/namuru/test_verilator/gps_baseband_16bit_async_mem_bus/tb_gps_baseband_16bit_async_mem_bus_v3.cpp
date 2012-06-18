@@ -22,16 +22,13 @@ Engineer: Artyom Gavrilov, gnss-sdr.com, 2012
 //=================Takuji Ebinuma code===========================================
 #define NCO_RESOLUTION	0.074505806         // = 16MHz*5 / 2^30 //!(GavAI) in original code division coef=2^29 (why???)
 
-#define CODE_REF		13730473UL  // = 1.023MHz / NCO_RESOLUTION
-#define CARR_REF		32480690UL  // = 2.420MHz / NCO_RESOLUTION
-///#define CARR_REF		34628173UL  // = 2.580MHz / NCO_RESOLUTION
-///#define CARR_REF_SIGN           0           // [Art] 1 - corresponds to +1 and 0 to -1.
-#define CARR_REF_SIGN           1           // [Art] 1 - corresponds to +1 and 0 to -1.
+#define CODE_REF		6858526UL   // = 0.511MHz / NCO_RESOLUTION
+#define CARR_REF		28501134UL  //24320252UL    //20978231UL  //28501134UL  // = 2.12350MHz / NCO_RESOLUTION
+#define CARR_REF_SIGN           1  //0 //1           // [Art] 1 - corresponds to +1 and 0 to -1.
 
-#define NoiseFloor		13400  //[ART] 68750  // FIXME: Much larger than expected. Why?
-#define AcqThresh		10*53600 //[ART]273699 // SNR = 6dB
-///#define AcqThresh		4*53600 //[ART]273699 // SNR = 6dB
-#define LossThresh		26800 //[ART]137174 // SNR = 3dB
+#define NoiseFloor		13400       //[ART] 68750  // FIXME: Much larger than expected. Why?
+#define AcqThresh		3*53600     //[ART]273699 // SNR = 6dB
+#define LossThresh		26800       //[ART]137174 // SNR = 3dB
 
 #define CodesrchStep	4    // = 500Hz / 1540 / NCO_RESOLUTION
 #define CarrSrchStep	6711 // = 500Hz / NCO_RESOLUTION
@@ -130,9 +127,8 @@ char IF[32000];              // array with GPS signal samples to be processed.
 
 // gnss-file with signal record:
 FILE *ifdata;
-///char IF_Filename[255] = "/home/Artyom/verilator/-2.58e6_iq_16e6.DAT"; // Name of the file with GPS signal record.
-char IF_Filename[255] = "/home/Artyom/verilator/2.42e6_iq_16e6.DAT"; // Name of the file with GPS signal record.
-int ifdata_curr_pos;                                         // Current position in the IF-buffer.
+char IF_Filename[255] = "/home/Artyom/verilator/glns_iq_16e6.DAT"; // Name of the file with GLONASS signal record.
+int ifdata_curr_pos;                                               // Current position in the IF-buffer.
 
 // output file for external analysis:
 FILE *extfile;
@@ -322,13 +318,6 @@ void read_sample_from_file(unsigned char *i, unsigned char *q)
     fread(&IF, sizeof(char), 32000, ifdata);
     ifdata_curr_pos = 0;
   }
-/*  #ifndef ENABLE_IQ_PROCESSING
-  *q = 0;
-  #else
-  *q = ( IF[2*ifdata_curr_pos]   > 0 ? 1 : 0 ); //1-bit quantization for now...
-  #endif
-  *i = ( IF[2*ifdata_curr_pos+1] > 0 ? 1 : 0 ); //1-bit quantization for now...*/
-
 
   #ifndef ENABLE_IQ_PROCESSING
   *q = 0;
@@ -336,9 +325,6 @@ void read_sample_from_file(unsigned char *i, unsigned char *q)
   *q = ( IF[2*ifdata_curr_pos]   > 0 ? 1 : 0 ); //1-bit quantization for now...
   #endif
   *i = ( IF[2*ifdata_curr_pos+1] > 0 ? 1 : 0 ); //1-bit quantization for now...
-
-
-
 
   if (++div_ratio == 5){
     ifdata_curr_pos++;
@@ -369,7 +355,6 @@ void alloc_task()
 {
   int i,k,already_allocated;
   static int sv = 26;//15;//22;//12;//15;//26;//0; //[Art] to reduce acquisition time!
-  int sv_index[2] = {27, 17};
   
   ///while (1) {
     for (i=0; i<MAX_CHANNELS; i++) {
@@ -384,10 +369,11 @@ void alloc_task()
         CH[i].half_chip_counter = 0;
         CH[i].freq_bin_counter = 0;
         CH[i].pull_in_time = 0;
-        CH[i].carr_nco = CARR_REF + CarrSrchStep*2; //[Art] to reduce acquisition time!
+        CH[i].carr_nco = CARR_REF;// + CarrSrchStep*2; //[Art] to reduce acquisition time!
         CH[i].code_nco = CODE_REF;
         
-        outpw((CH[i].BASE+PRN_KEY), prntaps[sv]);
+        ///outpw((CH[i].BASE+PRN_KEY), prntaps[sv]);
+        outpw((CH[i].BASE+PRN_KEY), (1<<10));//[Art] Enable GLONASS code generation.
         ///outpw((CH[i].BASE+CARR_NCO), CH[i].carr_nco);
         outpw((CH[i].BASE+CARR_NCO_LOW),  (CH[i].carr_nco & 0x0000ffff));
         ///outpw((CH[i].BASE+CARR_NCO_HIGH), ((CH[i].carr_nco & 0xffff0000)>>16));
@@ -403,9 +389,7 @@ void alloc_task()
         outpw((CH[i].BASE+CODE_NCO_HIGH), ((CH[i].code_nco & 0xffff0000)>>16));
         
         CH[i].prn = sv+1;//[Art]temporary commented.
-        //CH[i].prn = sv_index[0];
-        //CH[i].prn =  sv_index[i];
-        printf("PRN# %d \n", CH[i].prn);
+        printf("GLONASS MODE\n");
         
         // Search the next unallocated satellite
         do {
@@ -567,10 +551,9 @@ void accum_task()
         // T = 1ms
         // y(i)-y(i-1) = -(1.414*wn*(x(i)_pll-x(i-1)_pll) + wn^2*T*x(i)_pll) + wn*T*x(i)_fll
         {
-          ///ltemp = sign(IP[i])*QP[i];
           ltemp = -sign(QP[i])*IP[i];
           
-          E = ltemp<<11;
+          E = ltemp<<13; //[Art]. Corrected empirically during debug.
           
           ltemp = (E - CH[i].E) + ((E + 16L)>>5);
           
@@ -652,9 +635,7 @@ void accum_task()
         CH[i].QP = QP[i];
         
         // Update the carrier NCO
-        ///outpw((CH[i].BASE+CARR_NCO), CH[i].carr_nco);
         outpw((CH[i].BASE+CARR_NCO_LOW),  (CH[i].carr_nco & 0x0000ffff));
-        ///outpw((CH[i].BASE+CARR_NCO_HIGH), ((CH[i].carr_nco & 0xffff0000)>>16));[Art]
         if (CH[i].carr_nco_sign > 0 ){
           outpw((CH[i].BASE+CARR_NCO_HIGH), ( ((CH[i].carr_nco & 0xffff0000)>>16) | (1<<15) )); //[Art]. (1<<15) is the sign!
         }                                                                                       //of the NCO freq.
@@ -664,7 +645,6 @@ void accum_task()
         //printf("%d \t %d \n", CH[i].carr_nco_sign, top->test_point_02);//[Art]. Debug.
         
         // Update the code NCO
-        ///outpw((CH[i].BASE+CODE_NCO), CH[i].code_nco);
         outpw((CH[i].BASE+CODE_NCO_LOW),  (CH[i].code_nco & 0x0000ffff));
         outpw((CH[i].BASE+CODE_NCO_HIGH), ((CH[i].code_nco & 0xffff0000)>>16));
       }
@@ -739,16 +719,13 @@ int main(int argc, char **argv, char **env) {
   // Reset baseband processor:
   outpw(RESET, 0);
   // Set ACCUM_INT for 800us:
-  ///outpw(PROG_ACCUM_INT, 63999L);  // = (16MHz * 5) * 800us - 1
-  outpw(PROG_ACCUM_INT_LOW,  (63999L & 0x0000ffff));      // = (16MHz * 5) * 800us - 1
-  outpw(PROG_ACCUM_INT_HIGH, ((63999L & 0xffff0000)>>16));// = (16MHz * 5) * 800us - 1
+  outpw(PROG_ACCUM_INT_LOW,  (63999L & 0x0000ffff));       // = (16MHz * 5) * 800us - 1
+  outpw(PROG_ACCUM_INT_HIGH, ((63999L & 0xffff0000)>>16)); // = (16MHz * 5) * 800us - 1
   // Set PROG_TIC counter for 0.1s:
-  ///outpw(PROG_TIC, 7999999L);      // = (16MHz * 5) * 0.1s - 1
-  outpw(PROG_TIC_LOW,  (7999999L & 0x0000ffff));      // = (16MHz * 5) * 0.1s - 1
-  outpw(PROG_TIC_HIGH, ((7999999L & 0xffff0000)>>16));// = (16MHz * 5) * 0.1s - 1
+  outpw(PROG_TIC_LOW,  (7999999L & 0x0000ffff));           // = (16MHz * 5) * 0.1s - 1
+  outpw(PROG_TIC_HIGH, ((7999999L & 0xffff0000)>>16));     // = (16MHz * 5) * 0.1s - 1
   // Initialize channels:
   for (int i=0; i<MAX_CHANNELS; i++) {
-    //CH[i].BASE              = 0x10*i;
     CH[i].BASE              = 0x26*(i+DBG_STRT_CHNL);
     CH[i].prn               = IDLE;
     CH[i].lock_status       = NO_LOCK;
@@ -762,7 +739,6 @@ int main(int argc, char **argv, char **env) {
     CH[i].freq_bin_counter  = 0;
     CH[i].pull_in_time      = 0;
     CH[i].carr_nco_sign     = CARR_REF_SIGN; //[Art]. IQ-processing rough addition.
-    ///CH[i].carr_nco_sign     = 0; //[Art]. Test.
     CH[i].carr_nco          = CARR_REF;
     CH[i].code_nco          = CODE_REF;
   }
@@ -777,7 +753,7 @@ int main(int argc, char **argv, char **env) {
     // dump variables into VCD file and toggle clock
     wait_clock();
 
-    if (sys_cycle_count == 1000*80000) run = false;
+    if (sys_cycle_count == 4500*80000) run = false;
 
     if (Verilated::gotFinish())  exit(0);
   }
