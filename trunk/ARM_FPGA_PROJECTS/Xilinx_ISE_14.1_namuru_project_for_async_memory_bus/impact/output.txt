@@ -1,9 +1,0 @@
-Storage Target: Xilinx Flash/PROM
-Storage Family: Platform Flash
-xcf04s          [4 M]
-FF
-gps_baseband_16bit_async_mem_bus_with_debug_signals_10channels_without_debug.mcs
-C:\ARM\Correlator_multichannel\impact\
-
-MCS
-No
