@@ -1,0 +1,17 @@
+PROMGEN: Xilinx Prom Generator P.15xf
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+promgen -w -p mcs -c FF -o C:\ARM\Correlator_multichannel\impact\//gps_baseband_16bit_async_mem_bus_with_debug_signals.mcs -x xcf04s -u 00000000 C:/ARM/Correlator_multichannel/gps_baseband_16bit_async_mem_bus.bit 
+
+PROM C:\ARM\Correlator_multichannel\impact\gps_baseband_16bit_async_mem_bus_with_debug_signals.prm map: Thu Jun 07 11:49:04 2012
+
+Calculating PROM checksum with fill value ff
+
+Format        Mcs86 (32-bit)
+Size          512K
+PROM start    0000:0000
+PROM end      0007:ffff
+PROM checksum 04027af1
+
+        Addr1        Addr2                     Date File(s)
+    0000:0000    0004:547f     Jun 07 11:21:38 2012 C:/ARM/Correlator_multichannel/gps_baseband_16bit_async_mem_bus.bit

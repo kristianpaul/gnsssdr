@@ -1,0 +1,50 @@
+NET "extclk" LOC=p78 | CLOCK_DEDICATED_ROUTE = FALSE;
+#Net "hw_rstn" LOC=p101;
+
+NET "sign" LOC=p86;
+NET "sign_q" LOC=p84;
+
+NET "accum_int" LOC=p107;
+#NET "accum_int" LOC=p60;
+
+#MCU-FPGA interface:-----------------------------------
+NET "wen_a" LOC=p76;
+NET "oen_a" LOC=p62;
+NET "csn_a" LOC=p51;
+
+#NET "wen" PERIOD = 50 ns;
+#data_lines:
+NET "data[0]"  LOC=p22;
+NET "data[1]"  LOC=p18;
+NET "data[2]"  LOC=p15;
+NET "data[3]"  LOC=p9;
+NET "data[4]"  LOC=p5;
+NET "data[5]"  LOC=p4;
+NET "data[6]"  LOC=p2;
+NET "data[7]"  LOC=p24;
+NET "data[8]"  LOC=p23;
+NET "data[9]"  LOC=p19;
+NET "data[10]" LOC=p16;
+NET "data[11]" LOC=p12;
+NET "data[12]" LOC=p11;
+NET "data[13]" LOC=p8;
+NET "data[14]" LOC=p3;
+NET "data[15]" LOC=p25;
+#address_lines:
+NET "address_a[0]" LOC=p47;
+NET "address_a[1]" LOC=p45;
+NET "address_a[2]" LOC=p68;
+NET "address_a[3]" LOC=p40;
+NET "address_a[4]" LOC=p39;
+NET "address_a[5]" LOC=p36;
+NET "address_a[6]" LOC=p35;
+NET "address_a[7]" LOC=p34;
+NET "address_a[8]" LOC=p33;
+NET "address_a[9]" LOC=p77; 
+
+#TEST_POINTS_FOR_DEBUGGING:------------------------------
+#NET "test_point_01" LOC=p98;
+#NET "test_point_02" LOC=p97;
+#NET "test_point_03" LOC=p96;
+#NET "test_point_04" LOC=p94;
+#NET "test_point_05" LOC=p93;
