@@ -1,8 +1,0 @@
-INTSTYLE=ise
-INFILE=C:\ARM\Correlator_multichannel\gps_baseband_16bit_async_mem_bus.ncd
-OUTFILE=C:\ARM\Correlator_multichannel\gps_baseband_16bit_async_mem_bus.bit
-FAMILY=Spartan3E
-PART=xc3s500e-5pq208
-WORKINGDIR=C:\ARM\Correlator_multichannel
-LICENSE=WebPack
-USER_INFO=176454237_0_0_415

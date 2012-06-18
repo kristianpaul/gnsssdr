@@ -1,8 +1,0 @@
-INTSTYLE=impact
-INFILE=C:\ARM\Correlator_multichannel\impact\impact.xsl
-OUTFILE=C:\ARM\Correlator_multichannel\impact\impact.xsl
-FAMILY=Multiple
-PART=Multiple
-WORKINGDIR=C:\ARM\Correlator_multichannel\impact
-LICENSE=iMPACT
-USER_INFO=iMPACT
