@@ -1,6 +1,10 @@
-function [pseudoranges] = calculatePseudoranges(trackResults, ...
+function [pseudoranges] = calculatePseudoranges(numberOfChannels, ...
+                                                samplesPerCode, ...
+                                                absoluteSample, ...
+                                                startOffset, ...
+                                                c, ...
                                                 msOfTheSignal, ...
-                                                channelList, settings)
+                                                channelList)
 //calculatePseudoranges finds relative pseudoranges for all satellites
 //listed in CHANNELLIST at the specified millisecond of the processed
 //signal. The pseudoranges contain unknown receiver clock offset. It can be
@@ -25,6 +29,7 @@ function [pseudoranges] = calculatePseudoranges(trackResults, ...
 // Copyright (C) Darius Plausinaitis
 // Written by Darius Plausinaitis
 // Based on Peter Rinder and Nicolaj Bertelsen
+// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //
 //This program is free software; you can redistribute it and/or
@@ -43,34 +48,27 @@ function [pseudoranges] = calculatePseudoranges(trackResults, ...
 //USA.
 //--------------------------------------------------------------------------
 
-// CVS record:
-// Id: calculatePseudoranges.m,v 1.1.2.18 2006/08/09 17:20:11 dpl Exp
+  //--- Set initial travel time to infinity ----------------------------------
+  // Later in the code a shortest pseudorange will be selected. Therefore
+  // pseudoranges from non-tracking channels must be the longest - e.g.
+  // infinite. 
+  travelTime = %inf*ones(1, numberOfChannels);
 
-//--- Set initial travel time to infinity ----------------------------------
-// Later in the code a shortest pseudorange will be selected. Therefore
-// pseudoranges from non-tracking channels must be the longest - e.g.
-// infinite. 
-travelTime = %inf*ones(1, settings.numberOfChannels);
-
-// Find number of samples per spreading code
-samplesPerCode = round(settings.samplingFreq / ...
-                        (settings.codeFreqBasis / settings.codeLength));
-
-//--- For all channels in the list ... 
-for channelNr = channelList
+  //--- For all channels in the list ... 
+  for channelNr = channelList
 
     //--- Compute the travel times -----------------------------------------    
     travelTime(channelNr) = ...
-        trackResults(channelNr).absoluteSample(msOfTheSignal(channelNr)) / samplesPerCode;
-end
+        absoluteSample(channelNr, msOfTheSignal(channelNr)) / samplesPerCode;
+  end
 
-//--- Truncate the travelTime and compute pseudoranges ---------------------
-minimum         = floor(min(travelTime));
-travelTime      = travelTime - minimum + settings.startOffset;
-
-//--- Convert travel time to a distance ------------------------------------
-// The speed of light must be converted from meters per second to meters
-// per millisecond. 
-pseudoranges    = travelTime * (settings.c / 1000);
-
+  //--- Truncate the travelTime and compute pseudoranges ---------------------
+  minimum         = floor(min(travelTime));
+  travelTime      = travelTime - minimum + startOffset;
+  
+  //--- Convert travel time to a distance ------------------------------------
+  // The speed of light must be converted from meters per second to meters
+  // per millisecond. 
+  pseudoranges    = travelTime * (c / 1000);
+  
 endfunction

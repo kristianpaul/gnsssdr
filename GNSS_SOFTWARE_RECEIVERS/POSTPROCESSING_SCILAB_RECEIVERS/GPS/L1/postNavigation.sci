@@ -64,11 +64,12 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   set_elevationMask  = settings.elevationMask;
   set_useTropCorr    = settings.useTropCorr;
   set_samplesPerCode = round(settings.samplingFreq / (settings.codeFreqBasis / settings.codeLength));
+  set_msToProcess    = settings.msToProcess;
   //Local variables - end.
 
   svnCount = sum(trkRslt_status == 'T');
 
-  if (settings.msToProcess < 36000) | (svnCount < 4)
+  if (set_msToProcess < 36000) | (svnCount < 4)
     // Show the error message and exit
     printf('Record is to short or too few satellites tracked. Exiting!\n');
     navSolutions = [];
@@ -159,7 +160,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     loop_PRN(ttt) = trackResults(ttt).PRN;
   end
   // Initialization of current measurement ==================================
-  for currMeasNr = 1:fix((settings.msToProcess - max(subFrameStart)) / ...
+  for currMeasNr = 1:fix((set_msToProcess - max(subFrameStart)) / ...
                                                      set_navSolPeriod);
     
     // Exclude satellites, that are belove elevation mask 
@@ -177,9 +178,11 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
 
 // Find pseudoranges ======================================================
     navSol_channel_rawP(:, currMeasNr) = calculatePseudoranges(...
-            trackResults, ...
-            subFrameStart + settings.navSolPeriod * (currMeasNr-1), ...
-            activeChnList, settings)';
+            set_numberOfChnls, set_samplesPerCode,...
+            absoluteSample, ...
+            set_startOffset, set_c, ...
+            subFrameStart + set_navSolPeriod * (currMeasNr-1), ...
+            activeChnList)';
 
 // Find satellites positions and clocks corrections =======================
     //pause;
