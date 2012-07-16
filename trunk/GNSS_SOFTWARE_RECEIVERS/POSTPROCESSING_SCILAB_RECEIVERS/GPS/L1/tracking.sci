@@ -86,6 +86,9 @@ function [trackResults, channel]= tracking(fid, channel, settings)
   
   codePeriods = settings.msToProcess;     // For GPS one C/A code is one ms
   
+  // CodeLength:
+  settings_codeLength = settings.codeLength;
+  
   //--- DLL variables --------------------------------------------------------
   // Define early-late offset (in chips)
   earlyLateSpc = settings.dllCorrelatorSpacing;
@@ -335,7 +338,11 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         
 // Record various measures to show in postprocessing ----------------------
         // Record sample number (based on 8bit samples)
-        loopCnt_absoluteSample(loopCnt) =(mtell(fid))/dataAdaptCoeff;
+        ///loopCnt_absoluteSample(loopCnt) =(mtell(fid))/dataAdaptCoeff;
+        //[Art] Add assistance from carrier tracking loop:
+        loopCnt_absoluteSample(loopCnt) = (mtell(fid))/dataAdaptCoeff - ...
+                                          remCodePhase * ...
+                                          (loopCnt_samplingFreq/1000)/settings_codeLength;
 
         loopCnt_dllDiscr(loopCnt)       = codeError;
         loopCnt_dllDiscrFilt(loopCnt)   = codeNco;
