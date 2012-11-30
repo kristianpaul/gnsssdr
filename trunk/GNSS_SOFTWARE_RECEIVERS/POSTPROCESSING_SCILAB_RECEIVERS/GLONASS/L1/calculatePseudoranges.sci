@@ -61,7 +61,7 @@ end
 
 //--- Truncate the travelTime and compute pseudoranges ---------------------
 minimum         = floor(min(travelTime));
-travelTime      = travelTime - minimum + startOffset;
+travelTime      = travelTime - minimum;
 
 //--- Convert travel time to a distance ------------------------------------
 // The speed of light must be converted from meters per second to meters
