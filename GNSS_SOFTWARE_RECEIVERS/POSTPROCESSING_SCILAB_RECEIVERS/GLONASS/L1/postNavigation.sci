@@ -57,7 +57,6 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   end
 
   set_numberOfChnls  = settings.numberOfChannels;
-  set_startOffset    = settings.startOffset;
   set_c              = settings.c;
   set_navSolPeriod   = settings.navSolPeriod;
   set_elevationMask  = settings.elevationMask;
@@ -99,6 +98,10 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     
     //--- Exclude satellite if it has MSB of health flag set:
     if ( eph(trackResults(channelNr).SVN).Bn == 4 )
+        activeChnList = setdiff(activeChnList, channelNr);
+    end
+    //--- Exclude satellite if it ln flag is set:
+    if ( eph(trackResults(channelNr).SVN).In3 == 4 )
         activeChnList = setdiff(activeChnList, channelNr);
     end
     
@@ -161,7 +164,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     // Find pseudoranges ======================================================
     navSol_channel_rawP(:, currMeasNr) = calculatePseudoranges(...
             set_numberOfChnls, set_samplesPerCode, absoluteSample,...
-            set_startOffset, set_c, ...
+            set_c, ...
             stringStart + set_navSolPeriod * (currMeasNr-1), activeChnList)';
 
     // Find satellites positions and clocks corrections =======================

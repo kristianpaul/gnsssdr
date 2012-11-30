@@ -129,6 +129,5 @@ function settings = initSettings()
   // Constants ==============================================================
   
   settings.c                       = 299792458;// The speed of light, [m/s]
-  settings.startOffset             = 68.802;   //[ms] Initial sign. travel time
   
 endfunction
