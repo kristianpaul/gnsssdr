@@ -80,6 +80,13 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   // Decode ephemerides =====================================================
   for channelNr = activeChnList
 
+    //Add condition for the case of weak signal (Not all nav data is available):
+    if (stringStart(channelNr) + 300 + (1500 * 20) -1) > length(trkRslt_I_P(channelNr,:)) then
+      activeChnList = setdiff(activeChnList, channelNr);
+      stringStart(channelNr) = []
+      continue;
+    end
+
     //--- Copy 15 strings long record from tracking output ---------------
     navBitsSamples = trkRslt_I_P(channelNr, stringStart(channelNr) +...
                          300 : stringStart(channelNr) + 300 + (1500 * 20) -1)';
