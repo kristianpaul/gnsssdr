@@ -87,19 +87,28 @@ function [trackResults, channel]= tracking(fid, channel, settings)
   codePeriods = settings.msToProcess;     // For GLONASS one open code is one ms
   
   // CodeLength:
-  settings_codeLength = settings.codeLength;
+  settings_codeLength           = settings.codeLength;
   
   // GLONASS zero frequency:
   settings_GLONASS_zero_channel = settings.GLONASS_zero_channel;
   
   // GLONASS nominal IF:
-  settings_IF = settings.IF;
+  settings_IF                   = settings.IF;
   
   // GLONASS channel spacing:
-  settings_L1_IF_step = settings.L1_IF_step;
+  settings_L1_IF_step           = settings.L1_IF_step;
   
   // Nominal code frequency:
-  settings_codeFreqBasis = settings.codeFreqBasis;
+  settings_codeFreqBasis        = settings.codeFreqBasis;
+  
+  // Normal or switched IQ signal record:
+  settings_switchIQ             = settings.switchIQ;
+  
+  // Current sample number (of the signal from file):
+  currentSample                 = 0;
+  
+  // Data type size in bytes of samples from gnss file record:
+  settings_dataTypeSizeInBytes = settings.dataTypeSizeInBytes
   
   // Copy frequency channels numbers:
   for i = 1:length(channel.FCH)
@@ -152,7 +161,11 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       // appropriate sample (corresponding to code phase). Assumes sample
       // type is schar (or 1 byte per sample) 
       mseek(dataAdaptCoeff*...
-            (settings.skipNumberOfBytes + channel(channelNr).codePhase-1), fid);
+            (settings.skipNumberOfBytes + ...
+             settings.dataTypeSizeInBytes*(channel(channelNr).codePhase-1)), fid);
+      currentSample = dataAdaptCoeff*...
+            (settings.skipNumberOfBytes + ...
+             settings.dataTypeSizeInBytes*(channel(channelNr).codePhase-1));
 
       // Get a vector with the C/A code sampled 1x/chip
       caCode = generateSTcode();
@@ -242,11 +255,16 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         // interation 
         rawSignal = mget(dataAdaptCoeff*blksize, loopCnt_dataType, fid);
         samplesRead = length(rawSignal);
+        currentSample = currentSample + settings_dataTypeSizeInBytes*dataAdaptCoeff*blksize;
         
         if (dataAdaptCoeff==2)
           rawSignal1 = rawSignal(1:2:$);
           rawSignal2 = rawSignal(2:2:$);
-          rawSignal = rawSignal1 + %i .* rawSignal2;  //transpose vector
+          if (settings_switchIQ) then
+              rawSignal = rawSignal2 + %i .* rawSignal1;
+          else
+              rawSignal = rawSignal1 + %i .* rawSignal2;
+          end
         end
         
         
@@ -315,7 +333,8 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         dot   = abs(I1*I2 + Q1*Q2);
         
         // Implement carrier loop discriminator (frequency detector)
-        //freqError = atan(cross, dot)/(2*%pi)/0.001/500; //0.001 - integration periode. 500 - maximum discriminator output.
+        //freqError = atan(cross, dot)/(2*%pi)/0.001/500; //0.001 - integration periode. 
+                                                          //500 - maximum discriminator output.
         freqError = atan(cross, dot) / %pi;  //normalized output in the range from -1 to +1.
         
         // Implement carrier loop discriminator (phase detector)
@@ -323,10 +342,6 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         
         //Implement carrier loop filter and generate NCO command; 
         carrNco = oldCarrNco + k1*carrError - k2*oldCarrError - k3*freqError;
-        //(PLL Bw = 25 Hz; FLL Bw = 250 Hz).
-        //carrNco = oldCarrNco + (68.92)*carrError - (66.70)*oldCarrError - (1.0)*freqError;
-        //(PLL Bw = 7 Hz; FLL Bw = 250 Hz).
-        //carrNco = oldCarrNco + (18.85)*carrError - (18.68)*oldCarrError - (1.0)*freqError;
         
         oldCarrNco = carrNco;
         oldCarrError = carrError;
@@ -363,9 +378,13 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         // Record sample number (based on 8bit samples)
         ///loopCnt_absoluteSample(loopCnt) =(mtell(fid))/dataAdaptCoeff;
         ///loopCnt_absoluteSample(loopCnt) = (mtell(fid))/dataAdaptCoeff - remCodePhase*16000/511;
-        loopCnt_absoluteSample(loopCnt) = (mtell(fid))/dataAdaptCoeff - ...
+        ///loopCnt_absoluteSample(loopCnt) = (mtell(fid))/dataAdaptCoeff - ...
+        ///                                  remCodePhase * ...
+        ///                                  (loopCnt_samplingFreq/1000)/settings_codeLength;
+        loopCnt_absoluteSample(loopCnt)= currentSample/dataAdaptCoeff - ...
                                           remCodePhase * ...
                                           (loopCnt_samplingFreq/1000)/settings_codeLength;
+        // Don't use mtell any more! Because problems on big files (>4Gb).
         
         loopCnt_dllDiscr(loopCnt)       = codeError;
         loopCnt_dllDiscrFilt(loopCnt)   = codeNco;
