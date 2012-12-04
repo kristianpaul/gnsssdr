@@ -82,7 +82,11 @@ if (fid > 0)
         xtitle('Time domain plot', 'Time (ms)', 'Amplitude');
     else
 
-        data = data(1:2:$) - %i.*data(2:2:$);
+        if (settings.switchIQ==1) then
+            data = data(2:2:$) - %i.*data(1:2:$);
+        else
+            data = data(1:2:$) - %i.*data(2:2:$);
+        end
         subplot(3, 2, 4);
         plot(1000 * timeScale(1:round(samplesPerCode/50)), ...
             real(data(1:round(samplesPerCode/50))));

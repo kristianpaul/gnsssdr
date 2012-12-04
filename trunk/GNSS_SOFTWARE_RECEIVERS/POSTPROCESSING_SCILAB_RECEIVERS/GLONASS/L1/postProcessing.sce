@@ -92,9 +92,13 @@ if (fid > 0)
                  samplesPerCode, settings.dataType, fid);
     
     if (dataAdaptCoeff==2)
-        data1=data(1:2:$);    
-        data2=data(2:2:$);    
-        data=data1 + %i.*data2;
+        data1=data(1:2:$);
+        data2=data(2:2:$);
+        if (settings.switchIQ == 1) then
+            data=data2 + %i.*data1;
+        else
+            data=data1 + %i.*data2;
+        end
     end
     
     //--- Do the acquisition -------------------------------------------

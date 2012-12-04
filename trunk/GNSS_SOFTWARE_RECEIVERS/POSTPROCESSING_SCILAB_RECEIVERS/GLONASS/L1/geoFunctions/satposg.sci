@@ -34,7 +34,8 @@ function [satPositions, satVelocities, satAccelerations, satTransmitTime, satClk
     prn = prnList(satNr);
 
     //Delta time between ephemeris issue time and current time.
-    deltat = (transmitTime*1000) - (eph(prn).tb * 60 * 1000); 
+    ///deltat = (transmitTime*1000) - (eph(prn).tb * 60 * 1000); 
+    deltat = (transmitTime(prn)*1000) - (eph(prn).tb * 60 * 1000);
     //To speed up calculations we split satpos calculations is subintervals.
     deltat10    = fix(deltat/10000);
     remdeltat10 = deltat - fix(deltat/10000)*10000;

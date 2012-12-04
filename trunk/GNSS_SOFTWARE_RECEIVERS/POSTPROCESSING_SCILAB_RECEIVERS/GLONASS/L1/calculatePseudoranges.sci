@@ -1,5 +1,6 @@
 function [pseudoranges] = calculatePseudoranges(numberOfChannels, samplesPerCode,...
                                                 absoluteSample, c, ...
+                                                dataTypeSizeInBytes, ...
                                                 msOfTheSignal, channelList)
 //calculatePseudoranges finds relative pseudoranges for all satellites
 //listed in CHANNELLIST at the specified millisecond of the processed
@@ -10,15 +11,16 @@ function [pseudoranges] = calculatePseudoranges(numberOfChannels, samplesPerCode
 //                                       channelList, settings)
 //
 //   Inputs:
-//       numberOfChannels  - number of Channels
-//       samplesPerCode    - samples number per code
-//       absoluteSample    - trackResults.absoluteSample
-//       startOffset       - settings.startOffset
-//       c                 - speed of light
-//       msOfTheSignal     - 
-//       channelList       - list of Channels
+//       numberOfChannels    - number of Channels
+//       samplesPerCode      - samples number per code
+//       absoluteSample      - trackResults.absoluteSample
+//       startOffset         - settings.startOffset
+//       c                   - speed of light
+//       dataTypeSizeInBytes - Data type of samples from the GNSS signal record
+//       msOfTheSignal       - 
+//       channelList         - list of Channels
 //   Outputs:
-//       pseudoranges      - relative pseudoranges to the satellites. 
+//       pseudoranges        - relative pseudoranges to the satellites. 
 
 //--------------------------------------------------------------------------
 //                           SoftGNSS v3.0
@@ -56,7 +58,8 @@ travelTime = %inf*ones(1, numberOfChannels);
 for channelNr = channelList
     //--- Compute the travel times -----------------------------------------    
     travelTime(channelNr) = ...
-          absoluteSample(channelNr, msOfTheSignal(channelNr)) / samplesPerCode;
+          absoluteSample(channelNr, msOfTheSignal(channelNr)) / samplesPerCode / ...
+          dataTypeSizeInBytes;
 end
 
 //--- Truncate the travelTime and compute pseudoranges ---------------------

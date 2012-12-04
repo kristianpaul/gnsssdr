@@ -23,6 +23,10 @@ function [eph, t] = ephemeris(data)
 
   //Decode 15 data strings!
   string_1_pos = 0;//Used to detect first string number.
+  eph.tk_h = 0; //Initilize these variables!!!
+  eph.tk_m = 0;
+  eph.tk_s = 0;
+  
   for i=1:15
     curr_str = data(2000*(i-1)+1 : 2000*(i-1)+1700);//Take 1700 samples 
                                               //wich correspond to 85 data bits
@@ -30,6 +34,11 @@ function [eph, t] = ephemeris(data)
     decoded_str = decode_gl_data(curr_str); //bits er in the form: "0" - "-1", 
                                             //"1" - "+1".
     decoded_str = (decoded_str +1) / 2;     //convert "-1"/"+1" bits to "0"/"1".
+    
+    wrong_bits = find(decoded_str==0.5);    //This check is important for the case
+    if ~isempty(wrong_bits) then            //of weak signals or signal lost.
+      continue; //goto next loop iteration. //Later in postnavigation
+    end                                     //this sattelite will be excluded from processing.
 
     str_num = bin2dec(  strcat( dec2bin(decoded_str(84:-1:81)) )  );
   
@@ -85,8 +94,7 @@ function [eph, t] = ephemeris(data)
 
   t = (eph.tk_h * 60 * 60) + (eph.tk_m * 60) + eph.tk_s; //Time of the frame 
   //start in 24-hour format is converted in the number of seconds since the 
-  //day-start.
-
+ //day-start.
   t = t - ( (string_1_pos - 1)*2 ) - 0.3; //0.3 - time mark duration.
 
 endfunction 

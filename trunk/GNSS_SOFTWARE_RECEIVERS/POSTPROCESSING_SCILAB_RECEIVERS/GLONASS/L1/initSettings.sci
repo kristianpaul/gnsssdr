@@ -47,30 +47,33 @@ function settings = initSettings()
   // processing at any point in the data record (e.g. for long records). fseek
   // function is used to move the file read point, therefore advance is byte
   // based only. 
-  settings.skipNumberOfBytes     = 1*16e6;
+  settings.skipNumberOfBytes  = 1*16e6;
   
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
   // the post-processing mode
-  settings.fileName           = ...
-     'e:\GavAI\GPS\scilab_convert_data\routines\file_read\FFF005.DAT';
+  settings.fileName           = 'E:\GLONASS_L1\IQ\FFF005.DAT';
+  
   // Data type used to store one sample
-  settings.dataType           = 'cl';
+  settings.dataType           = 'cl';//'sl';
+  settings.dataTypeSizeInBytes = 1;//2; // This variable must be set correctly!!!
   
   // File Types
   //1 - 8 bit real samples S0,S1,S2,...
   //2 - 8 bit I/Q samples I0,Q0,I1,Q1,I2,Q2,...                      
   settings.fileType           = 2;
+  settings.switchIQ           = 0;//1; // Exchange I and Q samples read from the file.
+                                  //1 - exchange; 0 - don't exchange.
   
   // Intermediate, sampling and code frequencies
-  settings.samplingFreq       = 16.0e6;       //[Hz]
+  settings.samplingFreq       = 16e6;//25e6;       //[Hz]
   settings.codeFreqBasis      = 0.511e6;      //[Hz]
   // As GLONASS uses FDMA each satellite uses it's own frequency and hence 
   // has it's own IF frequency. Settings.IF corresponds to the zero channel 
   // frequency, i.e. to the nominal satellite frequency 1602.0000 MHz.
   // settings.IF = 1602.0e6 - 1601.0e6 = +1.0e6.
   // Where 1601 - is heterodyne frequency in rf front-end.
-  settings.IF                 = 1.0000e6;   //[Hz]
+  settings.IF                 = 1e6;//0;//4.0000e6;   //[Hz]
   settings.L1_IF_step         = 0.5625e6;   //[Hz]
   settings.GLONASS_zero_channel = 1602e6;   //[Hz]
   
@@ -82,7 +85,6 @@ function settings = initSettings()
   settings.skipAcquisition    = 0;
   // List of satellites frequency channels to look for. Some frequency channels
   // can be excluded to speed up acquisition
-  ///settings.acqFCHList         = -7:1:6;              // GLONASS frequency
   settings.acqFCHList         = -7:1:6;              // GLONASS frequency
                                                      // channels list
   // Band around IF to search for satellite signal. Depends on max Doppler
@@ -91,7 +93,7 @@ function settings = initSettings()
   settings.acqThreshold       = 3.0;         //this is empirical value;
   // Coherent integration time during acquisition (for GLONASS it can be from 1 
   // to 5 ms for current acquisition implementation)
-  settings.acqCohIntegration  = 4;
+  settings.acqCohIntegration  = 5;
   
   // Tracking loops settings ================================================
   // Code tracking loop parameters
@@ -105,6 +107,9 @@ function settings = initSettings()
   settings.fllNoiseBandwidth       = 250;    //[Hz]
   
   // Navigation solution settings ===========================================
+  
+  settings.skipNumberOfFirstBits   = 2500;   // Number of ms to skip (because
+                                             // of FLL to PLL transient)
   
   // Period for calculating pseudoranges and position
   settings.navSolPeriod            = 500;    //[ms]

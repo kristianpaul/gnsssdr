@@ -48,25 +48,30 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
 // when tracking has started in a middle of a string.
 
   //Local variables (to speed up code, bacause working with structs is slow):
-  trkRslt_I_P = zeros(size(trackResults, 2), settings.msToProcess);
+  trkRslt_I_P = zeros(size(trackResults, 2), (settings.msToProcess - settings.skipNumberOfFirstBits));
+  ///trkRslt_I_P = zeros(size(trackResults, 2), settings.msToProcess);
   for i = 1:size(trackResults, 2)
     trkRslt_status(i)   = trackResults.status(i);
-    trkRslt_I_P(i,:)    = trackResults(i).I_P;
+    trkRslt_I_P(i,:)    = trackResults(i).I_P((settings.skipNumberOfFirstBits+1):$);
+    ///trkRslt_I_P(i,:)    = trackResults(i).I_P;
     trkRslt_SVN(i)      = trackResults(i).SVN;
-    absoluteSample(i,:) = trackResults(i).absoluteSample;
+    ///absoluteSample(i,:) = trackResults(i).absoluteSample;
+    absoluteSample(i,:) = trackResults(i).absoluteSample((settings.skipNumberOfFirstBits+1):$);
   end
 
-  set_numberOfChnls  = settings.numberOfChannels;
-  set_c              = settings.c;
-  set_navSolPeriod   = settings.navSolPeriod;
-  set_elevationMask  = settings.elevationMask;
-  set_useTropCorr    = settings.useTropCorr;
-  set_samplesPerCode = round(settings.samplingFreq / (settings.codeFreqBasis / settings.codeLength));
+  set_numberOfChnls       = settings.numberOfChannels;
+  set_c                   = settings.c;
+  set_navSolPeriod        = settings.navSolPeriod;
+  set_elevationMask       = settings.elevationMask;
+  set_useTropCorr         = settings.useTropCorr;
+  set_samplesPerCode      = round(settings.samplingFreq / ...
+                               (settings.codeFreqBasis / settings.codeLength));
+  set_dataTypeSizeInBytes = settings.dataTypeSizeInBytes
   //Local variables - end.
 
   svnCount = sum(trkRslt_status == 'T');
 
-  if (settings.msToProcess < 32000) | (svnCount < 4)
+  if (settings.msToProcess < 35000) | (svnCount < 4)
     // Show the error message and exit
     printf('Record is to short or too few satellites tracked. Exiting!\n');
     navSolutions = [];
@@ -93,22 +98,27 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     //--- Convert prompt correlator output to +-1 ---------
     navBitsSamples = sign(navBitsSamples');
     //--- Decode data and extract ephemeris information ---
-    [eph(trkRslt_SVN(channelNr)), t] = ephemeris(navBitsSamples);
+    [eph(trkRslt_SVN(channelNr)), t(trkRslt_SVN(channelNr))] = ephemeris(navBitsSamples);
+
     //--- Exclude satellite if it does not have the necessary nav data -----
-    ///if (isempty(eph(trackResults(channelNr).SVN).tk_h) | ...
-    ///    isempty(eph(trackResults(channelNr).SVN).tk_m) | ...
-    ///    isempty(eph(trackResults(channelNr).SVN).tk_s))
-    ///
-    ///    //--- Exclude channel from the list (from further processing) ------
-    ///    activeChnList = setdiff(activeChnList, channelNr);
-    ///end
+    // we will check existence of at least one variable from each 
+    // navigation string. It would be better to check existence of all variable 
+    // but in this case the condition will be too huge and unclear!
+    if (isempty(eph(trackResults(channelNr).SVN).x) | ... 
+        isempty(eph(trackResults(channelNr).SVN).y) | ...
+        isempty(eph(trackResults(channelNr).SVN).z) | ...
+        isempty(eph(trackResults(channelNr).SVN).taun) );
+    
+      //--- Exclude channel from the list (from further processing) ------
+      activeChnList = setdiff(activeChnList, channelNr);
+    end
     
     //--- Exclude satellite if it has MSB of health flag set:
     if ( eph(trackResults(channelNr).SVN).Bn == 4 )
         activeChnList = setdiff(activeChnList, channelNr);
     end
     //--- Exclude satellite if it ln flag is set:
-    if ( eph(trackResults(channelNr).SVN).In3 == 4 )
+    if ( eph(trackResults(channelNr).SVN).In3 == 1 )
         activeChnList = setdiff(activeChnList, channelNr);
     end
     
@@ -137,6 +147,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   // time.  
   readyChnList = activeChnList;
 
+  ///transmitTime = max(t(trkRslt_SVN(activeChnList)));
   transmitTime = t;
 
   //##########################################################################
@@ -153,7 +164,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   //More local variables - end
 
   // Initialization of current measurement ==================================
-  for currMeasNr = 1:fix((settings.msToProcess - max(stringStart)) / ... 
+  for currMeasNr = 1:fix((settings.msToProcess - max(stringStart) - settings.skipNumberOfFirstBits) / ... 
                    set_navSolPeriod)
     // Exclude satellites, that are belove elevation mask 
     activeChnList = intersect(find(satElev >= set_elevationMask), ...
@@ -171,7 +182,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     // Find pseudoranges ======================================================
     navSol_channel_rawP(:, currMeasNr) = calculatePseudoranges(...
             set_numberOfChnls, set_samplesPerCode, absoluteSample,...
-            set_c, ...
+            set_c, set_dataTypeSizeInBytes, ...
             stringStart + set_navSolPeriod * (currMeasNr-1), activeChnList)';
 
     // Find satellites positions and clocks corrections =======================
@@ -187,20 +198,18 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     if length(activeChnList) > 3
       
       //=== Calculate receiver position ==================================
-      [aa bb cc dd] = leastSquarePos(satPositions, ...
+      [xyzdt sat_el sat_az sat_dop] = leastSquarePos(satPositions, ...
                          navSol_channel_rawP(activeChnList, currMeasNr)' - ...
                          satClkCorr * set_c, ...
                          set_c, set_useTropCorr);
        //Transform from PZ90.02 to WGS84!
-       aaa = aa(1:3);
-       aaa = [-1.1 -0.3 -0.9] + ... 
-             (1-0.12e-6).*([1 -0.82e-6 0; 0.82e-6 1 0; 0 0 1] * aaa')';
-       aa(1:3) = aaa;
+       xyz = xyzdt(1:3);
+       xyz = [-1.1 -0.3 -0.9] + (1-0.12e-6).*([1 -0.82e-6 0; 0.82e-6 1 0; 0 0 1] * xyz')';
+       xyzdt(1:3) = xyz;
 
-       xyzdt = aa;
-       navSol_channel_el(activeChnList, currMeasNr) = bb';
-       navSol_channel_az(activeChnList, currMeasNr) = cc';
-       navSol_DOP(:, currMeasNr) = dd';
+       navSol_channel_el(activeChnList, currMeasNr) = sat_el';
+       navSol_channel_az(activeChnList, currMeasNr) = sat_az';
+       navSol_DOP(:, currMeasNr) = sat_dop';
 
       //--- Save results -------------------------------------------------
       navSol_X(currMeasNr)  = xyzdt(1);
@@ -258,13 +267,11 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
       navSol_N(currMeasNr)           = %nan;
       navSol_U(currMeasNr)           = %nan;
 
-      navSol_channel_az(activeChnList, currMeasNr) = ...
-                                      %nan .* ones(1, length(activeChnList));
-      navSol_channel_el(activeChnList, currMeasNr) = ...
-                                      %nan .* ones(1, length(activeChnList));
+      navSol_channel_az(activeChnList, currMeasNr) = %nan*ones(length(activeChnList),1);
+      navSol_channel_el(activeChnList, currMeasNr) = %nan*ones(length(activeChnList),1);
 
       // TODO: Know issue. Satellite positions are not updated if the
-      // satellites are excluded do to elevation mask. Therefore rasing
+      // satellites are excluded do to elevation mask. Therefore raising
       // satellites will be not included even if they will be above
       // elevation mask at some point. This would be a good place to
       // update positions of the excluded satellites.
