@@ -50,13 +50,16 @@ function acqResults = acquisition(longSignal, settings)
 
   // Create four 4 msec vectors of data
   // to correlate with (in worst case data loss would not be higher than 1/4):
-  signal1 = longSignal(1:2*samplesPerCode);
+  signal1 = longSignal(samplesPerCode*0/4+1:4/4*samplesPerCode);
+  signal2 = longSignal(samplesPerCode*1/4+1:5/4*samplesPerCode);
+  signal3 = longSignal(samplesPerCode*2/4+1:6/4*samplesPerCode);
+  signal4 = longSignal(samplesPerCode*3/4+1:7/4*samplesPerCode);
   
   // Find sampling period:
   ts = 1 / settings.samplingFreq;
   
   // Find phase points of the local carrier wave:
-  phasePoints = (0 : (2*samplesPerCode-1)) * 2*%pi*ts;
+  phasePoints = (0 : (samplesPerCode-1)) * 2*%pi*ts;
 
   // Number of the frequency bins for the given acquisition band 
   numberOfFrqBins = round(settings.acqSearchBand * 2*settings.msCodeLength) + 1;
@@ -87,8 +90,7 @@ function acqResults = acquisition(longSignal, settings)
   
   // Correlate signals ======================================================   
     //--- Perform DFT of C/A code ------------------------------------------
-    ///E1BCodeFreqDom = conj(fft(E1BCodesTable(PRN, :)));
-    E1BCodeFreqDom = conj(fft([E1BCodesTable(PRN, :) zeros(1, samplesPerCode)]));
+    E1BCodeFreqDom = conj(fft(E1BCodesTable(PRN, :)));
 
     //--- Make the correlation for whole frequency band (for all freq. bins)
     for frqBinIndex = 1:numberOfFrqBins
@@ -104,16 +106,47 @@ function acqResults = acquisition(longSignal, settings)
       //--- "Remove carrier" from the signal and Convert the baseband 
       // signal to frequency domain --------------------------------------
       IQfreqDom1 = fft(sigCarr .* signal1);
+      IQfreqDom2 = fft(sigCarr .* signal2);
+      IQfreqDom3 = fft(sigCarr .* signal3);
+      IQfreqDom4 = fft(sigCarr .* signal4);
       
       //--- Multiplication in the frequency domain (correlation in time domain)
       convCodeIQ1 = IQfreqDom1 .* E1BCodeFreqDom;
+      convCodeIQ2 = IQfreqDom2 .* E1BCodeFreqDom;
+      convCodeIQ3 = IQfreqDom3 .* E1BCodeFreqDom;
+      convCodeIQ4 = IQfreqDom4 .* E1BCodeFreqDom;
       
       //--- Perform inverse DFT and store correlation results ------------
       acqRes1 = abs(ifft(convCodeIQ1)) .^ 2;
+      acqRes2 = abs(ifft(convCodeIQ2)) .^ 2;
+      acqRes3 = abs(ifft(convCodeIQ3)) .^ 2;
+      acqRes4 = abs(ifft(convCodeIQ4)) .^ 2;
       
       //--- Check which 4msec had the greater power and save that, will
       //"blend" 1st and 2nd 4msec but will correct data bit issues
-      results(frqBinIndex, :) = acqRes1(1:samplesPerCode);
+      if     ( (max(acqRes1) > max(acqRes2)) &..
+               (max(acqRes1) > max(acqRes3)) &..
+               (max(acqRes1) > max(acqRes4)))
+        results(frqBinIndex, :) = acqRes1;
+        code_phase_corr = 0*samplesPerCode/4;
+        code_phase_slot = 1;
+      elseif ( (max(acqRes2) > max(acqRes1)) &..
+               (max(acqRes2) > max(acqRes3)) &..
+               (max(acqRes2) > max(acqRes4)))
+        results(frqBinIndex, :) = acqRes2;
+        code_phase_corr = 1*samplesPerCode/4;
+        code_phase_slot = 12;
+      elseif ( (max(acqRes3) > max(acqRes1)) &..
+               (max(acqRes3) > max(acqRes2)) &..
+               (max(acqRes3) > max(acqRes4)))
+        results(frqBinIndex, :) = acqRes3;
+        code_phase_corr = 2*samplesPerCode/4;
+        code_phase_slot = 3;
+      else
+        results(frqBinIndex, :) = acqRes4;
+        code_phase_corr = 3*samplesPerCode/4;
+        code_phase_slot = 4;
+      end
     
     end // frqBinIndex = 1:numberOfFrqBins
 
@@ -155,8 +188,8 @@ function acqResults = acquisition(longSignal, settings)
     // If the result is above threshold, then there is a signal ...
     if (peakSize/secondPeakSize) > settings.acqThreshold
       //--- Indicate PRN number of the detected signal -------------------
-      printf('%02d ', PRN);
-      acqResults.codePhase(PRN) = codePhase;
+      printf('%02d %01d   ', PRN, code_phase_slot);
+      acqResults.codePhase(PRN) = codePhase + 16000*2 + 0*code_phase_corr;
       acqResults.carrFreq(PRN)    =...
                                settings.IF - ...
                                (settings.acqSearchBand/2) * 1000 + ...
