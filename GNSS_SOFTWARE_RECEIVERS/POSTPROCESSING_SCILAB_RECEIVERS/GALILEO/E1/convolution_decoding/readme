@@ -1,0 +1,23 @@
+Version 0.0.2 (Wed Nov 3 16:12:39 CET 2004)
+
+Use :
+=====
+
+To use this library: 
+
+1 Under Scilab, go to the directory containing this README file.
+
+2 To load the encoding function :
+	getf('convol_encoder.sci');
+
+3 To load the hard decoding function :
+	getf('convol_decoder.sci');
+
+4 To load the soft decoding function :
+	getf('convol_decoder_soft.sci');
+
+5 To view a demo, change directory to 'examples' and write :
+	exec('r_1_2_g_7_5_hl.sci');
+
+Antoine Blais
+Romain Martineau
