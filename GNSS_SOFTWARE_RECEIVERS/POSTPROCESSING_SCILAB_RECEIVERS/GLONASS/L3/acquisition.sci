@@ -1,13 +1,13 @@
 function acqResults = acquisition(longSignal, settings)
 //Function performs cold start acquisition on the collected "data". It
-//searches for GALILEO signals of all satellites, which are listed in field
-//"acqSatelliteList" in the settings structure. Function saves code phase
-//and frequency of the detected signals in the "acqResults" structure.
+//searches for GLONASS L3 CDMA signals of all satellites, which are listed 
+//in field "acqSatelliteList" in the settings structure. Function saves 
+//code phase and frequency of the detected signals in the "acqResults" structure.
 //
 //acqResults = acquisition(longSignal, settings)
 //
 //   Inputs:
-//       longSignal    - 8 ms of raw signal from the front-end 
+//       longSignal    - 10 ms of raw signal from the front-end 
 //       settings      - Receiver settings. Provides information about
 //                       sampling and intermediate frequencies and other
 //                       parameters including the list of the satellites to
@@ -17,7 +17,11 @@ function acqResults = acquisition(longSignal, settings)
 //                       detected signals in the "acqResults" structure. The
 //                       field "carrFreq" is set to 0 if the signal is not
 //                       detected for the given PRN number. 
- 
+//
+// Idea of acquisition is taken from: "Development and Testing of an 
+// L1 Combined GPS-Galileo Software Receiver" by Florence Macchi, 2010
+// phd thesis published by PLAN/Calgary.
+//
 //--------------------------------------------------------------------------
 //                           SoftGNSS v3.0
 // 
@@ -25,6 +29,7 @@ function acqResults = acquisition(longSignal, settings)
 // Written by Darius Plausinaitis and Dennis M. Akos
 // Based on Peter Rinder and Nicolaj Bertelsen
 // Updated and converted to scilab 5.4.0 by Artyom Gavrilov
+// GLONASS L3 version by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
 //modify it under the terms of the GNU General Public License
@@ -48,7 +53,7 @@ function acqResults = acquisition(longSignal, settings)
   samplesPerCode = round(settings.samplingFreq / ...
                         (settings.codeFreqBasis / settings.codeLength));
 
-  // Take 8 msec vector of data to correlate with:
+  // Take 10 msec vector of data to correlate with:
   signal1 = longSignal(1:10*samplesPerCode);
   
   // Find sampling period:
@@ -60,7 +65,7 @@ function acqResults = acquisition(longSignal, settings)
   // Number of the frequency bins for the given acquisition band 
   numberOfFrqBins = round(settings.acqSearchBand * 2*5) + 1;
 
-  // Generate all E1B codes and sample them according to the sampling freq:
+  // Generate all CA codes and sample them according to the sampling freq:
   caCodesTable = makeCaTable(settings);
   
   //--- Initialize arrays to speed up the code -------------------------------
@@ -86,7 +91,10 @@ function acqResults = acquisition(longSignal, settings)
     //--- Perform DFT of ca code ------------------------------------------
     // take 5ms of the reference code add 5ms of zeros to the end. Don't forget
     //about Barker code 00010:
-    caCodeFreqDom = conj(fft([-1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) 1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) zeros(1, 5*samplesPerCode)]));
+    caCodeFreqDom = conj(fft([-1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) ..
+                              -1*caCodesTable(PRN, :) 1*caCodesTable(PRN, :) ..
+                              -1*caCodesTable(PRN, :) ..
+                              zeros(1, 5*samplesPerCode)]));
 
     //--- Make the correlation for whole frequency band (for all freq. bins)
     for frqBinIndex = 1:numberOfFrqBins
@@ -117,20 +125,19 @@ function acqResults = acquisition(longSignal, settings)
 // Look for correlation peaks in the results ==============================
     // Find the highest peak and compare it to the second highest peak
     // The second peak is chosen not closer than 1 chip to the highest peak
-    //pause;
     //--- Find the correlation peak and the carrier frequency --------------
     [peakSize frequencyBinIndex] = max(max(results, 'c'));
 
     //--- Find code phase of the same correlation peak ---------------------
     [peakSize codePhase] = max(max(results, 'r'));
 
-    //--- Find 1 chip wide E1B code phase exclude range around the peak ----
+    //--- Find 1 chip wide ca code phase exclude range around the peak ----
     samplesPerCodeChip   = round(settings.samplingFreq /...
                                  settings.codeFreqBasis);
     excludeRangeIndex1 = codePhase - samplesPerCodeChip;
     excludeRangeIndex2 = codePhase + samplesPerCodeChip;
 
-    //--- Correct E1B code phase exclude range if the range includes array
+    //--- Correct ca code phase exclude range if the range includes array
     //boundaries
     if excludeRangeIndex1 < 2
         codePhaseRange = excludeRangeIndex2 : ...

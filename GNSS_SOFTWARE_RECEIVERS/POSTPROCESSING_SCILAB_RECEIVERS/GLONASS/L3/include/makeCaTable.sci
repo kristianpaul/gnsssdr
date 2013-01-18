@@ -51,7 +51,7 @@ function caCodesTable = makeCaTable(settings)
   //=== For all satellite PRN-s ...
   for PRN = 1:32
     //--- Generate CA code for given PRN -----------------------------------
-    caCode = generateCAcode(PRN+32);
+    caCode = generateCAcode(PRN+32); // Generate codes for information channel
  
     //=== Digitizing =======================================================
     
@@ -62,7 +62,7 @@ function caCodesTable = makeCaTable(settings)
     codeValueIndex = ceil((ts * (1:samplesPerCode)) / tc);
     
     //--- Correct the last index (due to number rounding issues) -----------
-    codeValueIndex($) = 10230;
+    codeValueIndex($) = settings.codeLength;
     //--- Make the digitized version of the C/A code -----------------------
     // The "upsampled" code is made by selecting values form the CA code
     // chip array (caCode) for the time instances of each sample.
