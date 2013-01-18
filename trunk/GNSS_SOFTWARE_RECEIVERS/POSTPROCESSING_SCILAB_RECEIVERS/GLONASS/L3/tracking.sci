@@ -99,22 +99,22 @@ function [trackResults, channel]= tracking(fid, channel, settings)
   codePeriods = settings.msToProcess;     // For GLONASS one CA code is one ms
   
   // CodeLength:
-  settings_codeLength = settings.codeLength;
+  settings_codeLength           = settings.codeLength;
   
   // Normal or switched IQ signal record:
-  settings_switchIQ   = settings.switchIQ;
+  settings_switchIQ             = settings.switchIQ;
   
   // Nominal IF frequency:
-  settings_IF = settings.IF;
+  settings_IF                   = settings.IF;
   
   // Nominal code frequency:
-  settings_codeFreqBasis = settings.codeFreqBasis;
+  settings_codeFreqBasis        = settings.codeFreqBasis;
   
   // Nominal rf frequency for GLONASS L3:
   settings_GLONASS_nominal_freq = settings.GLONASS_nominal_freq;
   
   // Current sample number (of the signal from file):
-  currentSample       = 0;
+  currentSample                 = 0;
   
   // Data type size in bytes of samples from gnss file record:
   settings_dataTypeSizeInBytes = settings.dataTypeSizeInBytes
@@ -182,8 +182,8 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       
       // define initial code frequency basis of NCO
       codeFreq      = settings_codeFreqBasis +..
-                       ( (channel(channelNr).acquiredFreq - (settings_IF)) / ..
-                       (settings_GLONASS_nominal_freq/settings_codeFreqBasis) );
+                       ( (channel(channelNr).acquiredFreq - settings_IF) / ..
+                       (settings_GLONASS_nominal_freq/settings_codeFreqBasis) )*0;
       // define residual code phase (in chips)
       remCodePhase  = 0.0;
       // define carrier frequency which is used over whole tracking period
@@ -234,9 +234,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       loopCnt_samplingFreq     = settings.samplingFreq;
       loopCnt_codeLength       = settings.codeLength;
       loopCnt_dataType         = settings.dataType;
-      loopCnt_codeFreqBasis    = settings_codeFreqBasis +..
-                       ( (channel(channelNr).acquiredFreq - (settings_IF)) / ..
-                       (settings_GLONASS_nominal_freq/settings_codeFreqBasis) );
+      loopCnt_codeFreqBasis    = settings.codeFreqBasis;
       loopCnt_numberOfChannels = settings.numberOfChannels
       
       //=== Process the number of specified code periods =================
@@ -354,7 +352,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         
 // Find combined PLL/FLL error and update carrier NCO (FLL-assisted PLL) ------
         I2 = I1;  Q2 = Q1;
-        I1 = I_P; Q1 = Q_P;
+        I1 = I_P2; Q1 = Q_P2;
         cross = I1*Q2 - I2*Q1;
         dot   = abs(I1*I2 + Q1*Q2);
         
@@ -377,10 +375,10 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         loopCnt_carrFreq(loopCnt) = carrFreq;
 
 // Find DLL error and update code NCO -------------------------------------
-        codeError = (sqrt(I_E * I_E + Q_E * Q_E) -...
-                     sqrt(I_L * I_L + Q_L * Q_L)) / ...
-                    (sqrt(I_E * I_E + Q_E * Q_E) +...
-                     sqrt(I_L * I_L + Q_L * Q_L));
+        codeError = (sqrt(I_E2 * I_E2 + Q_E2 * Q_E2) -...
+                     sqrt(I_L2 * I_L2 + Q_L2 * Q_L2)) / ...
+                    (sqrt(I_E2 * I_E2 + Q_E2 * Q_E2) +...
+                     sqrt(I_L2 * I_L2 + Q_L2 * Q_L2));
         
         // Implement code loop filter and generate NCO command
         codeNco = oldCodeNco + (tau2code/tau1code) * ...
@@ -391,7 +389,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
         // Modify code freq based on NCO command
         codeFreq = loopCnt_codeFreqBasis - codeNco + ...
                        ( (carrFreq - settings_IF)/ ..
-                       (settings_GLONASS_nominal_freq/settings_codeFreqBasis));
+                       (settings_GLONASS_nominal_freq/settings_codeFreqBasis) );
         
         loopCnt_codeFreq(loopCnt) = codeFreq;
         
