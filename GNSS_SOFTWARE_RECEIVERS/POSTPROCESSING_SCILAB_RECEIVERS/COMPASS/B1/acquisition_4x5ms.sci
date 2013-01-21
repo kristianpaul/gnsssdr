@@ -1,4 +1,4 @@
-function acqResults = acquisition(longSignal, settings)
+function acqResults = acquisition_4x5ms(longSignal, settings)
 //Function performs cold start acquisition on the collected "data". It
 //searches for COMPASS signals of all satellites, which are listed in field
 //"acqSatelliteList" in the settings structure. Function saves code phase
@@ -50,23 +50,26 @@ function acqResults = acquisition(longSignal, settings)
 
   // Create two "settings.acqCohIntegration" msec vectors of data
   // to correlate with:
-  signal1 = longSignal(1:2*samplesPerCode);
+  signal1 = longSignal(0*5*samplesPerCode+1:5*samplesPerCode+1*5*samplesPerCode);
+  signal2 = longSignal(1*5*samplesPerCode+1:5*samplesPerCode+2*5*samplesPerCode);
+  signal3 = longSignal(2*5*samplesPerCode+1:5*samplesPerCode+3*5*samplesPerCode);
+  signal4 = longSignal(3*5*samplesPerCode+1:5*samplesPerCode+4*5*samplesPerCode);
   
   // Find sampling period:
   ts = 1 / settings.samplingFreq;
   
   // Find phase points of the local carrier wave:
-  phasePoints = (0 : (2*samplesPerCode-1)) * 2*%pi*ts;
+  phasePoints = (0 : (10*samplesPerCode-1)) * 2*%pi*ts;
 
   // Number of the frequency bins for the given acquisition band 
-  numberOfFrqBins = round(settings.acqSearchBand * 2*1) + 1;
+  numberOfFrqBins = round(settings.acqSearchBand * 2*5) + 1;
 
   // Generate all C/A codes and sample them according to the sampling freq:
   caCodesTable = makeCaTable(settings);
   
   //--- Initialize arrays to speed up the code -------------------------------
   // Search results of all frequency bins and code shifts (for one satellite)
-  results     = zeros(numberOfFrqBins, 1*samplesPerCode);
+  results     = zeros(numberOfFrqBins, 20*samplesPerCode);
   // Carrier frequencies of the frequency bins
   frqBins     = zeros(1, numberOfFrqBins);
   
@@ -87,7 +90,10 @@ function acqResults = acquisition(longSignal, settings)
     //--- Perform DFT of C/A code ------------------------------------------
     //Multiply C/A code on Neumann-Hoffman code (first 5 ms - otherwise too long wait time)
     //NH = "0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1,  0,  0,  1,  1,  1,  0";
-    caCodeFreqDom = conj(fft([caCodesTable(PRN, :) zeros(1, samplesPerCode)]));
+    caCodeFreqDom = conj(fft([-1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) ..
+                              -1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) ..
+                              -1*caCodesTable(PRN, :) ..
+                              zeros(1, 5*samplesPerCode)]));
 
     //--- Make the correlation for whole frequency band (for all freq. bins)
     for frqBinIndex = 1:numberOfFrqBins
@@ -95,7 +101,7 @@ function acqResults = acquisition(longSignal, settings)
       // on "settings.acqCohIntegration") --------------------------------
       frqBins(frqBinIndex) = settings.IF - ...
                              (settings.acqSearchBand/2) * 1000 + ...
-                             (1000 / (2*1)) * (frqBinIndex - 1);
+                             (1000 / (2*5)) * (frqBinIndex - 1);
       //--- Generate local sine and cosine -------------------------------
       sigCarr = exp(%i*frqBins(frqBinIndex) * phasePoints);
       
@@ -103,17 +109,57 @@ function acqResults = acquisition(longSignal, settings)
       // signal to frequency domain --------------------------------------
       //pause;
       IQfreqDom1 = fft(sigCarr .* signal1);
+      IQfreqDom2 = fft(sigCarr .* signal2);
+      IQfreqDom3 = fft(sigCarr .* signal3);
+      IQfreqDom4 = fft(sigCarr .* signal4);
       
       //--- Multiplication in the frequency domain (correlation in time domain)
       convCodeIQ1 = IQfreqDom1 .* caCodeFreqDom;
+      convCodeIQ2 = IQfreqDom2 .* caCodeFreqDom;
+      convCodeIQ3 = IQfreqDom3 .* caCodeFreqDom;
+      convCodeIQ4 = IQfreqDom4 .* caCodeFreqDom;
 
       //--- Perform inverse DFT and store correlation results ------------
       acqRes1 = abs(ifft(convCodeIQ1)) .^ 2;
+      acqRes2 = abs(ifft(convCodeIQ2)) .^ 2;
+      acqRes3 = abs(ifft(convCodeIQ3)) .^ 2;
+      acqRes4 = abs(ifft(convCodeIQ4)) .^ 2;
       
       //--- Check which msec had the greater power and save that, will
       //"blend" 1st and 2nd "settings.acqCohIntegration" msec but will
       // correct data bit issues
-      results(frqBinIndex, :) = acqRes1(1:samplesPerCode);
+      ///results(frqBinIndex, :) = acqRes1(1:samplesPerCode);
+      ///results(frqBinIndex, :) = acqRes2(1:samplesPerCode);
+      ///results(frqBinIndex, :) = acqRes3(1:samplesPerCode);
+      ///results(frqBinIndex, :) = acqRes4(1:samplesPerCode);
+      //pause;
+      results(frqBinIndex, :) = [acqRes1(1:5*samplesPerCode) ..
+                                 acqRes2(1:5*samplesPerCode) ..
+                                 acqRes3(1:5*samplesPerCode) ..
+                                 acqRes4(1:5*samplesPerCode)];
+//      if ( (max(acqRes1) > max(acqRes2)) &.. 
+//           (max(acqRes1) > max(acqRes3)) &.. 
+//           (max(acqRes1) > max(acqRes4)))
+//        results(frqBinIndex, :) = acqRes1;
+//        code_phase_corr = 0*samplesPerCode/4;
+//        code_phase_slot = 1;
+//      elseif ( (max(acqRes2) > max(acqRes1)) &.. 
+//               (max(acqRes2) > max(acqRes3)) &.. 
+//               (max(acqRes2) > max(acqRes4)))
+//        results(frqBinIndex, :) = acqRes2;
+//        code_phase_corr = 1*samplesPerCode/4;
+//        code_phase_slot = 12;
+//      elseif ( (max(acqRes3) > max(acqRes1)) &..
+//               (max(acqRes3) > max(acqRes2)) &.. 
+//               (max(acqRes3) > max(acqRes4)))
+//        results(frqBinIndex, :) = acqRes3;
+//        code_phase_corr = 2*samplesPerCode/4;
+//        code_phase_slot = 3;
+//      else
+//        results(frqBinIndex, :) = acqRes4;
+//        code_phase_corr = 3*samplesPerCode/4;
+//        code_phase_slot = 4;
+//      end
       
     end // frqBinIndex = 1:numberOfFrqBins
 
@@ -160,7 +206,7 @@ function acqResults = acquisition(longSignal, settings)
       acqResults.carrFreq(PRN)    =...
                                settings.IF - ...
                                (settings.acqSearchBand/2) * 1000 + ...
-                               (1000 / (2*1)) * (frequencyBinIndex - 1);
+                               (1000 / (2*5)) * (frequencyBinIndex - 1);
         
     else
       //--- No signal with this PRN --------------------------------------

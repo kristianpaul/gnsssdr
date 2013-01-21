@@ -62,97 +62,108 @@ disp ('Starting processing...');
 
 //Initialize the multiplier to adjust for the data type
 if (settings.fileType==1) 
-    dataAdaptCoeff=1;
+  dataAdaptCoeff=1;
 else
-    dataAdaptCoeff=2;
+  dataAdaptCoeff=2;
 end
 
 //If success, then process the data
 if (fid > 0)
-    
-    // Move the starting point of processing. Can be used to start the
-    // signal processing at any point in the data record (e.g. good for long
-    // records or for signal processing in blocks).
-    mseek(dataAdaptCoeff*settings.skipNumberOfBytes, fid); 
-
+  
+  // Move the starting point of processing. Can be used to start the
+  // signal processing at any point in the data record (e.g. good for long
+  // records or for signal processing in blocks).
+  mseek(dataAdaptCoeff*settings.skipNumberOfBytes, fid); 
+  
 // Acquisition ============================================================
-
-    // Do acquisition if it is not disabled in settings or if the variable
-    // acqResults does not exist.
-    if ((settings.skipAcquisition == 0) | ~exists('acqResults'))
-        
-        // Find number of samples per spreading code
-        samplesPerCode = round(settings.samplingFreq / ...
-                           (settings.codeFreqBasis / settings.codeLength));
-        
-        // Read data for acquisition. 11ms of signal are needed for the fine
-        // frequency estimation
-        
-        data  = mget(dataAdaptCoeff*25*samplesPerCode, settings.dataType, fid);
+  
+  // Do acquisition if it is not disabled in settings or if the variable
+  // acqResults does not exist.
+  if ((settings.skipAcquisition == 0) | ~exists('acqResults'))
     
-        if (dataAdaptCoeff==2)
-            data1=data(1:2:$);    
-            data2=data(2:2:$);    
-            data=data1 + %i.*data2;
-        end
-
-        //--- Do the acquisition -------------------------------------------
-        printf('   Acquiring satellites...\n');
-        acqResults = acquisition(data, settings);
-
-        plotAcquisition(acqResults);
+    // Find number of samples per spreading code
+    samplesPerCode = round(settings.samplingFreq / ...
+                          (settings.codeFreqBasis / settings.codeLength));
+    
+    // Read data for acquisition. 11ms of signal are needed for the fine
+    // frequency estimation
+    
+    data  = mget(dataAdaptCoeff*25*samplesPerCode, settings.dataType, fid);
+    
+    if (dataAdaptCoeff==2)
+      data1=data(1:2:$);
+      data2=data(2:2:$);
+      if (settings.switchIQ == 1)
+        data=data2 + %i.*data1;
+      else
+        data=data1 + %i.*data2;
+      end
     end
+    
+    //--- Do the acquisition -------------------------------------------
+    printf('   Acquiring satellites...\n');
+    
+    if (settings.acqMode == 3)
+      acqResults = acquisition_7x3ms(data, settings);
+    elseif (settings.acqMode == 5)
+      acqResults = acquisition_4x5ms(data, settings);
+    else
+      acqResults = acquisition(data, settings);
+    end
+    
+    plotAcquisition(acqResults);
+  end
 
 // Initialize channels and prepare for the run ============================
-
-    // Start further processing only if a GNSS signal was acquired (the
-    // field FREQUENCY will be set to 0 for all not acquired signals)
-    if (or(acqResults.carrFreq))
-        channel = preRun(acqResults, settings);
-        showChannelStatus(channel, settings);
-    else
-        // No satellites to track, exit
-        printf('No GNSS signals detected, signal processing finished.\n');
-        trackResults = [];
-        return;
-    end
+  
+  // Start further processing only if a GNSS signal was acquired (the
+  // field FREQUENCY will be set to 0 for all not acquired signals)
+  if (or(acqResults.carrFreq))
+    channel = preRun(acqResults, settings);
+    showChannelStatus(channel, settings);
+  else
+    // No satellites to track, exit
+    printf('No GNSS signals detected, signal processing finished.\n');
+    trackResults = [];
+    return;
+  end
 
 // Track the signal =======================================================
-    startTime = now();
-    [Y1,M1,D1,H1,MI1,S1]=datevec(startTime);
-    printf('   Tracking started at %d:%d:%d\n', H1, MI1, S1);
-
-    // Process all channels for given data block
-    [trackResults, channel] = tracking(fid, channel, settings);
-
-    // Close the data file
-    mclose(fid);
-    
-    deltaTime = now() - startTime;
-    [Y2,M2,D2,H2,MI2,S2]=datevec(deltaTime);
-    printf('   Tracking is over (elapsed time %d:%d:%d)\n', H2, MI2, S2);
-
-    // Auto save the acquisition & tracking results to a file to allow
-    // running the positioning solution afterwards.
-    printf('   Saving Acq & Tracking results to file trackingResults.dat\n')
-    save('trackingResults.dat', trackResults, settings, acqResults, channel);
-
+  startTime = now();
+  [Y1,M1,D1,H1,MI1,S1]=datevec(startTime);
+  printf('   Tracking started at %d:%d:%d\n', H1, MI1, S1);
+  
+  // Process all channels for given data block
+  [trackResults, channel] = tracking(fid, channel, settings);
+  
+  // Close the data file
+  mclose(fid);
+  
+  deltaTime = now() - startTime;
+  [Y2,M2,D2,H2,MI2,S2]=datevec(deltaTime);
+  printf('   Tracking is over (elapsed time %d:%d:%d)\n', H2, MI2, S2);
+  
+  // Auto save the acquisition & tracking results to a file to allow
+  // running the positioning solution afterwards.
+  printf('   Saving Acq & Tracking results to file trackingResults.dat\n')
+  save('trackingResults.dat', trackResults, settings, acqResults, channel);
+  
 // Calculate navigation solutions =========================================
-    printf('   Calculating navigation solutions...\n');
-    //navSolutions = postNavigation(trackResults, settings);
-    printf('   Processing is complete for this data block\n');
-
+  printf('   Calculating navigation solutions...\n');
+  //navSolutions = postNavigation(trackResults, settings);
+  printf('   Processing is complete for this data block\n');
+  
 // Plot all results ===================================================
-    printf('   Ploting results...\n');
-    if settings.plotTracking
-        plotTracking(1:settings.numberOfChannels, trackResults, settings);
-    end
-
-    //plotNavigation(navSolutions, settings);
-
-    printf('Post processing of the signal is over.\n');
-
+  printf('   Ploting results...\n');
+  if settings.plotTracking
+    plotTracking(1:settings.numberOfChannels, trackResults, settings);
+  end
+  
+  //plotNavigation(navSolutions, settings);
+  
+  printf('Post processing of the signal is over.\n');
+  
 else
-    // Error while opening the data file.
-    error('Unable to read file %s: %s.', settings.fileName, message);
+  // Error while opening the data file.
+  error('Unable to read file %s: %s.', settings.fileName, message);
 end // if (fid > 0)
