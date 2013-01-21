@@ -53,7 +53,7 @@ function [firstString, activeChnList] = findSubframeStart(trkRslt_status, trkRsl
                                              // correlation-result is high 
                                              // enough! These points correspond 
                                              // to the first point of Preamble.
-    pause;
+    //pause;
     // If we have not found preamble - remove sat from the list:
     if isempty(index) then
       delFromActiveChnList = [delFromActiveChnList channelNr];

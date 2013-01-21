@@ -42,8 +42,21 @@ exec('./include/showChannelStatus.sci');
 exec('./include/ephemeris.sci');
 exec('./include/decode_bd_data.sci');
 
-exec('./geoFunctions/satpos.sci');
+exec('./geoFunctions/cart2geo.sci');
+exec('./geoFunctions/cart2utm.sci');
 exec('./geoFunctions/check_t.sci');
+exec('./geoFunctions/clksin.sci');
+exec('./geoFunctions/clsin.sci');
+exec('./geoFunctions/e_r_corr.sci');
+exec('./geoFunctions/findUtmZone.sci');
+exec('./geoFunctions/leastSquarePos.sci');
+exec('./geoFunctions/satpos.sci');
+exec('./geoFunctions/togeod.sci');
+exec('./geoFunctions/topocent.sci');
+exec('./geoFunctions/tropo.sci');
+exec('./geoFunctions/deg2dms.sci');
+exec('./geoFunctions/dms2mat.sci');
+exec('./geoFunctions/roundn.sci');
 
 exec('./initSettings.sci');
 exec('./probeData.sci');
@@ -54,6 +67,9 @@ exec('./plotAcquisition.sci');
 exec('./tracking.sci');
 exec('./plotTracking.sci');
 exec('./findSubframeStart.sci');
+exec('./calculatePseudoranges.sci');
+exec('./postNavigation.sci');
+exec('./plotNavigation.sci');
 
 // Print startup ==========================================================
 

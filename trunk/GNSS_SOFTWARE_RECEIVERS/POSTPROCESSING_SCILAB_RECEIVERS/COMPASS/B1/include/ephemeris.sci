@@ -113,5 +113,5 @@ function [eph, t] = ephemeris(data)
 
   eph.t_oe = eph.t_oe_msb + eph.t_oe_lsb; //Surprise from BeiDou ;)
   
-  t = bin2dec(  strcat( dec2bin(decoded_sbfrm(8:27)) )  ) - 30;
+  t = bin2dec(  strcat( dec2bin(decoded_sbfrm(8:27)) )  ) - 24 - 11*0.020;//30;
 endfunction 
