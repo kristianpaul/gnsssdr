@@ -48,6 +48,8 @@ exec('./geoFunctions/check_t.sci');
 exec('./initSettings.sci');
 exec('./probeData.sci');
 exec('./acquisition.sci');
+exec('./acquisition_7x3ms.sci');
+exec('./acquisition_4x5ms.sci');
 exec('./plotAcquisition.sci');
 exec('./tracking.sci');
 exec('./plotTracking.sci');
