@@ -38,7 +38,7 @@ function settings = initSettings()
   // Processing settings ====================================================
   // Number of milliseconds to be processed used 36000 + any transients (see
   // below - in Nav parameters) to ensure nav subframes are provided
-  settings.msToProcess           = 5000;        //[ms]
+  settings.msToProcess           = 42000;        //[ms]
 
   // Number of channels to be used for signal processing
   settings.numberOfChannels      = 7;
@@ -52,7 +52,7 @@ function settings = initSettings()
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
   // the post-processing mode
-  settings.fileName              = 'E:\COMPASS_B1\New\14.01.2013\FFF005.DAT';
+  settings.fileName              = 'd:\Art\COMPASS\FFF005.DAT';
 
   // Data type used to store one sample
   settings.dataType              = 'cl';
@@ -84,7 +84,7 @@ function settings = initSettings()
   settings.acqMode = 3;
   // List of satellites to look for. Some satellites can be excluded to speed
   // up acquisition
-  settings.acqSatelliteList      = [1:37];       //[PRN numbers]
+  settings.acqSatelliteList      = [7 10 13 14];//[1:37];       //[PRN numbers]
   // Band around IF to search for satellite signal. Depends on max Doppler
   settings.acqSearchBand         = 14;           //[kHz]
   // Threshold for the signal presence decision rule
@@ -93,11 +93,10 @@ function settings = initSettings()
   // Tracking loops settings ================================================
   // Code tracking loop parameters
   settings.dllDampingRatio       = 0.7;
-  settings.dllNoiseBandwidth     = 0.75;         //[Hz]
-  settings.dllCorrelatorSpacing  = 0.25;         //[chips]
+  settings.dllNoiseBandwidth     = 0.5;         //[Hz]
+  settings.dllCorrelatorSpacing  = 0.1;         //[chips]
 
   // Carrier tracking loop parameters
-  settings.pllDampingRatio       = 0.7;
   settings.pllNoiseBandwidth     = 25;           //[Hz]
   settings.fllNoiseBandwidth     = 250;          //[Hz]
 

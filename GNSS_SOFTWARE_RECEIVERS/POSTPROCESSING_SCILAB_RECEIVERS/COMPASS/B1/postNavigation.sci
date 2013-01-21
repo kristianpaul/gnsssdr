@@ -72,7 +72,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   // Find time marks start positions ==========================================
   [subFrameStart, activeChnList] =.. 
              findSubframeStart(trkRslt_status, trkRslt_I_P, set_numberOfChnls);
-
+  //pause;
   // Decode ephemerides =====================================================
   for channelNr = activeChnList
 
@@ -112,7 +112,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
       end
     end
   end
-  
+  //pause;
   ///activeChnList(delFromActiveChnList) = [];//temporary disable
   ///subFrameStart(delFromActiveChnList) = [];//temporary disable
 
@@ -140,7 +140,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   readyChnList = activeChnList;
   
   transmitTime = SOW;
-
+  //pause;
   //##########################################################################
   //#   Do the satellite and receiver position calculations                  #
   //##########################################################################
@@ -150,8 +150,8 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
                            settings.skipNumberOfFirstBits) / ... 
                          set_navSolPeriod)
     // Exclude satellites, that are belove elevation mask 
-    activeChnList = intersect(find(satElev >= set_elevationMask), ...
-                              readyChnList);
+    ///activeChnList = intersect(find(satElev >= set_elevationMask), ...
+    ///                          readyChnList);
 
     // Save list of satellites used for position calculation
     navSol_channel_SVN(activeChnList, currMeasNr) = trkRslt_PRN(activeChnList);
@@ -172,6 +172,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
     [satPositions, satClkCorr] = satpos(transmitTime, ...
                                         [trackResults(activeChnList).PRN], ...
                                         eph, settings);
+    //pause;
     // Find receiver position =================================================
 
     // 3D receiver position can be found only if signals from more than 3
@@ -183,6 +184,9 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
                          navSol_channel_rawP(activeChnList, currMeasNr)' - ...
                          satClkCorr * set_c, ...
                          set_c, set_useTropCorr);
+      navSol_channel_el(activeChnList, currMeasNr) = sat_el';
+      navSol_channel_az(activeChnList, currMeasNr) = sat_az';
+      navSol_DOP(:, currMeasNr) = sat_dop';
 //       //Transform from PZ90.02 to WGS84!
 //       xyz = xyzdt(1:3);
 //       xyz = [-1.1 -0.3 -0.9] + (1-0.12e-6).*([1 -0.82e-6 0; 0.82e-6 1 0; 0 0 1] * xyz')';
