@@ -291,8 +291,17 @@ function [trackResults, channel]= tracking(fid, channel, settings)
 // Find combined PLL/FLL error and update carrier NCO (FLL-assisted PLL) ------
         I2 = I1;  Q2 = Q1;
         I1 = I_P; Q1 = Q_P;
+        
+        if (sign(I2)~=sign(I1))
+          I2 = -I2;
+          Q2 = -Q2;
+        end
+        
         cross = I1*Q2 - I2*Q1;
-        dot   = abs(I1*I2 + Q1*Q2);
+        dot   = abs(I1*I2 + Q1*Q2); /// This is potentially bug. 
+                                    /// In theory there is no abs()!
+                                    /// dot   = abs(I1*I2 + Q1*Q2);
+                                    /// But it works :)
         
         // Implement carrier loop discriminator (frequency detector)
         //freqError = atan(cross, dot)/(2*%pi)/0.001/500; //0.001 - integration periode. 500 - maximum discriminator output.
