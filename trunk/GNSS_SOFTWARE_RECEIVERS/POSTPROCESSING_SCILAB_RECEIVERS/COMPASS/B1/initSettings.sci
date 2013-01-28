@@ -52,7 +52,7 @@ function settings = initSettings()
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
   // the post-processing mode
-  settings.fileName              = 'd:\Art\COMPASS\FFF005.DAT';
+  settings.fileName              = 'E:\COMPASS_B1\New\FFF005.DAT';
 
   // Data type used to store one sample
   settings.dataType              = 'cl';
@@ -81,7 +81,11 @@ function settings = initSettings()
   //1 - 1ms coherent integration (fast circular correlation with zero padding);
   //3 - 3ms coherent integration (fast circular correlation with zero padding);
   //5 - 5ms coherent integration (fast circular correlation with zero padding);
-  settings.acqMode = 3;
+  settings.acqMode = 5;
+  //Resample coefficient to increase speed during acquisition! Be carefull! 
+  //Resample coefficient must devide Sampling freq to integer value!
+  //It must be itself ineger value!!!
+  settings.acqResampleCoef = 4;
   // List of satellites to look for. Some satellites can be excluded to speed
   // up acquisition
   settings.acqSatelliteList      = [7 10 13 14];//[1:37];       //[PRN numbers]

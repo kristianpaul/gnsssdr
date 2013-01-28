@@ -134,7 +134,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       // appropriate sample (corresponding to code phase). Assumes sample
       // type is schar (or 1 byte per sample):
       mseek(dataAdaptCoeff*...
-            (settings.skipNumberOfBytes + channel(channelNr).codePhase-1), fid);
+            (settings.skipNumberOfBytes + channel(channelNr).codePhase), fid);
 
       // Get a vector with the C/A code sampled 1x/chip
       caCode = generateCAcode(channel(channelNr).PRN);

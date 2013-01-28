@@ -40,13 +40,15 @@ function caCodesTable = makeCaTable(settings)
   //--- Find number of samples per spreading code ----------------------------
   samplesPerCode = round(settings.samplingFreq / ...
                              (settings.codeFreqBasis / settings.codeLength));
+  
+  samplesPerCode = samplesPerCode / settings.acqResampleCoef;//test!
 
   //--- Prepare the output matrix to speed up function -----------------------
   caCodesTable = zeros(37, samplesPerCode);
 
   //--- Find time constants --------------------------------------------------
-  ts = 1/settings.samplingFreq;   // Sampling period in sec
-  tc = 1/settings.codeFreqBasis;  // C/A chip period in sec
+  ts = settings.acqResampleCoef/settings.samplingFreq;// Sampling period in sec
+  tc = 1/settings.codeFreqBasis;                      // C/A chip period in sec
 
   //=== For all satellite PRN-s ...
   for PRN = 1:37

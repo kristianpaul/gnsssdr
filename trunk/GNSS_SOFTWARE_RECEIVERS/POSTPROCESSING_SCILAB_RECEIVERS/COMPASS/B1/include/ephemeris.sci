@@ -79,8 +79,7 @@ function [eph, t] = ephemeris(data)
                         (decoded_sbfrm(44))*2^(length(decoded_sbfrm(44:61))) ) * 2^(-31);///[rad]
         eph.M_0       = (bin2dec(  strcat( dec2bin(decoded_sbfrm(62:93)) )  )-..
                         (decoded_sbfrm(62))*2^(length(decoded_sbfrm(62:93))) ) * 2^(-31) * BDPi;///[pi]->[-]
-        eph.e         = (bin2dec(  strcat( dec2bin(decoded_sbfrm(94:125)) )  )-..
-                        (decoded_sbfrm(94))*2^(length(decoded_sbfrm(94:125))) ) * 2^(-33);///[-]
+        eph.e         = bin2dec(  strcat( dec2bin(decoded_sbfrm(94:125)) )  ) * 2^(-33);///[-]
         eph.C_us      = (bin2dec(  strcat( dec2bin(decoded_sbfrm(126:143)) )  )-..
                         (decoded_sbfrm(126))*2^(length(decoded_sbfrm(126:143))) ) * 2^(-31);///[rad]
         eph.C_rc      = (bin2dec(  strcat( dec2bin(decoded_sbfrm(144:161)) )  )-..

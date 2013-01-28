@@ -47,6 +47,12 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
   // Find number of samples per spreading code
   samplesPerCode = round(settings.samplingFreq / ...
                         (settings.codeFreqBasis / settings.codeLength));
+  
+  //Let's test simple acceleration. Let's resample the signal to lower frequency.
+  longSignal = matrix(longSignal, settings.acqResampleCoef, ..
+                      length(longSignal) / settings.acqResampleCoef);
+  longSignal = sum(longSignal, 'r');
+  samplesPerCode = samplesPerCode / settings.acqResampleCoef;
 
   // Create two "settings.acqCohIntegration" msec vectors of data
   // to correlate with:
@@ -59,7 +65,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
   signal7 = longSignal(6*3*samplesPerCode+1:3*samplesPerCode+7*3*samplesPerCode);
   
   // Find sampling period:
-  ts = 1 / settings.samplingFreq;
+  ts = settings.acqResampleCoef / settings.samplingFreq;
   
   // Find phase points of the local carrier wave:
   phasePoints = (0 : (6*samplesPerCode-1)) * 2*%pi*ts;
@@ -117,7 +123,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
       IQfreqDom5 = fft(sigCarr .* signal5);
       IQfreqDom6 = fft(sigCarr .* signal6);
       IQfreqDom7 = fft(sigCarr .* signal7);
-      
+      //pause;
       //--- Multiplication in the frequency domain (correlation in time domain)
       convCodeIQ1 = IQfreqDom1 .* caCodeFreqDom;
       convCodeIQ2 = IQfreqDom2 .* caCodeFreqDom;
@@ -160,7 +166,8 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
     [peakSize codePhase] = max(max(results, 'r'));
 
     //--- Find 1 chip wide CA code phase exclude range around the peak ----
-    samplesPerCodeChip   = round(settings.samplingFreq /...
+    samplesPerCodeChip   = round(settings.samplingFreq / ..
+                                 settings.acqResampleCoef / ..
                                  settings.codeFreqBasis);
     excludeRangeIndex1 = codePhase - samplesPerCodeChip;
     excludeRangeIndex2 = codePhase + samplesPerCodeChip;
@@ -188,7 +195,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
     if (peakSize/secondPeakSize) > settings.acqThreshold
       //--- Indicate PRN number of the detected signal -------------------
       printf('%02d ', PRN);
-      acqResults.codePhase(PRN) = codePhase;
+      acqResults.codePhase(PRN) = (codePhase-1) * settings.acqResampleCoef;
       acqResults.carrFreq(PRN)    =...
                                settings.IF - ...
                                (settings.acqSearchBand/2) * 1000 + ...
