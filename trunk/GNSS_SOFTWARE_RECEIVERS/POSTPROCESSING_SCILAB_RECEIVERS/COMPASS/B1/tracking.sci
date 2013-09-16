@@ -22,7 +22,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
 // Copyright (C) Dennis M. Akos
 // Written by Darius Plausinaitis and Dennis M. Akos
 // Based on code by DMAkos Oct-1999
-// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
+// Updated and converted to scilab 5.4.1 by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
 //modify it under the terms of the GNU General Public License
@@ -134,7 +134,7 @@ function [trackResults, channel]= tracking(fid, channel, settings)
       // appropriate sample (corresponding to code phase). Assumes sample
       // type is schar (or 1 byte per sample):
       mseek(dataAdaptCoeff*...
-            (settings.skipNumberOfBytes + channel(channelNr).codePhase), fid);
+            (settings.skipNumberOfBytes + channel(channelNr).codePhase-1), fid);
 
       // Get a vector with the C/A code sampled 1x/chip
       caCode = generateCAcode(channel(channelNr).PRN);

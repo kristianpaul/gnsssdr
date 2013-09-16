@@ -41,7 +41,7 @@ function settings = initSettings()
   settings.msToProcess           = 42000;        //[ms]
 
   // Number of channels to be used for signal processing
-  settings.numberOfChannels      = 7;
+  settings.numberOfChannels      = 5;
 
   // Move the starting point of processing. Can be used to start the signal
   // processing at any point in the data record (e.g. for long records). fseek
@@ -52,7 +52,7 @@ function settings = initSettings()
   // Raw signal file name and other parameter ===============================
   // This is a "default" name of the data file (signal record) to be used in
   // the post-processing mode
-  settings.fileName              = 'E:\COMPASS_B1\New\FFF005.DAT';
+  settings.fileName              = '..\FFF005.DAT';
 
   // Data type used to store one sample
   settings.dataType              = 'cl';
@@ -81,14 +81,10 @@ function settings = initSettings()
   //1 - 1ms coherent integration (fast circular correlation with zero padding);
   //3 - 3ms coherent integration (fast circular correlation with zero padding);
   //5 - 5ms coherent integration (fast circular correlation with zero padding);
-  settings.acqMode = 5;
-  //Resample coefficient to increase speed during acquisition! Be carefull! 
-  //Resample coefficient must devide Sampling freq to integer value!
-  //It must be itself ineger value!!!
-  settings.acqResampleCoef = 4;
+  settings.acqMode = 3;
   // List of satellites to look for. Some satellites can be excluded to speed
   // up acquisition
-  settings.acqSatelliteList      = [7 10 13 14];//[1:37];       //[PRN numbers]
+  settings.acqSatelliteList      = [6:37];       //[PRN numbers] Only non-GEO satellites for now...
   // Band around IF to search for satellite signal. Depends on max Doppler
   settings.acqSearchBand         = 14;           //[kHz]
   // Threshold for the signal presence decision rule
@@ -101,8 +97,8 @@ function settings = initSettings()
   settings.dllCorrelatorSpacing  = 0.1;         //[chips]
 
   // Carrier tracking loop parameters
-  settings.pllNoiseBandwidth     = 25;           //[Hz]
-  settings.fllNoiseBandwidth     = 250;          //[Hz]
+  settings.pllNoiseBandwidth     = 25;          //[Hz]
+  settings.fllNoiseBandwidth     = 250;         //[Hz]
 
   // Navigation solution settings ===========================================
   
@@ -110,13 +106,13 @@ function settings = initSettings()
                                                // of FLL to PLL transient)
 
   // Period for calculating pseudoranges and position
-  settings.navSolPeriod          = 500;          //[ms]
+  settings.navSolPeriod          = 500;        //[ms]
 
   // Elevation mask to exclude signals from satellites at low elevation
-  settings.elevationMask         = 0;            //[degrees 0 - 90]
+  settings.elevationMask         = 0;          //[degrees 0 - 90]
   // Enable/dissable use of tropospheric correction
-  settings.useTropCorr           = 1;            // 0 - Off
-                                                 // 1 - On
+  settings.useTropCorr           = 0;          // 0 - Off
+                                               // 1 - On
 
   // True position of the antenna in UTM system (if known). Otherwise enter
   // all NaN's and mean position will be used as a reference .
@@ -129,7 +125,7 @@ function settings = initSettings()
   settings.plotTracking          = 1;            // 0 - Off
                                                  // 1 - On
   // Constants ==============================================================
-
+  
   settings.c                     = 299792458;    // The speed of light, [m/s]
-
+  
 endfunction

@@ -9,12 +9,12 @@
 // block of data.
 
 //--------------------------------------------------------------------------
-//                           SoftGNSS v3.0 GLONASS version
+//                           SoftGNSS v3.0 BeiDou version
 // 
 // Copyright (C) Darius Plausinaitis
 // Written by Darius Plausinaitis, Dennis M. Akos
 // Some ideas by Dennis M. Akos
-// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
+// Updated and converted to scilab 5.4.1 by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
 //modify it under the terms of the GNU General Public License
@@ -150,7 +150,7 @@ if (fid > 0)
   
 // Calculate navigation solutions =========================================
   printf('   Calculating navigation solutions...\n');
-  //navSolutions = postNavigation(trackResults, settings);
+  navSolutions = postNavigation(trackResults, settings);
   printf('   Processing is complete for this data block\n');
   
 // Plot all results ===================================================
@@ -159,7 +159,7 @@ if (fid > 0)
     plotTracking(1:settings.numberOfChannels, trackResults, settings);
   end
   
-  //plotNavigation(navSolutions, settings);
+  plotNavigation(navSolutions, settings);
   
   printf('Post processing of the signal is over.\n');
   
