@@ -79,7 +79,8 @@ function [eph, t] = ephemeris(data)
                         (decoded_sbfrm(44))*2^(length(decoded_sbfrm(44:61))) ) * 2^(-31);///[rad]
         eph.M_0       = (bin2dec(  strcat( dec2bin(decoded_sbfrm(62:93)) )  )-..
                         (decoded_sbfrm(62))*2^(length(decoded_sbfrm(62:93))) ) * 2^(-31) * BDPi;///[pi]->[-]
-        eph.e         = bin2dec(  strcat( dec2bin(decoded_sbfrm(94:125)) )  ) * 2^(-33);///[-]
+        eph.e         = (bin2dec(  strcat( dec2bin(decoded_sbfrm(94:125)) )  )-..
+                        (decoded_sbfrm(94))*2^(length(decoded_sbfrm(94:125))) ) * 2^(-33);///[-]
         eph.C_us      = (bin2dec(  strcat( dec2bin(decoded_sbfrm(126:143)) )  )-..
                         (decoded_sbfrm(126))*2^(length(decoded_sbfrm(126:143))) ) * 2^(-31);///[rad]
         eph.C_rc      = (bin2dec(  strcat( dec2bin(decoded_sbfrm(144:161)) )  )-..
@@ -108,9 +109,16 @@ function [eph, t] = ephemeris(data)
       case 5 then //subframe #5.
     end
 
+    //if (i == 1)
+    //  t = bin2dec(  strcat( dec2bin(decoded_sbfrm(8:27)) )  );
+    //end
+
   end
 
   eph.t_oe = eph.t_oe_msb + eph.t_oe_lsb; //Surprise from BeiDou ;)
   
-  t = bin2dec(  strcat( dec2bin(decoded_sbfrm(8:27)) )  ) - 24 - 11*0.020;//30;
+  //minus 24 sec because I want to know the time of the first bit 
+  //of the first subframe (and last decoded_sbfrm(8:27) corresponds to the
+  //last subframe of 30 sec block of data):
+  t = (bin2dec(  strcat( dec2bin(decoded_sbfrm(8:27)) )  ) - 24);
 endfunction 

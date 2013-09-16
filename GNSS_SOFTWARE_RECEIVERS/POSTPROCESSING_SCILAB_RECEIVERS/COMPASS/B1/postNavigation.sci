@@ -87,6 +87,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
       //--- Copy 5 subframes long record from tracking output ---------------
       navBitsSamples = trkRslt_I_P(channelNr, subFrameStart(channelNr) : ...
                               subFrameStart(channelNr) + (30000) -1)';
+      //pause;
       //--- Convert prompt correlator output to +-1 ---------
       navBitsSamples = sign(navBitsSamples');
       //--- Decode data and extract ephemeris information ---
@@ -139,7 +140,9 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
   // time.  
   readyChnList = activeChnList;
   
-  transmitTime = SOW;
+  ///transmitTime = SOW;
+  //pause;
+  transmitTime = SOW(trkRslt_PRN(activeChnList(1)));//+60*12.082;
   //pause;
   //##########################################################################
   //#   Do the satellite and receiver position calculations                  #
@@ -181,7 +184,7 @@ function [navSolutions, eph] = postNavigation(trackResults, settings)
       
       //=== Calculate receiver position ==================================
       [xyzdt sat_el sat_az sat_dop] = leastSquarePos(satPositions, ...
-                         navSol_channel_rawP(activeChnList, currMeasNr)' - ...
+                         navSol_channel_rawP(activeChnList, currMeasNr)' + ...
                          satClkCorr * set_c, ...
                          set_c, set_useTropCorr);
       navSol_channel_el(activeChnList, currMeasNr) = sat_el';

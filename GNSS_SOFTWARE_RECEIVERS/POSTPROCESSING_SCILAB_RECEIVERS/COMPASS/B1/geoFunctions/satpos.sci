@@ -49,14 +49,16 @@ for satNr = 1 : numOfSatellites
 // Find initial satellite clock correction --------------------------------
   
   //--- Find time difference ---------------------------------------------
-  dt = check_t(transmitTime(prn) - eph(prn).t_oc);
+  ///dt = check_t(transmitTime(prn) - eph(prn).t_oc);
+  dt = check_t(transmitTime - eph(prn).t_oc);
   //pause;
   //--- Calculate clock correction ---------------------------------------
   satClkCorr(satNr) = (eph(prn).a2 * dt + eph(prn).a1) * dt + ...
                        eph(prn).a0 - ...
                        eph(prn).T_GD_1;
   
-  time = transmitTime(prn) - satClkCorr(satNr);
+  ///time = transmitTime(prn) - satClkCorr(satNr);
+  time = transmitTime - satClkCorr(satNr);
   
 // Find satellite's position ----------------------------------------------
   

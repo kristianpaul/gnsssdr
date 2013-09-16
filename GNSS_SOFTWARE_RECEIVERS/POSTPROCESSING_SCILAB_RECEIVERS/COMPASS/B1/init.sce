@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------------
-//                           SoftGNSS v3.0 GLONASS version
+//                           SoftGNSS v3.0 BeiDou version
 // 
 // Copyright (C) Darius Plausinaitis and Dennis M. Akos
 // Written by Darius Plausinaitis and Dennis M. Akos
-// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
+// Updated and converted to scilab 5.4.1 by Artyom Gavrilov
 // BeiDou version by gnss-sdr.ru
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
@@ -89,22 +89,22 @@ settings = initSettings();
 
 // Generate plot of raw data and ask if ready to start processing =========
 try
-    printf('Probing data (%s)...\n', settings.fileName);
-    probeData(settings);
+  printf('Probing data (%s)...\n', settings.fileName);
+  probeData(settings);
 catch
-    // There was an error, print it and exit
-    disp(lasterror());
-    printf('  (run setSettings or change settings in initSettings.sci to reconfigure)');
-    return;
+  // There was an error, print it and exit
+  disp(lasterror());
+  printf('  (run setSettings or change settings in initSettings.sci to reconfigure)');
+  return;
 end
     
 printf('  Raw IF data plotted \n');
 printf('  (run setSettings or change settings in initSettings.sci to reconfigure)');
 printf(' ');
-///gnssStart = input('Enter {1} to initiate GNSS processing or {0} to exit : ');
+gnssStart = input('Enter {1} to initiate GNSS processing or {0} to exit : ');
 
-///if (gnssStart == 1)
-    printf(' ');
-    //start things rolling...
-    exec('./postProcessing.sce');
-///end
+if (gnssStart == 1)
+  printf(' ');
+  //start things rolling...
+  exec('./postProcessing.sce');
+end

@@ -19,12 +19,12 @@ function acqResults = acquisition(longSignal, settings)
 //                       detected for the given PRN number. 
  
 //--------------------------------------------------------------------------
-//                           SoftGNSS v3.0 GLONASS version
+//                           SoftGNSS v3.0 BeiDou version
 // 
 // Copyright (C) Darius Plausinaitis and Dennis M. Akos
 // Written by Darius Plausinaitis and Dennis M. Akos
 // Based on Peter Rinder and Nicolaj Bertelsen
-// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
+// Updated and converted to scilab 5.4.1 by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
 //modify it under the terms of the GNU General Public License

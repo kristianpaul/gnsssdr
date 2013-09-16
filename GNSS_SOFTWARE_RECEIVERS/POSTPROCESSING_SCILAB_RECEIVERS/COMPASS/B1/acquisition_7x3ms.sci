@@ -19,12 +19,12 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
 //                       detected for the given PRN number. 
  
 //--------------------------------------------------------------------------
-//                           SoftGNSS v3.0 GLONASS version
+//                           SoftGNSS v3.0 BeiDou version
 // 
 // Copyright (C) Darius Plausinaitis and Dennis M. Akos
 // Written by Darius Plausinaitis and Dennis M. Akos
 // Based on Peter Rinder and Nicolaj Bertelsen
-// Updated and converted to scilab 5.3.0 by Artyom Gavrilov
+// Updated and converted to scilab 5.4.1 by Artyom Gavrilov
 //--------------------------------------------------------------------------
 //This program is free software; you can redistribute it and/or
 //modify it under the terms of the GNU General Public License
@@ -48,14 +48,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
   samplesPerCode = round(settings.samplingFreq / ...
                         (settings.codeFreqBasis / settings.codeLength));
   
-  //Let's test simple acceleration. Let's resample the signal to lower frequency.
-  longSignal = matrix(longSignal, settings.acqResampleCoef, ..
-                      length(longSignal) / settings.acqResampleCoef);
-  longSignal = sum(longSignal, 'r');
-  samplesPerCode = samplesPerCode / settings.acqResampleCoef;
-
-  // Create two "settings.acqCohIntegration" msec vectors of data
-  // to correlate with:
+  // Create 7 3_msec vectors of data to correlate with:
   signal1 = longSignal(0*3*samplesPerCode+1:3*samplesPerCode+1*3*samplesPerCode);
   signal2 = longSignal(1*3*samplesPerCode+1:3*samplesPerCode+2*3*samplesPerCode);
   signal3 = longSignal(2*3*samplesPerCode+1:3*samplesPerCode+3*3*samplesPerCode);
@@ -65,14 +58,14 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
   signal7 = longSignal(6*3*samplesPerCode+1:3*samplesPerCode+7*3*samplesPerCode);
   
   // Find sampling period:
-  ts = settings.acqResampleCoef / settings.samplingFreq;
+  ts = 1 / settings.samplingFreq;
   
-  // Find phase points of the local carrier wave:
+  // Find phase points of the local carrier wave (6 ms = 2*3_ms):
   phasePoints = (0 : (6*samplesPerCode-1)) * 2*%pi*ts;
-
+  
   // Number of the frequency bins for the given acquisition band 
-  numberOfFrqBins = round(settings.acqSearchBand * 2*3) + 1;
-
+  numberOfFrqBins = round(settings.acqSearchBand * 2 * 3) + 1;
+  
   // Generate all C/A codes and sample them according to the sampling freq:
   caCodesTable = makeCaTable(settings);
   
@@ -97,7 +90,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
   
   // Correlate signals ======================================================   
     //--- Perform DFT of C/A code ------------------------------------------
-    //Multiply C/A code on Neumann-Hoffman code (first 5 ms - otherwise too long wait time)
+    //Multiply C/A code on Neumann-Hoffman code (first 3 ms)
     //NH = "0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1,  0,  0,  1,  1,  1,  0";
     caCodeFreqDom = conj(fft([-1*caCodesTable(PRN, :) -1*caCodesTable(PRN, :) ..
                               -1*caCodesTable(PRN, :) ..
@@ -123,7 +116,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
       IQfreqDom5 = fft(sigCarr .* signal5);
       IQfreqDom6 = fft(sigCarr .* signal6);
       IQfreqDom7 = fft(sigCarr .* signal7);
-      //pause;
+      
       //--- Multiplication in the frequency domain (correlation in time domain)
       convCodeIQ1 = IQfreqDom1 .* caCodeFreqDom;
       convCodeIQ2 = IQfreqDom2 .* caCodeFreqDom;
@@ -142,9 +135,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
       acqRes6 = abs(ifft(convCodeIQ6)) .^ 2;
       acqRes7 = abs(ifft(convCodeIQ7)) .^ 2;
       
-      //--- Check which msec had the greater power and save that, will
-      //"blend" 1st and 2nd "settings.acqCohIntegration" msec but will
-      // correct data bit issues
+      //--- Save correlation results:
       results(frqBinIndex, :) = [acqRes1(1:3*samplesPerCode) ..
                                  acqRes2(1:3*samplesPerCode) ..
                                  acqRes3(1:3*samplesPerCode) ..
@@ -166,8 +157,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
     [peakSize codePhase] = max(max(results, 'r'));
 
     //--- Find 1 chip wide CA code phase exclude range around the peak ----
-    samplesPerCodeChip   = round(settings.samplingFreq / ..
-                                 settings.acqResampleCoef / ..
+    samplesPerCodeChip   = round(settings.samplingFreq /...
                                  settings.codeFreqBasis);
     excludeRangeIndex1 = codePhase - samplesPerCodeChip;
     excludeRangeIndex2 = codePhase + samplesPerCodeChip;
@@ -195,7 +185,7 @@ function acqResults = acquisition_7x3ms(longSignal, settings)
     if (peakSize/secondPeakSize) > settings.acqThreshold
       //--- Indicate PRN number of the detected signal -------------------
       printf('%02d ', PRN);
-      acqResults.codePhase(PRN) = (codePhase-1) * settings.acqResampleCoef;
+      acqResults.codePhase(PRN) = codePhase;
       acqResults.carrFreq(PRN)    =...
                                settings.IF - ...
                                (settings.acqSearchBand/2) * 1000 + ...
